@@ -8,7 +8,7 @@ from dash.dependencies import Input, Output, State
 from collections import OrderedDict
 
 from app import app
-from app.data_functions import get_gem_info, get_gem_list, get_data_recent, get_slider
+from data_functions import get_gem_info, get_gem_list, get_data_recent, get_slider
 
 # Get location info
 master = get_gem_info()
@@ -22,16 +22,17 @@ def generate_layout():
 	return html.Div(
 		[
 			dcc.Interval(id='live-interval', interval=1*60*1000, n_intervals=0),
+			dcc.Store(id='filter-store', storage_type='session'),
 			dbc.Row(
 				[
 					dbc.Col(
 						html.Img(
-							#src=app.get_asset_url(),#"lcm_logo_medium.png"),
+							src='/assets/gem-stone.png',
 							style={
 								'height': 'auto',
 								'max-width': '100%',
-								'width': 250,
-								'margin-left': 5,
+								'width': 100,
+								'margin-left': 25,
 							},
 							className='hidden-logo-sm',
 							id='logo-head',

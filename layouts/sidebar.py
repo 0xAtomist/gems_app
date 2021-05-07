@@ -3,20 +3,15 @@ import dash_bootstrap_components as dbc
 import dash_html_components as html
 import dash_core_components as dcc
 
-from app.colours import sidebar_grey
-from app.data_functions import (get_slider, get_gem_info, get_gem_list, get_data_recent)
-
+from colours import sidebar_grey
 
 # path to this file location
 script_dir = os.path.dirname(__file__)
 
-# Get location info
-master = get_gem_info()
-
 
 sidebar_header = dbc.Row(
     [
-        dbc.Col(html.H1("GEMS Alliance", className="display-5")),
+        dbc.Col(html.H1("TokenFeeds", className="display-6", style={'fontSize': '22pt'})),
         dbc.Col(
             html.Button(
                 # use the Bootstrap navbar-toggler classes to style the toggle
@@ -60,31 +55,31 @@ def generate_layout():
                         dbc.NavLink(
                             "GEMS Overview",
                             id='gems-page',
-                            href='/app/gems-overview',
+                            href='/gems-overview',
                             style={'padding-left': 5, 'color': '#000000', 'font-size': 18}
                         ),
                         dbc.NavLink(
                             "Token Overview",
                             id='token-page',
-                            href='/app/token-overview',
+                            href='/token-overview',
                             style={'padding-left': 5, 'color': '#000000', 'font-size': 18}
                         ),
                         dbc.NavLink(
                             "Trending Data", 
                             id='trends-page',
-                            href='/app/trends', 
+                            href='/trends', 
                             style={'padding-left': 5, 'color': '#000000', 'font-size': 18}
                         ),
                         dbc.NavLink(
                             "Macro Market", 
                             id='macro-page',
-                            href='/app/macro', 
+                            href='/macro', 
                             style={'padding-left': 5, 'color': '#000000', 'font-size': 18}
                         ),
                         dbc.NavLink(
                             "Wallet Tracker", 
                             id='wallet-page',
-                            href='/app/wallet', 
+                            href='/wallet', 
                             style={'padding-left': 5, 'color': '#000000', 'font-size': 18}
                         )
                     ],

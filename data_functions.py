@@ -20,7 +20,7 @@ from pycoingecko import CoinGeckoAPI
 #from email.mime.image import MIMEImage
 #from PIL import Image
 
-from app.auth import auth_conf
+#from app.auth import auth_conf
 
 
 # path to this script
@@ -33,7 +33,7 @@ def get_gem_list(master):  # get list of site IDs publishing data
 
 
 def get_gem_info():  # load JSON storing client site information
-    rel_path_pub = '../../master.json'
+    rel_path_pub = 'master.json'
     abs_path_pub = os.path.join(script_dir, rel_path_pub)
     with open(abs_path_pub, 'r') as f:
         master = json.load(f)
@@ -77,14 +77,14 @@ def get_api_markets():
 
 
 def get_btc_history():
-	r = requests.get('https://ftx.com/api/markets/BTC-PERP/candles?resolution=86400')
+    r = requests.get('https://ftx.com/api/markets/BTC-PERP/candles?resolution=86400')
 
-	btc_history = r.json()['result']
+    btc_history = r.json()['result']
 
-	df_btc = pd.DataFrame.from_dict(btc_history)
-	df_btc['time'] = df_btc['time']/1000
-
-	return df_btc
+    df_btc = pd.DataFrame.from_dict(btc_history)
+    df_btc['time'] = df_btc['time']/1000
+    print(df_btc)
+    return df_btc
 
 
 def get_data_recent(gem):  # get most recent reading for site input

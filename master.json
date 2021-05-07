@@ -1,0 +1,295 @@
+{
+	"gems":
+		{
+			"mainframe": {
+				"symbol": "MFT",
+				"market": "Binance",
+				"sector": "DeFi",
+				"Notes": "Fixed-rate lending and borrowing",
+				"Tweet Date": "2021-03-02",
+				"Tweet Price": 0.010,
+				"Tier": 1,
+				"Chart": "https://www.tradingview.com/chart/?symbol=BINANCE%3AMFTUSDT"
+			},
+			"api3": {
+				"symbol": "API3",
+				"market": "Huobi",
+				"sector": "DeFi",
+				"Notes": "Oracle",
+				"Tweet Date": "2021-01-12",
+				"Tweet Price": 4.500,
+				"Tier": 1,
+				"Chart": "https://www.tradingview.com/chart?symbol=HUOBI%3AAPI3USDT"
+			},
+			"melon": {
+				"symbol": "MLN",
+				"market": "Huobi",
+				"sector": "DeFi",
+				"Notes": "Asset Management",
+				"Tweet Date": "2021-02-03",
+				"Tweet Price": 40,
+				"Tier": 1,
+				"Chart": "https://www.tradingview.com/chart?symbol=HUOBI%3AMLNUSD"
+			},
+			"cartesi": {
+				"symbol": "CTSI",
+				"market": "Binance",
+				"sector": "DeFi",
+				"Notes": "ETH smart contracts on Linux",
+				"Tweet Date": "2021-02-22",
+				"Tweet Price": 0.170,
+				"Tier": 1,
+				"Chart": "https://www.tradingview.com/chart/?symbol=BINANCE%3AMFTUSDT"
+			},
+			"rari-governance-token": {
+				"symbol": "RGT",
+				"market": "Uniswap",
+				"sector": "DeFi",
+				"Notes": "Yield farming",
+				"Tweet Date": "2021-02-07",
+				"Tweet Price": 4.300,
+				"Tier": 1,
+				"Chart": "https://chartex.pro/?symbol=UNISWAP%3ARGT.6CC623"
+			},
+			"rook": {
+				"symbol": "ROOK",
+				"market": "FTX",
+				"sector": "DeFi",
+				"Notes": "Arbitrage in mempool",
+				"Tweet Date": "2020-12-19",
+				"Tweet Price": 76,
+				"Tier": 1,
+				"Chart": "https://www.tradingview.com/chart?symbol=FTX%3AROOKUSD"
+			},
+			"yield": {
+				"symbol": "YLD",
+				"market": "Uniswap",
+				"sector": "DeFi",
+				"Notes": "Fixed interest rate lending",
+				"Tweet Date": "2020-12-29",
+				"Tweet Price": 11,
+				"Tier": 2,
+				"Chart": "https://chartex.pro/?symbol=UNISWAP%3AYLD.EAFF9F"
+			},
+			"auction": {
+				"symbol": "AUCTION",
+				"market": "Binance",
+				"sector": "DeFi",
+				"Notes": "A protocol to launch new tokens",
+				"Tweet Date": "2021-03-06",
+				"Tweet Price": 24,
+				"Tier": 2,
+				"Chart": "https://www.tradingview.com/chart?symbol=BINANCE%3AAUCTIONBUSD"
+			},
+			"meta": {
+				"symbol": "MTA",
+				"market": "Huobi",
+				"sector": "DeFi",
+				"Notes": "Stablecoin & bitcoin aggregator",
+				"Tweet Date": "2020-12-19",
+				"Tweet Price": 1.15,
+				"Tier": 1,
+				"Chart": "https://www.tradingview.com/chart?symbol=HUOBI%3AMTAUSDT"
+			},
+			"float-protocol": {
+				"symbol": "BANK",
+				"market": "Uniswap",
+				"sector": "DeFi",
+				"Notes": "Crypto native monetary policy",
+				"Tweet Date": "2021-03-13",
+				"Tweet Price": 635,
+				"Tier": 2,
+				"Chart": "https://chartex.pro/?symbol=UNISWAP%3ABANK.B42921"
+			},
+			"index-cooperative": {
+				"symbol": "INDEX",
+				"market": "Uniswap",
+				"sector": "DeFi",
+				"Notes": "Indexes ($DPI also)",
+				"Tweet Date": "2021-01-03",
+				"Tweet Price": 4.5,
+				"Tier": 1,
+				"Chart": "https://chartex.pro/?symbol=UNISWAP%3AINDEX.464CAB"
+			},
+			"union-protocol-governance-token": {
+				"symbol": "UNN",
+				"market": "Uniswap",
+				"sector": "DeFi",
+				"Notes": "Insurance as structured products",
+				"Tweet Date": "2021-03-13",
+				"Tweet Price": 0.08,
+				"Tier": 2,
+				"Chart": "https://chartex.pro/?symbol=UNISWAP%3AUNN.773A9D"
+			},
+			"inverse-finance": {
+				"symbol": "INV",
+				"market": "Uniswap",
+				"sector": "DeFi",
+				"Notes": "A suite of DeFi products for yield generation",
+				"Tweet Date": "2021-03-26",
+				"Tweet Price": 989,
+				"Tier": 2,
+				"Chart": "https://chartex.pro/?symbol=UNISWAP%3AINV.9DFB68"
+			},
+			"apy-finance": {
+				"symbol": "APY",
+				"market": "Uniswap",
+				"sector": "DeFi",
+				"Notes": "Yield farming",
+				"Tweet Date": "2021-01-12",
+				"Tweet Price": 0.37,
+				"Tier": 2,
+				"Chart": "https://chartex.pro/?symbol=UNISWAP%3AAPY.446611"
+			},
+			"ellipsis": {
+				"symbol": "EPS",
+				"market": "Pancake Swap",
+				"sector": "DeFi",
+				"Notes": "A licensed & endorsed Curve fork on BSC",
+				"Tweet Date": "2021-03-25",
+				"Tweet Price": 2,
+				"Tier": 2,
+				"Chart": "https://goswapp-bsc.web.app/0xa7f552078dcc247c2684336020c03648500c6d9f"
+			},
+			"basis-share": {
+				"symbol": "BAS",
+				"market": "Uniswap",
+				"sector": "DeFi",
+				"Notes": "Algorithmic stablecoin (can buy on BSC as well, soon)",
+				"Tweet Date": "2021-03-27",
+				"Tweet Price": 49.5,
+				"Tier": 2,
+				"Chart": "https://www.tradingview.com/chart?symbol=UNISWAP%3ABASV2DAI"
+			},
+			"onx-finance": {
+				"symbol": "ONX",
+				"market": "Uniswap",
+				"sector": "DeFi",
+				"Notes": "DeFi for collateralized tokens",
+				"Tweet Date": "2021-03-17",
+				"Tweet Price": 2.31,
+				"Tier": 2,
+				"Chart": "https://chartex.pro/?symbol=UNISWAP%3AONX.411033"
+			},
+			"lien": {
+				"symbol": "LIEN",
+				"market": "Uniswap",
+				"sector": "DeFi",
+				"Notes": "Derivatives & futures based stablecoin",
+				"Tweet Date": "2020-12-19",
+				"Tweet Price": 36.5,
+				"Tier": 2,
+				"Chart": "https://chartex.pro/?symbol=UNISWAP%3ALIEN.A7557E"
+			},
+			"offshift": {
+				"symbol": "XFT",
+				"market": "Uniswap",
+				"sector": "DeFi",
+				"Notes": "Privacy protocol",
+				"Tweet Date": "2020-12-19",
+				"Tweet Price": 1,
+				"Tier": 2,
+				"Chart": "https://chartex.pro/?symbol=UNISWAP%3AXFT.22E6BE"
+			},
+			"furucombo": {
+				"symbol": "COMBO",
+				"market": "Uniswap",
+				"sector": "DeFi",
+				"Notes": "NoCode DeFi aggregator",
+				"Tweet Date": "2021-02-05",
+				"Tweet Price": 4,
+				"Tier": 1,
+				"Chart": "https://chartex.pro/?symbol=UNISWAP%3ACOMBO.930278"
+			},
+			"defidollar-dao": {
+				"symbol": "DFD",
+				"market": "Uniswap",
+				"sector": "DeFi",
+				"Notes": "Stablecoin aggregator",
+				"Tweet Date": "2021-02-06",
+				"Tweet Price": 0.55,
+				"Tier": 1,
+				"Chart": "https://www.dextools.io/app/sushiswap/pair-explorer/0xb12aa722a3a4566645f079b6f10c89a3205b6c2c"
+			},
+			"plotx": {
+				"symbol": "PLOT",
+				"market": "Uniswap",
+				"sector": "DeFi",
+				"Notes": "Prediction markets",
+				"Tweet Date": "2021-02-21",
+				"Tweet Price": 0.12,
+				"Tier": 2,
+				"Chart": "https://chartex.pro/?symbol=UNISWAP%3APLOT.0C66BB"
+			},
+			"holyheld-2": {
+				"symbol": "MOVE",
+				"market": "Uniswap",
+				"sector": "DeFi",
+				"Notes": "Mobile DeFi banking",
+				"Tweet Date": "2021-02-04",
+				"Tweet Price": 1.35,
+				"Tier": 2,
+				"Chart": "https://www.dextools.io/app/sushiswap/pair-explorer/0x87b918e76c92818db0c76a4e174447aee6e6d23f"
+			},
+			"xtoken": {
+				"symbol": "XTK",
+				"market": "Uniswap",
+				"sector": "DeFi",
+				"Notes": "Passive staking strategies",
+				"Tweet Date": "2021-02-28",
+				"Tweet Price": 0.15,
+				"Tier": 1,
+				"Chart": "https://chartex.pro/?symbol=UNISWAP%3AXTK.B3ADEB"
+			},
+			"xvix": {
+				"symbol": "XVIX",
+				"market": "Uniswap",
+				"sector": "DeFi",
+				"Notes": "Protocol for leveraged trading (TIMEVAULT)",
+				"Tweet Date": "2021-01-16",
+				"Tweet Price": 14.8,
+				"Tier": 2,
+				"Chart": "https://chartex.pro/?symbol=UNISWAP%3AXVIX.3AE9EC"
+			},
+			"gambit": {
+				"symbol": "GMT",
+				"market": "Pancake Swap",
+				"sector": "DeFi",
+				"Notes": "Interest-generating stablecoin (on BSC, from XVIX)",
+				"Tweet Date": "2021-03-08",
+				"Tweet Price": 15,
+				"Tier": 2,
+				"Chart": "https://goswapp-bsc.web.app/0x99e92123eb77bc8f999316f622e5222498438784"
+			},
+			"tokencard": {
+				"symbol": "TKN",
+				"market": "Uniswap",
+				"sector": "DeFi",
+				"Notes": "Mobile DeFi banking focused on branding",
+				"Tweet Date": "2021-04-03",
+				"Tweet Price": 0.35,
+				"Tier": 2,
+				"Chart": "https://chartex.pro/?symbol=UNISWAP%3ATKN.77E73A"
+			},
+			"bondappetit-gov-token": {
+				"symbol": "BAG",
+				"market": "Uniswap",
+				"sector": "DeFi",
+				"Notes": "Real world assets as collateral bonds for liquidity",
+				"Tweet Date": "2021-04-09",
+				"Tweet Price": 5.35,
+				"Tier": 2,
+				"Chart": "https://www.dextools.io/app/uniswap/pair-explorer/0xf3bc6f13bc030e7c294da2aad27b99807bc5f8fd"
+			},
+			"arc-governance": {
+				"symbol": "ARCX",
+				"market": "Gate.io",
+				"sector": "DeFi",
+				"Notes": "Rehypothecation of interest bearing assets",
+				"Tweet Date": "2021-04-12",
+				"Tweet Price": 8780,
+				"Tier": 1,
+				"Chart": "https://www.gate.io/trade/ARCX_USDT"
+			}
+		}
+}
