@@ -107,7 +107,7 @@ def get_data_recent(gem):  # get most recent reading for site input
 	return df.loc[0]
 
 
-#@cache.memoize(timeout=0)
+@cache.memoize(timeout=20)
 def get_extended_data(gem):
     master = get_gem_info()
     tweet_price = master['gems'][gem]['Tweet Price']
@@ -134,7 +134,7 @@ def get_extended_data(gem):
     return df
 
 
-@cache.memoize(timeout=0)
+@cache.memoize(timeout=20)
 def get_filtered_df(filtered_gem_list):
     #print(filtered_gem_list)
     if 'ellipsis' in filtered_gem_list: filtered_gem_list.remove('ellipsis')
