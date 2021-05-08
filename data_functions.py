@@ -5,6 +5,7 @@ import time
 import json
 from datetime import timedelta, date, datetime
 
+import pyarrow as pa
 import pandas as pd
 from pandas.tseries.offsets import *
 import redis
@@ -12,6 +13,7 @@ import numpy as np
 import hmac
 import requests
 from pycoingecko import CoinGeckoAPI
+from app import cache
 
 #from flask_login import current_user
 #import smtplib
@@ -26,12 +28,13 @@ from pycoingecko import CoinGeckoAPI
 # path to this script
 script_dir = os.path.dirname(__file__)
 
-
+#@cache.memoize(timeout=20)
 def get_gem_list(master):  # get list of site IDs publishing data
-	gem_list = list(master["gems"].keys())
-	return gem_list
+    gem_list = list(master["gems"].keys())
+    if 'ellipsis' in gem_list: gem_list.remove('ellipsis')
+    return gem_list
 
-
+#@cache.memoize(timeout=0)
 def get_gem_info():  # load JSON storing client site information
     rel_path_pub = 'master.json'
     abs_path_pub = os.path.join(script_dir, rel_path_pub)
@@ -41,13 +44,6 @@ def get_gem_info():  # load JSON storing client site information
 
 
 '''
-def get_data_month(pub, start_date, end_date):  # get data for date range inputs
-
-
-def get_data_real(pub):  # get most recent reading for site input
-'''
-
-
 def get_api_markets():
 	cg = CoinGeckoAPI()
 	master = get_gem_info()
@@ -83,10 +79,20 @@ def get_btc_history():
 
     df_btc = pd.DataFrame.from_dict(btc_history)
     df_btc['time'] = df_btc['time']/1000
-    print(df_btc)
+    #print(df_btc)
     return df_btc
+'''
 
 
+@cache.memoize(timeout=20)
+def get_btc_daily():
+    r = redis.StrictRedis('localhost')
+    context = pa.default_serialization_context()
+    df = context.deserialize(r.get('btc_history'))
+    return df
+
+
+@cache.memoize(timeout=20)
 def get_data_recent(gem):  # get most recent reading for site input
 	r = redis.StrictRedis('localhost', charset='utf-8', decode_responses=True)
 	output = r.hgetall(gem)
@@ -101,31 +107,57 @@ def get_data_recent(gem):  # get most recent reading for site input
 	return df.loc[0]
 
 
+#@cache.memoize(timeout=0)
 def get_extended_data(gem):
-	master = get_gem_info()
-	tweet_price = master['gems'][gem]['Tweet Price']
-	tweet_date = master['gems'][gem]['Tweet Date']
-	tweet_price = master['gems'][gem]['Tweet Price']
+    master = get_gem_info()
+    tweet_price = master['gems'][gem]['Tweet Price']
+    tweet_date = master['gems'][gem]['Tweet Date']
+    tweet_price = master['gems'][gem]['Tweet Price']
 
-	df = get_data_recent(gem)
-	df_btc = get_btc_history()
+    df = get_data_recent(gem)
+    df_btc = get_btc_daily()
 
-	btc_now = get_data_recent('bitcoin')['current_price']
-	gem_now = df['current_price']
-	tweet_time = datetime.timestamp(datetime.strptime(tweet_date, '%Y-%m-%d'))
-	btc_tweet = df_btc.loc[df_btc['time'] == tweet_time]['close'].values[0]
-	gem_tweet = tweet_price
-	
-	df['fdv_tot'] = df['current_price'] * df['total_supply']
-	df['mc_fdv_ratio'] = df['market_cap'] / df['fdv_tot']
-	df['gem_usd_x'] = df['current_price'] / tweet_price - 1
-	df['btc_usd_x'] = btc_now/btc_tweet
-	df['gem_btc_x'] = (gem_now/btc_now) / (gem_tweet/btc_tweet) - 1
-	df['20x']  = tweet_price * 20
-	df['50x'] = tweet_price * 50
+    btc_now = get_data_recent('bitcoin')['current_price']
+    gem_now = df['current_price']
+    tweet_time = datetime.timestamp(datetime.strptime(tweet_date, '%Y-%m-%d'))
+    btc_tweet = df_btc.loc[df_btc['time'] == tweet_time]['close'].values[0]
+    gem_tweet = tweet_price
 
-	return df
+    df['fdv_tot'] = df['current_price'] * df['total_supply']
+    df['mc_fdv_ratio'] = df['market_cap'] / df['fdv_tot']
+    df['gem_usd_x'] = df['current_price'] / tweet_price - 1
+    df['btc_usd_x'] = btc_now/btc_tweet
+    df['gem_btc_x'] = (gem_now/btc_now) / (gem_tweet/btc_tweet) - 1
+    df['20x']  = tweet_price * 20
+    df['50x'] = tweet_price * 50
 
+    return df
+
+
+@cache.memoize(timeout=0)
+def get_filtered_df(filtered_gem_list):
+    #print(filtered_gem_list)
+    if 'ellipsis' in filtered_gem_list: filtered_gem_list.remove('ellipsis')
+    if filtered_gem_list:
+        print(filtered_gem_list)
+        dfs = []
+        for gem in filtered_gem_list:
+
+            s = get_extended_data(gem)
+            df = pd.DataFrame(s).transpose()
+            df['id'] = gem
+            df = df.set_index('id')
+            dfs.append(df)
+        df_master = pd.concat(dfs)
+        df_master.rename(columns={
+            'price_change_percentage_1h_in_currency': '1h_col',
+            'price_change_percentage_24h_in_currency': '24h_col',
+            'price_change_percentage_7d_in_currency': '7d_col'
+        }, inplace=True)
+        #print(df_master)
+        return df_master
+    else:
+        return pd.DataFrame()
 
 
 def get_slider(gem):  # get settings for date range slider

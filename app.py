@@ -5,7 +5,6 @@ from flask_caching import Cache
 
 from auth import auth_conf
 
-
 server = Flask(__name__)
 
 app = dash.Dash(
@@ -26,3 +25,7 @@ cache = Cache(server, config={
 #    'CACHE_REDIS_PASSWORD': auth_conf['redis']['password'],
     'CACHE_REDIS_DB': 1
 })
+
+cache.clear()
+
+

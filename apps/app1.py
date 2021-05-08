@@ -15,7 +15,7 @@ from dash.dependencies import Input, Output, State
 
 from app import app, cache
 from colours import *
-from data_functions import get_gem_info, get_gem_list, get_data_recent, get_extended_data
+from data_functions import get_gem_info, get_gem_list, get_data_recent, get_extended_data, get_filtered_df
 
 master = get_gem_info()
 
@@ -96,170 +96,45 @@ def get_gem_options():
 	return gem_options
 
 
-def gain_table_data(gem_list):
-	change_list = []
-	loss_list = []
-	gain_list = []
-	for gem in gem_list:
-		change = get_24h_change(gem)
-		change_list.append(change)
-	for i, change in enumerate(change_list):
-		if change < 0:
-			loss_list.append(gem_list[i])
-		elif change > 0:
-			gain_list.append(gem_list[i])
+def generate_bar_chart(df, variable, color):
+    if not df.empty:
+        df = df.sort_values(by=[variable])
+        data = [
+            go.Bar(
+                x=df['symbol'],
+                y=df[variable],
+                marker={'color': color},
+                hoverinfo='x+y',
+                #textinfo='percent',
+            ),
+        ]
 
-	data_dict = OrderedDict([
-		("gem_col", []),
-		("change_col", [])
-	])
-	for gem in sorted(loss_list):
-		gem_info = master['gems'][gem]
-		data_dict['gem_col'].append(gem)
-		data_dict['change_col'].append(get_24h_change(gem))
+    else: 
+        data = [
+            go.Bar(
+                x=[0,0,0],
+                y=[0,0,0],
+                marker={'color': grey},
+                text=['No Gems Found', 'No Gems Found', 'No Gems Found'],
+            )
+        ]
 
-	for gem in sorted(gain_list):
-		gem_info = master['gems'][gem]
-		data_dict['gem_col'].append(gem)
-		data_dict['change_col'].append(get_24h_change(gem))
+    figure={
+        'data': data,
+        'layout':
+            go.Layout(
+                #title='Gem 24h Overview',
+                margin={'l': 40, 'r': 20, 't': 10, 'b': 50},
+                #legend={'font': {'size': 10}, 'orientation': 'h'},
+                #autosize=True,
+                xaxis=dict(tickangle=45),
+                height=300,
+                #width='auto',
+                showlegend=False,
+            ),
+    }
 
-	df = pd.DataFrame(data_dict)
-	return df
-
-def generate_table_data(gem_list):
-	data_dict = OrderedDict([
-		("name_col", []),
-		("symbol_col", []),
-		("price_col", []),
-		("1h_col", []),
-		("24h_col", []),
-		("7d_col", []),
-		("market_cap_col", []),
-		#("fdv_max_col", []),
-		("fdv_tot_col", []),
-		("mc_fdv_ratio_col", []),
-		("volume_col", []),
-		("gemusd_col", []),
-		("gembtc_col", []),
-		("20x_col", []),
-		("50x_col", []),
-		("ath_col", []),
-		("ath_retrace_col", []),
-		("datetime_col", []),
-	])
-
-	for gem in sorted(gem_list): 
-		recent_data = get_data_recent(gem)
-		extended_data = get_extended_data(gem)
-		gem_info = master['gems'][gem]
-
-		data_dict['symbol_col'].append(gem_info['symbol'])
-		data_dict['name_col'].append(recent_data['name'])
-
-		if recent_data['last_updated'] == 0:
-			data_dict['datetime_col'].append(0)
-		else:
-			data_dict['datetime_col'].append(
-				datetime.strftime(datetime.strptime(recent_data['last_updated'],'%Y-%m-%dT%H:%M:%S.%fZ'), '%d/%m/%y %H:%M')
-			)
-
-		data_dict['price_col'].append(recent_data['current_price'])
-		data_dict['1h_col'].append(recent_data['price_change_percentage_1h_in_currency']/100)
-		data_dict['24h_col'].append(recent_data['price_change_percentage_24h_in_currency']/100)
-		data_dict['7d_col'].append(recent_data['price_change_percentage_7d_in_currency']/100)
-		data_dict['market_cap_col'].append(recent_data['market_cap'])
-		#data_dict['fdv_max_col'].append(recent_data['fully_diluted_valuation'])
-		data_dict['fdv_tot_col'].append(extended_data['fdv_tot'])
-		data_dict['mc_fdv_ratio_col'].append(extended_data['mc_fdv_ratio'])
-		data_dict['volume_col'].append(recent_data['total_volume'])
-		data_dict['gemusd_col'].append(extended_data['gem_usd_x'])
-		data_dict['gembtc_col'].append(extended_data['gem_btc_x'])
-		data_dict['20x_col'].append(extended_data['20x'])
-		data_dict['50x_col'].append(extended_data['50x'])
-		data_dict['ath_col'].append(recent_data['ath'])
-		data_dict['ath_retrace_col'].append(recent_data['ath_change_percentage']/100)
-
-	df = pd.DataFrame(data_dict)
-	return df
-
-
-
-def get_urgent_list(urgency, gem_list):
-	urgent_list = []
-	for gem in gem_list:
-		gem_info = master['gems'][gem]
-		health = check_readings(gem)
-		if health == urgency:
-			urgent_list.append(gem_info['symbol'])
-	return sorted(urgent_list)
-
-
-def n_urgent_alert(urgency, gem_list):
-	health_list = []
-	for gem in gem_list:
-		health = check_readings(gem)
-		health_list.append(health)
-	return health_list.count(urgency)
-
-
-def generate_bar_chart(gem_list, source, variable, color):
-	if gem_list:
-		if source == 'ext':
-			variable_list = []
-			ticker_list = []
-			for gem in sorted(gem_list):
-				ticker_list.append(get_data_recent(gem)['symbol'])
-				variable_list.append(get_extended_data(gem)[variable])
-			df = pd.DataFrame(data={'gems': ticker_list, variable: variable_list})
-			df = df.sort_values(variable)
-
-		elif source == 'api':
-			variable_list = []
-			ticker_list = []
-			for gem in sorted(gem_list):
-				ticker_list.append(get_data_recent(gem)['symbol'])
-				variable_list.append(get_data_recent(gem)[variable])
-			df = pd.DataFrame(data={'gems': ticker_list, variable: variable_list})
-			df = df.sort_values(variable)
-
-		data = [
-			go.Bar(
-				x=df['gems'],
-				y=df[variable],
-				marker={'color': color},
-				hoverinfo='x+y',
-				#textinfo='percent',
-			),
-		]
-
-	else: 
-		data = [
-			go.bar(
-				x=[0,0,0],
-				y=[0,0,0],
-				marker={'color': grey},
-				text=['No Gems Found', 'No Gems Found', 'No Gems Found'],
-				hoverinfo='text+value',
-				#textinfo='percent',
-			)
-		]
-
-	figure={
-		'data': data,
-		'layout':
-			go.Layout(
-				#title='Gem 24h Overview',
-				margin={'l': 40, 'r': 20, 't': 0, 'b': 50},
-				#legend={'font': {'size': 10}, 'orientation': 'h'},
-				#autosize=True,
-				xaxis=dict(tickangle=45),
-				height=300,
-				#width='auto',
-				showlegend=False,
-			),
-	}
-
-	return figure
+    return figure
 
 def generate_pie_chart(gem_list, change):
 	health_list = []
@@ -311,6 +186,14 @@ def generate_pie_chart(gem_list, change):
 
 	return figure
 
+
+def generate_table_data(df):
+    df['1h_col'] = df['1h_col']/100
+    df['24h_col'] = df['24h_col']/100
+    df['7d_col'] = df['7d_col']/100
+    df['ath_change_percentage'] = df['ath_change_percentage']/100
+    df['last_updated'] = pd.to_datetime(df['last_updated'], format='%Y-%m-%dT%H:%M:%S.%fZ').dt.strftime('%Y/%m/%d %H:%M')
+    return df.to_dict('records')
 		
 def filter_gem_list(gem_filter, tier_filter, sector_filter, market_filter):
 	gem_list = get_gem_list(master)
@@ -489,12 +372,12 @@ layout = html.Div(
 							id="gems_table",
 							sort_action='native',
                                                         sort_by=[{'column_id': '24h_col', 'direction': 'desc'}],
-							#style_table={'height': '1000px', 'overflowY': 'visible'},
+							#style_table={'height': '2000px', 'overflowY': 'visible'},
 							fixed_rows={'headers': True}, #'data': 0},
 							columns=[
-								{"name": ["Name"], "id": "name_col", "type": "text"},
-								{"name": ["Ticker"], "id": "symbol_col", "type": "text"},
-								{"name": ["Price"], "id": "price_col", "type": "numeric",
+								{"name": ["Name"], "id": "name", "type": "text"},
+								{"name": ["Ticker"], "id": "symbol", "type": "text"},
+								{"name": ["Price"], "id": "current_price", "type": "numeric",
 									"format": FormatTemplate.money(3)},
 								{"name": ["1h"], "id": "1h_col", "type": "numeric",
 									"format": FormatTemplate.percentage(2)},
@@ -503,7 +386,7 @@ layout = html.Div(
 								{"name": ["7d"], "id": "7d_col", "type": "numeric",
 									"format": FormatTemplate.percentage(2)},
 								#{"name": ["Sparkline"], "id": "sparkline_col", "type": "numeric"},
-								{"name": ["Market Cap"], "id": "market_cap_col", "type": "numeric",
+								{"name": ["Market Cap"], "id": "market_cap", "type": "numeric",
 									"format": Format(
 										precision=0,
 										scheme=Scheme.fixed,
@@ -515,7 +398,7 @@ layout = html.Div(
 								},
 								#{"name": ["FDV (Max Supply)"], "id": "fdv_max_col", "type": "numeric",
 								#	"format": FormatTemplate.money(0)},
-								{"name": ["FDV (Total Supply)"], "id": "fdv_tot_col", "type": "numeric",
+								{"name": ["FDV (Total Supply)"], "id": "fdv_tot", "type": "numeric",
 									"format": Format(
 										precision=0,
 										scheme=Scheme.fixed,
@@ -525,26 +408,27 @@ layout = html.Div(
 										symbol_prefix='$'
 									)
 								},
-								{"name": ["Market Cap/ FDV Ratio"], "id": "mc_fdv_ratio_col", "type": "numeric",
+								{"name": ["Market Cap/ FDV Ratio"], "id": "mc_fdv_ratio", "type": "numeric",
 									"format": FormatTemplate.percentage(2)},
-								{"name": ["Volume"], "id": "volume_col", "type": "numeric",
+								{"name": ["Volume"], "id": "total_volume", "type": "numeric",
 									"format": FormatTemplate.money(0)},
-                                                                {"name": ["GEM/ USD X"], "id": "gemusd_col", "type": "numeric", "format": Format(precision=2)},
-								{"name": ["GEM/ BTC X"], "id": "gembtc_col", "type": "numeric", "format": Format(precision=2)},
-								{"name": ["20X Target"], "id": "20x_col", "type": "numeric",
+                                                                {"name": ["GEM/ USD Multiple"], "id": "gem_usd_x", "type": "numeric", "format": Format(precision=2)},
+								{"name": ["GEM/ BTC Multiple"], "id": "gem_btc_x", "type": "numeric", "format": Format(precision=2)},
+								{"name": ["20X Target"], "id": "20x", "type": "numeric",
 									"format": FormatTemplate.money(1)},
-								{"name": ["50X Target"], "id": "50x_col", "type": "numeric",
+								{"name": ["50X Target"], "id": "50x", "type": "numeric",
 									"format": FormatTemplate.money(1)},
-								{"name": ["ATH"], "id": "ath_col", "type": "numeric",
+								{"name": ["ATH"], "id": "ath", "type": "numeric",
 									"format": FormatTemplate.money(3)},
-								{"name": ["ATH Retrace"], "id": "ath_retrace_col", "type": "numeric",
+								{"name": ["ATH Retrace"], "id": "ath_change_percentage", "type": "numeric",
 									"format": FormatTemplate.percentage(2)},
-								{"name": ["Last Updated"], "id": "datetime_col", "type": "numeric"},
+								{"name": ["Last Updated"], "id": "last_updated", "type": "numeric"},
 							],
-							data=generate_table_data(get_gem_list(master)).to_dict('records'),
+							data=generate_table_data(get_filtered_df(get_gem_list(master))),
 							style_header={
-								'text-align': 'left',
+								'text-align': 'right',
 								'background-color': 'rgb(230, 230, 230)',
+                                                                #'font-size': '14',
 								'font-weight': 'bold',
 								'whiteSpace': 'normal',
 								'height': 'auto',
@@ -602,14 +486,14 @@ layout = html.Div(
 							],
 							style_cell={"font-family": "sans-serif", "font-size": 12}, #, 'border': '1px solid lightgrey'},
 							style_cell_conditional=[
-                                                                {'if': {'column_id': 'name_col'}, 'textAlign': 'left', 'fontWeight': 'bold', 'max-width': '120px'},
-                                                                {'if': {'column_id': 'symbol_col'}, 'textAlign': 'left', 'fontWeight': 'bold'},
-								{'if': {'column_id': 'mc_fdv_ratio_col'}, 'min-width': '80px'},
-								{'if': {'column_id': '20x_col'}, 'min-width': '60px'},
-								{'if': {'column_id': '50x_col'}, 'min-width': '60px'},
-								{'if': {'column_id': 'gemusd_col'}, 'min-width': '50px'},
-								{'if': {'column_id': 'genbtc_col'}, 'min-width': '50px'},
-								{'if': {'column_id': 'datetime_col'}, 'width': '70px'},
+                                                                {'if': {'column_id': 'name'}, 'textAlign': 'left', 'fontWeight': 'bold', 'max-width': '120px'},
+                                                                {'if': {'column_id': 'symbol'}, 'textAlign': 'left', 'fontWeight': 'bold'},
+								{'if': {'column_id': 'mc_fdv_ratio'}, 'min-width': '80px'},
+								{'if': {'column_id': '20x'}, 'min-width': '60px'},
+								{'if': {'column_id': '50x'}, 'min-width': '60px'},
+								{'if': {'column_id': 'gem_usd_x'}, 'min-width': '60px'},
+								{'if': {'column_id': 'gem_btc_x'}, 'min-width': '60px'},
+								{'if': {'column_id': 'last_updated'}, 'width': '70px'},
 							],
 						)
 					],
@@ -629,7 +513,7 @@ layout = html.Div(
                                                         dbc.Tooltip('From date of GEMS Alliance tweet', target='gemusd_tooltip'),
 							dcc.Graph(
 								id="gemusd_bar",
-								figure=generate_bar_chart(get_gem_list(master), 'ext', 'gem_usd_x', dash_green),
+								figure=generate_bar_chart(get_filtered_df(get_gem_list(master)), 'gem_usd_x', dash_green),
 								config=graph_config
 							),
 						],
@@ -646,7 +530,7 @@ layout = html.Div(
                                                         dbc.Tooltip('From date of GEMS Alliance tweet', target='gembtc_tooltip'),
 							dcc.Graph(
 								id="gembtc_bar",
-								figure=generate_bar_chart(get_gem_list(master), 'ext', 'gem_btc_x', yellow),
+								figure=generate_bar_chart(get_filtered_df(get_gem_list(master)), 'gem_btc_x', yellow),
 								config=graph_config
 							),
 						],
@@ -667,7 +551,7 @@ layout = html.Div(
                                                         dbc.Tooltip('Retracement of the Current Price relative to the All Time High Price', target='athretrace_tooltip'),
 							dcc.Graph(
 								id="athretrace_bar",
-								figure=generate_bar_chart(get_gem_list(master), 'api', 'ath_change_percentage', coral),
+								figure=generate_bar_chart(get_filtered_df(get_gem_list(master)), 'ath_change_percentage', coral),
 								config=graph_config
 							),
 						],
@@ -684,7 +568,7 @@ layout = html.Div(
                                                         dbc.Tooltip('Market Cap / FDV Ratio shows the amount of circulating supply relative to the total supply', target='mcfdv_tooltip'),
 							dcc.Graph(
 								id="mcfdv_bar",
-								figure=generate_bar_chart(get_gem_list(master), 'ext', 'mc_fdv_ratio', teal),
+								figure=generate_bar_chart(get_filtered_df(get_gem_list(master)), 'mc_fdv_ratio', teal),
 								config=graph_config
 							),
 						],
@@ -705,7 +589,7 @@ layout = html.Div(
                                                         dbc.Tooltip('Market Cap = Current Price * Circulating Supply', target='mc_tooltip'),
 							dcc.Graph(
 								id="mc_bar",
-								figure=generate_bar_chart(get_gem_list(master), 'api', 'market_cap', magenta),
+								figure=generate_bar_chart(get_filtered_df(get_gem_list(master)), 'market_cap', magenta),
 								config=graph_config
 							),
 						],
@@ -722,7 +606,7 @@ layout = html.Div(
                                                         dbc.Tooltip('Fully Diluted Value = Current Price * Total Supply', target='fdv_tooltip'),
 							dcc.Graph(
 								id="fdv_bar",
-								figure=generate_bar_chart(get_gem_list(master), 'ext', 'fdv_tot', blue),
+								figure=generate_bar_chart(get_filtered_df(get_gem_list(master)), 'fdv_tot', blue),
 								config=graph_config
 							),
 						],
@@ -761,8 +645,8 @@ def update_filter_store(gem_filter, tier_filter, sector_filter, market_filter):
 @cache.memoize(timeout=20)
 def update_table(filtered_json, n_intervals):
     filtered_gem_list = json.loads(filtered_json)
-    df = generate_table_data(filtered_gem_list)
-    return df.to_dict('records')
+    df = get_filtered_df(filtered_gem_list)
+    return generate_table_data(df)
 
 
 @app.callback(Output('1h_pie', 'figure'),
@@ -798,7 +682,8 @@ def update_7d_pie(filtered_json, n_intervals):
 @cache.memoize(timeout=20)
 def update_gemusd_bar(filtered_json, n_intervals):
     filtered_gem_list = json.loads(filtered_json)
-    return generate_bar_chart(filtered_gem_list, 'ext', 'gem_usd_x', dash_green)
+    df = get_filtered_df(filtered_gem_list)
+    return generate_bar_chart(df, 'gem_usd_x', dash_green)
 
 
 @app.callback(Output('gembtc_bar', 'figure'),
@@ -807,7 +692,8 @@ def update_gemusd_bar(filtered_json, n_intervals):
 @cache.memoize(timeout=20)
 def update_gembtc_bar(filtered_json, n_intervals):
     filtered_gem_list = json.loads(filtered_json)
-    return generate_bar_chart(filtered_gem_list, 'ext', 'gem_btc_x', yellow)
+    df = get_filtered_df(filtered_gem_list)
+    return generate_bar_chart(df, 'gem_btc_x', yellow)
 
 
 @app.callback(Output('athretrace_bar', 'figure'),
@@ -816,7 +702,8 @@ def update_gembtc_bar(filtered_json, n_intervals):
 @cache.memoize(timeout=20)
 def update_athretrace_bar(filtered_json, n_intervals):
     filtered_gem_list = json.loads(filtered_json)
-    return generate_bar_chart(filtered_gem_list, 'api', 'ath_change_percentage', coral)
+    df = get_filtered_df(filtered_gem_list)
+    return generate_bar_chart(df, 'ath_change_percentage', coral)
 
 
 @app.callback(Output('mcfdv_bar', 'figure'),
@@ -825,7 +712,8 @@ def update_athretrace_bar(filtered_json, n_intervals):
 @cache.memoize(timeout=20)
 def update_mcfdv_bar(filtered_json, n_intervals):
     filtered_gem_list = json.loads(filtered_json)
-    return generate_bar_chart(filtered_gem_list, 'ext', 'mc_fdv_ratio', teal)
+    df = get_filtered_df(filtered_gem_list)
+    return generate_bar_chart(df, 'mc_fdv_ratio', teal)
 
 
 @app.callback(Output('mc_bar', 'figure'),
@@ -834,7 +722,8 @@ def update_mcfdv_bar(filtered_json, n_intervals):
 @cache.memoize(timeout=20)
 def update_mc_bar(filtered_json, n_intervals):
     filtered_gem_list = json.loads(filtered_json)
-    return generate_bar_chart(filtered_gem_list, 'api', 'market_cap', magenta)
+    df = get_filtered_df(filtered_gem_list)
+    return generate_bar_chart(df, 'market_cap', magenta)
 
 
 @app.callback(Output('fdv_bar', 'figure'),
@@ -843,5 +732,6 @@ def update_mc_bar(filtered_json, n_intervals):
 @cache.memoize(timeout=20)
 def update_fdv_bar(filtered_json, n_intervals):
     filtered_gem_list = json.loads(filtered_json)
-    return generate_bar_chart(filtered_gem_list, 'ext', 'fdv_tot', blue)
+    df = get_filtered_df(filtered_gem_list)
+    return generate_bar_chart(df, 'fdv_tot', blue)
 

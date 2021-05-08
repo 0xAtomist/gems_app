@@ -34,7 +34,7 @@
 			"cartesi": {
 				"symbol": "CTSI",
 				"market": "Binance",
-				"sector": "DeFi",
+				"sector": "Infrastructure",
 				"Notes": "ETH smart contracts on Linux",
 				"Tweet Date": "2021-02-22",
 				"Tweet Price": 0.170,
@@ -140,16 +140,6 @@
 				"Tweet Price": 0.37,
 				"Tier": 2,
 				"Chart": "https://chartex.pro/?symbol=UNISWAP%3AAPY.446611"
-			},
-			"ellipsis": {
-				"symbol": "EPS",
-				"market": "Pancake Swap",
-				"sector": "DeFi",
-				"Notes": "A licensed & endorsed Curve fork on BSC",
-				"Tweet Date": "2021-03-25",
-				"Tweet Price": 2,
-				"Tier": 2,
-				"Chart": "https://goswapp-bsc.web.app/0xa7f552078dcc247c2684336020c03648500c6d9f"
 			},
 			"basis-share": {
 				"symbol": "BAS",
@@ -290,6 +280,46 @@
 				"Tweet Price": 8780,
 				"Tier": 1,
 				"Chart": "https://www.gate.io/trade/ARCX_USDT"
+			},
+			"stabilize": {
+				"symbol": "STBZ",
+				"market": "Uniswap",
+				"sector": "DeFi",
+				"Notes": "Stablecoin aggregator",
+				"Tweet Date": "2021-04-21",
+				"Tweet Price": 5.16,
+				"Tier": 2,
+				"Chart": "https://www.dextools.io/app/uniswap/pair-explorer/0xdb28312a8d26d59978d9b86ca185707b1a26725b"
+			},
+			"moar": {
+				"symbol": "MOAR",
+				"market": "Uniswap",
+				"sector": "DeFi",
+				"Notes": "Lending protocol",
+				"Tweet Date": "2021-04-21",
+				"Tweet Price": 4,
+				"Tier": 2,
+				"Chart": "https://dex.guru/token/0x187eff9690e1f1a61d578c7c492296eaab82701a-eth"
+			},
+			"mixsome": {
+				"symbol": "SOME",
+				"market": "Uniswap",
+				"sector": "DeFi",
+				"Notes": "NoCode DeFi aggregator focused on yield farming",
+				"Tweet Date": "2021-04-23",
+				"Tweet Price": 0.25,
+				"Tier": 2,
+				"Chart": "https://www.dextools.io/app/uniswap/pair-explorer/0xfac08a488f366f245f65781305b7c1ce204761f1"
+			},
+			"alphr": {
+				"symbol": "ALPHR",
+				"market": "Uniswap",
+				"sector": "DeFi",
+				"Notes": "Wallet mirror trading",
+				"Tweet Date": "2021-04-12",
+				"Tweet Price": 5.36,
+				"Tier": 2,
+				"Chart": "https://dex.guru/token/0xaa99199d1e9644b588796f3215089878440d58e0-eth"
 			}
 		}
 }
