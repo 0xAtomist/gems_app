@@ -3,11 +3,15 @@ import dash_html_components as html
 import dash_bootstrap_components as dbc
 from dash.dependencies import Input, Output
 #import logging
+import jsonify
 
 from app import app, server
 from apps import app1
 from layouts import header, sidebar
 
+from data_functions import get_gem_list, get_gem_info, get_filtered_df
+
+master = get_gem_info()
 
 content = html.Div(id="page-content", style={'padding-top': 5}) #, style=CONTENT_STYLE)
 
@@ -73,6 +77,14 @@ def toggle_active_links(pathname):
     if pathname == "/wallet":
         return True
     else: return False
+
+
+@server.route('/api/v1/gems/all')
+def api_gems():
+    df = get_filtered_df(get_gem_list(master))
+    json_msg = df.to_json(orient='split')
+    return json_msg
+
 
 if __name__ == "__main__":
 	#gunicorn_logger = logging.getLogger('gunicorn.error')

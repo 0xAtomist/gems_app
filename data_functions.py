@@ -139,7 +139,6 @@ def get_filtered_df(filtered_gem_list):
     #print(filtered_gem_list)
     if 'ellipsis' in filtered_gem_list: filtered_gem_list.remove('ellipsis')
     if filtered_gem_list:
-        print(filtered_gem_list)
         dfs = []
         for gem in filtered_gem_list:
 
