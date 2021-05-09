@@ -11,25 +11,15 @@ script_dir = os.path.dirname(__file__)
 
 sidebar_header = dbc.Row(
     [
-        dbc.Col(html.H1("TokenFeeds", className="display-6", style={'fontSize': '22pt'})),
         dbc.Col(
-            html.Button(
-                # use the Bootstrap navbar-toggler classes to style the toggle
-                html.Span(className="navbar-toggler-icon"),
-                className="navbar-toggler",
-                # the navbar-toggler classes don't set color, so we do it here
-                style={
-                    "color": "rgba(0,0,0,.5)",
-                    "border-color": "rgba(0,0,0,.1)",
-                },
-                id="toggle",
+            html.Img(
+                src='assets/Color logo - no background.png',
+                style={'max-width': '100%', 'width': 200, 'margin': 0, 'height': 'auto'}, 
+                className='hidden-logo-md'
             ),
-            # the column containing the toggle will be only as wide as the
-            # toggle, resulting in the toggle being right aligned
-            width="auto",
-            # vertically align the toggle in the center
-            align="center",
-        ),
+            width=12,
+            style={'padding-right': '5px', 'padding-left': '5px'}
+        )
     ]
 )
 
@@ -56,31 +46,31 @@ def generate_layout():
                             "GEMS Overview",
                             id='gems-page',
                             href='/gems-overview',
-                            style={'padding-left': 5, 'color': '#000000', 'font-size': 18}
+                            style={'padding-left': 5, 'color': '#ffffff', 'font-size': 18}
                         ),
                         dbc.NavLink(
                             "Token Overview",
                             id='token-page',
                             href='/token-overview',
-                            style={'padding-left': 5, 'color': '#000000', 'font-size': 18}
+                            style={'padding-left': 5, 'color': '#ffffff', 'font-size': 18}
                         ),
                         dbc.NavLink(
                             "Trending Data", 
                             id='trends-page',
                             href='/trends', 
-                            style={'padding-left': 5, 'color': '#000000', 'font-size': 18}
+                            style={'padding-left': 5, 'color': '#ffffff', 'font-size': 18}
                         ),
                         dbc.NavLink(
                             "Macro Market", 
                             id='macro-page',
                             href='/macro', 
-                            style={'padding-left': 5, 'color': '#000000', 'font-size': 18}
+                            style={'padding-left': 5, 'color': '#ffffff', 'font-size': 18}
                         ),
                         dbc.NavLink(
                             "Wallet Tracker", 
                             id='wallet-page',
                             href='/wallet', 
-                            style={'padding-left': 5, 'color': '#000000', 'font-size': 18}
+                            style={'padding-left': 5, 'color': '#ffffff', 'font-size': 18}
                         )
                     ],
                     vertical=True,
@@ -90,7 +80,7 @@ def generate_layout():
             ),
         ],
         id="sidebar",
-        style={'background-color': '#c0c0c0'},
+        #style={'background-color': '#c0c0c0'},
     )
 
 layout = generate_layout()

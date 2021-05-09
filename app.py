@@ -7,6 +7,9 @@ from auth import auth_conf
 
 server = Flask(__name__)
 
+
+
+
 app = dash.Dash(
     __name__,
     server=server,
@@ -14,6 +17,7 @@ app = dash.Dash(
     external_stylesheets=[dbc.themes.BOOTSTRAP]
 )
 
+app.css.config.serve_locally = True
 app.title = 'GEMS Alliance: Performance'
 app.server.secret_key = auth_conf['flask']['SECRET_KEY']
 

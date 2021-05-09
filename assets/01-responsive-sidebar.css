@@ -1,7 +1,7 @@
 #sidebar {
   text-align: center;
   padding: 1rem 1rem;
-  background-color: #f8f9fa;
+  background-color: #000000;
 }
 
 #sidebar h2 {
@@ -17,13 +17,13 @@
   margin-top: 1rem;
 }
 
-@media (min-width: 48em) {
+@media (min-width: 42em) {
   #sidebar {
     position: fixed;
     top: 0;
     left: 0;
     bottom: 0;
-    width: 12.5rem;
+    width: 11rem;
     text-align: left;
   }
 
@@ -49,8 +49,8 @@
 }
 
 .nav-link.active {
-  background-color: #484848 !important;
-  color: #fff !important;
+  background-color: #212124 !important;
+  color: #ffffff !important;
 }
 
 #page-content {
@@ -62,14 +62,14 @@
   margin-top: 0.5rem;
 }
 
-@media (min-width: 48em) {
+@media (min-width: 42em) {
   /* set margins of the main content so that it doesn't overlap the sidebar */
   #page-content {
-    margin-left: 10.5rem;
+    margin-left: 9rem;
     margin-right: 0rem;
   }
   #header {
-    margin-left: 10.5rem;
+    margin-left: 9rem;
     margin-right: 0rem;
   }
 }
@@ -93,3 +93,15 @@ td.CalendarDay__selected_end {
     background-color: #808080;
 }
 
+
+/* Custom font */
+@font-face {
+font-family: Supermolot;
+src: url('fonts/TTSupermolotCondensed-Regular.ttf') format('truetype');
+}
+
+h1, h2, h3, h5, a, p{
+font-family: Supermolot, sans-serif;
+}
+
+*/
