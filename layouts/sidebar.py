@@ -7,7 +7,7 @@ from colours import sidebar_grey
 
 # path to this file location
 script_dir = os.path.dirname(__file__)
-
+from colours import base_colours
 
 sidebar_header = dbc.Row(
     [
@@ -77,6 +77,46 @@ def generate_layout():
                     pills=True,
                 ),
                 id="collapse",
+            ),
+            dbc.Row([dbc.Col([html.Hr()])]),
+            dbc.Row(
+                [
+                    dbc.Col([
+                        html.A(
+                            dbc.Button(
+                                'GEMS API',
+                                id='api-button',
+                                size='sm',
+                                className="mr-1",
+                                style={'margin': 10, 'background-color': base_colours['tf_accent2'], 'color': base_colours['black']},
+                                block=True,
+                            ),
+                            href='https://tokenfeeds.info/api/v1/gems/all',
+                        ),
+                        html.A(
+                            dbc.Button(
+                                'Portfolio Tracker',
+                                id='sheets-button',
+                                size='sm',
+                                className="mr-1",
+                                style={'margin': 10, 'background-color': base_colours['tf_accent3'], 'color': base_colours['black']},
+                                block=True,
+                            ),
+                            href='https://docs.google.com/spreadsheets/d/1wxgm4sU_MAJloRxBLU2_cQTaPIMbesmKhxfLoF9bEI0/edit?usp=sharing',
+                        ),
+                        ], xl=12),
+                ],
+                style={'padding-right': '1rem'},
+                align='end',
+            ),
+            dbc.Row(
+                [
+                    dbc.Col([
+                        html.Hr(),
+                        html.P('version 0.0.2', style={'font-size': 11, 'font-style': 'italic', 'color': base_colours['cg_cell']}),
+                    ], xl=12),
+                ],
+                style={'text-align': 'center'},
             ),
         ],
         id="sidebar",

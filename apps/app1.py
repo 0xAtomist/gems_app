@@ -2,16 +2,19 @@ import os, sys
 from datetime import datetime
 import json
 
+from dash.dependencies import Input, Output, State
 import dash_core_components as dcc
 import dash_html_components as html
 import dash_bootstrap_components as dbc
 import dash_table
-import pandas as pd
 import dash_table.FormatTemplate as FormatTemplate
 from dash_table.Format import Format, Scheme, Sign, Symbol, Group
-import plotly.graph_objs as go
-from collections import OrderedDict
 from dash.dependencies import Input, Output, State
+import plotly.graph_objs as go
+import plotly.express as px
+
+import pandas as pd
+from collections import OrderedDict
 
 from app import app, cache
 from colours import *
@@ -20,8 +23,8 @@ from data_functions import get_gem_info, get_gem_list, get_data_recent, get_exte
 master = get_gem_info()
 
 health_dict = {
-	'gainer': green,
-	'loser': red,
+    'gainer': green,
+    'loser': red,
 }
 
 yellow = '#f4a522'
@@ -50,21 +53,21 @@ def check_readings(gem, change):
 
 	if change == '1h':
 		if dff['price_change_percentage_1h_in_currency'] > 0:
-			health = 'gainer'
+			health = 'Gainer'
 		else:
-			health = 'loser'
+			health = 'Loser'
 
 	if change == '24h':
 		if dff['price_change_percentage_24h_in_currency'] > 0:
-			health = 'gainer'
+			health = 'Gainer'
 		else:
-			health = 'loser'
+			health = 'Loser'
 
 	if change == '7d':
 		if dff['price_change_percentage_7d_in_currency'] > 0:
-			health = 'gainer'
+			health = 'Gainer'
 		else:
-			health = 'loser'
+			health = 'Loser'
 
 	return health
 
@@ -97,94 +100,69 @@ def get_gem_options():
 
 
 def generate_bar_chart(df, variable, color):
+    blank_df = pd.DataFrame({'symbol': ['No GEMS found'], variable: [0]})
+
     if not df.empty:
         df = df.sort_values(by=[variable])
-        data = [
-            go.Bar(
-                x=df['symbol'],
-                y=df[variable],
-                marker={'color': color},
-                hoverinfo='x+y',
-                #textinfo='percent',
-            ),
-        ]
-
+        fig = px.bar(df, x='symbol', y=variable)
     else: 
-        data = [
-            go.Bar(
-                x=[0,0,0],
-                y=[0,0,0],
-                marker={'color': grey},
-                text=['No Gems Found', 'No Gems Found', 'No Gems Found'],
-            )
-        ]
+        fig = px.bar(blank_df, x='symbol', y=variable)
 
-    figure={
-        'data': data,
-        'layout':
-            go.Layout(
-                #title='Gem 24h Overview',
-                margin={'l': 40, 'r': 20, 't': 10, 'b': 50},
-                #legend={'font': {'size': 10}, 'orientation': 'h'},
-                #autosize=True,
-                xaxis=dict(tickangle=45),
-                height=300,
-                #width='auto',
-                showlegend=False,
-            ),
-    }
+    fig.update_layout(
+        plot_bgcolor=base_colours['card'],
+        paper_bgcolor=base_colours['card'],
+        margin={'l': 0, 'r': 0, 't': 0, 'b': 0},
+        xaxis=dict(tickangle=45, title=dict(text='')),
+        yaxis=dict(gridcolor=base_colours['sidebar'], title=dict(text='')),
+        height=300,
+        showlegend=False,
+        font={'color': base_colours['primary_text']},
+    )
 
-    return figure
+    fig.update_traces(marker_color=color, marker=dict(line=dict(color=base_colours['black'])))
+    fig.update_xaxes(zerolinecolor=base_colours['sidebar'])
+    fig.update_yaxes(zerolinecolor=base_colours['sidebar'])
+
+    return fig
 
 def generate_pie_chart(gem_list, change):
-	health_list = []
-	for gem in gem_list:
-		health = check_readings(gem, change)
-		health_list.append(health)
+    health_list = []
+    for gem in gem_list:
+        health = check_readings(gem, change)
+        health_list.append(health)
 
-	n_gainer = health_list.count('gainer')
-	n_loser = health_list.count('loser')
+    n_gainer = health_list.count('Gainer')
+    n_loser = health_list.count('Loser')
+    count_list = [1] * len(health_list)
+    df = pd.DataFrame({'status': health_list, 'count': count_list})
+    blank_df = pd.DataFrame({'status': ['No GEMS found'], 'count': [1]})
 
-	if gem_list:
-		data = [
-			go.Pie(
-				values=[n_gainer, n_loser],
-				#labels=['Gainers', 'Losers'],
-				hole=0.5,
-				marker={'colors': [green, red]},
-				text=['Gainers', 'Losers'],
-				hoverinfo='text+value+percent',
-				textinfo='percent',
-			),
-		]
-	else: 
-		data = [
-			go.Pie(
-				values=[100],
-				labels=['No Gems Found'],
-				hole=0.5,
-				marker={'colors': ['#d0d0d0']},
-				text=['No Gems Found'],
-				hoverinfo='text',
-				textinfo='percent',
-			)
-		]
+    if gem_list:
+        fig = px.pie(df, values='count', names='status', hole=0.5, color='status',
+            color_discrete_map={
+                'Gainer': palette['green']['50'],
+                'Loser': palette['red']['50'],
+                'No GEMS found': base_colours['tf_accent'] 
+            })
+    else: 
+        fig = px.pie(blank_df, values='count', names='status', hole=0.5, color='status',
+            title=change,
+            color_discrete_map={
+                'Gainer': palette['green']['50'],
+                'Loser': palette['red']['50'],
+                'No GEMS found': base_colours['tf_accent']
+            })
 
-	figure={
-		'data': data,
-		'layout':
-			go.Layout(
-				title='Gem 24h Overview',
-				margin={'l': 15, 'r': 0, 't': 0, 'b': 15},
-				#legend={'font': {'size': 10}, 'orientation': 'h'},
-				#autosize=True,
-				height=200,
-				#width='auto',
-				showlegend=False,
-			),
-	}
+    fig.update_layout(
+        plot_bgcolor=base_colours['card'],
+        paper_bgcolor=base_colours['card'],
+        margin={'l': 0, 'r': 0, 't': 0, 'b': 15},
+        height=200,
+        showlegend=False,
+        #font={'color': base_colours['primary_text']}
+    )
 
-	return figure
+    return fig
 
 
 def generate_table_data(df):
@@ -302,7 +280,7 @@ layout = html.Div(
 													figure=generate_pie_chart(get_gem_list(master), '7d'),
 													config=graph_config
 												),
-												html.H2('7d', style={'textAlign': 'center'})
+                                                                                                html.H2('7d', style={'textAlign': 'center', 'margin-bottom': 0})
 											],
 											width=4,
 											style={'padding': 0},
@@ -313,7 +291,7 @@ layout = html.Div(
 								)
 							],
 							className="pretty_container",
-							style={'height': 'auto', 'min-height': 350},
+                                                        style={'height': 'auto', 'min-height': 320, 'padding-bottom': '10px'},
 						),
 					],
 					xl=8,
@@ -352,11 +330,11 @@ layout = html.Div(
 								options=get_options('Tier'),
 								multi=True,
 								value=[],
-								style={'width': 'calc(100%-40px)', 'margin-bottom': 10},
+								style={'width': 'calc(100%-40px)', 'margin-bottom': 0},
 							),
 						],
 						className="pretty_container",
-						style={'height': 'auto', 'min-height': 350}
+						style={'height': 'auto', 'min-height': 320}
 					),
 				xl=4,
 				style={'padding': 0}
@@ -372,19 +350,20 @@ layout = html.Div(
 							id="gems_table",
 							sort_action='native',
                                                         sort_by=[{'column_id': '24h_col', 'direction': 'desc'}],
-							#style_table={'height': '2000px', 'overflowY': 'visible'},
-							fixed_rows={'headers': True}, #'data': 0},
+                                                        style_table={'overflowY': 'auto', 'border': '{} {} {}'.format('1px', 'solid', base_colours['cg_border'])},
+							fixed_rows={'headers': True},
+                                                        #style_as_list_view=True,
 							columns=[
 								{"name": ["Name"], "id": "name", "type": "text"},
 								{"name": ["Ticker"], "id": "symbol", "type": "text"},
 								{"name": ["Price"], "id": "current_price", "type": "numeric",
 									"format": FormatTemplate.money(3)},
 								{"name": ["1h"], "id": "1h_col", "type": "numeric",
-									"format": FormatTemplate.percentage(2)},
+									"format": FormatTemplate.percentage(1)},
 								{"name": ["24h"], "id": "24h_col", "type": "numeric",
-									"format": FormatTemplate.percentage(2)},
+									"format": FormatTemplate.percentage(1)},
 								{"name": ["7d"], "id": "7d_col", "type": "numeric",
-									"format": FormatTemplate.percentage(2)},
+									"format": FormatTemplate.percentage(1)},
 								#{"name": ["Sparkline"], "id": "sparkline_col", "type": "numeric"},
 								{"name": ["Market Cap"], "id": "market_cap", "type": "numeric",
 									"format": Format(
@@ -408,7 +387,7 @@ layout = html.Div(
 										symbol_prefix='$'
 									)
 								},
-								{"name": ["Market Cap/ FDV Ratio"], "id": "mc_fdv_ratio", "type": "numeric",
+								{"name": ["Market Cap / FDV Ratio"], "id": "mc_fdv_ratio", "type": "numeric",
 									"format": FormatTemplate.percentage(2)},
 								{"name": ["Volume"], "id": "total_volume", "type": "numeric",
 									"format": FormatTemplate.money(0)},
@@ -427,73 +406,103 @@ layout = html.Div(
 							data=generate_table_data(get_filtered_df(get_gem_list(master))),
 							style_header={
 								'text-align': 'right',
-								'background-color': 'rgb(230, 230, 230)',
-                                                                #'font-size': '14',
+								'background-color': base_colours['background'],
+                                                                'color': base_colours['text'],
+                                                                'font-size': 14,
 								'font-weight': 'bold',
 								'whiteSpace': 'normal',
 								'height': 'auto',
-								#'border': '1px solid lightgrey',
+                                                                'font-family': 'Supermolot',
 							},
+                                                        style_header_conditional=[
+                                                                {'if': {'column_id': 'name'}, 'textAlign': 'left'},
+                                                                {'if': {'column_id': 'symbol'}, 'textAlign': 'left'},
+                                                        ],
 							style_data_conditional=[
-								{'if': {'row_index': 'odd'},
-								 'backgroundColor': 'rgb(248, 248, 248)',
-								 'color': '#000000'},
-								{'if': {'row_index': 'even'},
-								 'backgroundColor': '#ffffff',
-								 'color': '#000000'},
+								#{'if': {'row_index': 'odd'},
+								# 'backgroundColor': base_colours['card'],
+								# 'color': base_colours['text']},
+								#{'if': {'row_index': 'even'},
+								# 'backgroundColor': base_colours['alt_row'],
+								# 'color': base_colours['text']},
+								{'if': {'column_id': 'name'}, 'color': base_colours['text']},
 								{'if': 
 									{
 										'filter_query': '{1h_col} > 0',
 										'column_id': '1h_col'
 									},
-									'color': 'green'
+									'color': palette['green']['50']
 								},
 								{'if': 
 									{
 										'filter_query': '{24h_col} > 0',
 										'column_id': '24h_col'
 									},
-									'color': 'green'
+									'color': palette['green']['50']
+ 
 								},
 								{'if': 
 									{
 										'filter_query': '{7d_col} > 0',
 										'column_id': '7d_col'
 									},
-									'color': 'green'
+									'color': palette['green']['50']
 								},
 								{'if': 
 									{
 										'filter_query': '{1h_col} < 0',
 										'column_id': '1h_col'
 									},
-									'color': 'red'
+									'color': palette['red']['50']
 								},
 								{'if': 
 									{
 										'filter_query': '{24h_col} < 0',
 										'column_id': '24h_col'
 									},
-									'color': 'red'
+									'color': palette['red']['50']
 								},
 								{'if': 
 									{
 										'filter_query': '{7d_col} < 0',
 										'column_id': '7d_col'
 									},
-									'color': 'red'
-								}
+									'color': palette['red']['50']
+								},
+                                                                {'if': {'state': 'active'},
+                                                                        'backgroundColor': '#1f9990',
+                                                                        'border': '1px solid #30d5c8',
+                                                                        'color': '#ffffff',
+                                                                },
 							],
-							style_cell={"font-family": "sans-serif", "font-size": 12}, #, 'border': '1px solid lightgrey'},
+							style_cell={
+                                                                'background-color': base_colours['cg_bg'],
+                                                                'color': base_colours['cg_cell'],
+                                                                'font-family': "sans-serif", 
+                                                                'font-size': 13,
+                                                                'border': '{} {} {}'.format('1px', 'solid', base_colours['cg_border']),
+								'height': 'auto',
+                                                                'whiteSpace': 'normal',
+                                                                'padding': '10px',
+                                                        },
 							style_cell_conditional=[
-                                                                {'if': {'column_id': 'name'}, 'textAlign': 'left', 'fontWeight': 'bold', 'max-width': '120px'},
-                                                                {'if': {'column_id': 'symbol'}, 'textAlign': 'left', 'fontWeight': 'bold'},
-								{'if': {'column_id': 'mc_fdv_ratio'}, 'min-width': '80px'},
+                                                                {'if': {'column_id': 'name'},
+                                                                    'min-width': '80px',
+                                                                    'max-width': '140px',
+                                                                    'textAlign': 'left',
+                                                                    'fontSize': 14,
+                                                                    'fontWeight': 'bold',
+                                                                    'font-family': 'Supermolot'},
+                                                                {'if': {'column_id': 'symbol'},
+                                                                    'textAlign': 'left',
+                                                                    'fontSize': 14,
+                                                                    'font-family': 'Supermolot'},
+								{'if': {'column_id': 'mc_fdv_ratio'}, 'min-width': '100px'},
 								{'if': {'column_id': '20x'}, 'min-width': '60px'},
 								{'if': {'column_id': '50x'}, 'min-width': '60px'},
-								{'if': {'column_id': 'gem_usd_x'}, 'min-width': '60px'},
-								{'if': {'column_id': 'gem_btc_x'}, 'min-width': '60px'},
-								{'if': {'column_id': 'last_updated'}, 'width': '70px'},
+								{'if': {'column_id': 'gem_usd_x'}, 'min-width': '90px'},
+								{'if': {'column_id': 'gem_btc_x'}, 'min-width': '90px'},
+								{'if': {'column_id': 'last_updated'}, 'min-width': '70px'},
 							],
 						)
 					],
@@ -520,7 +529,7 @@ layout = html.Div(
 						className="pretty_container",
 						style={'height': 'auto'}
 					),
-				width=6,
+				xl=6,
 				style={'padding': 0}
 				),
 				dbc.Col(
@@ -537,7 +546,7 @@ layout = html.Div(
 						className="pretty_container",
 						style={'height': 'auto'}
 					),
-				width=6,
+				xl=6,
 				style={'padding': 0}
 				),
 			]
@@ -558,7 +567,7 @@ layout = html.Div(
 						className="pretty_container",
 						style={'height': 'auto'}
 					),
-				width=6,
+				xl=6,
 				style={'padding': 0}
 				),
 				dbc.Col(
@@ -575,7 +584,7 @@ layout = html.Div(
 						className="pretty_container",
 						style={'height': 'auto'}
 					),
-				width=6,
+				xl=6,
 				style={'padding': 0}
 				),
 			]
@@ -596,7 +605,7 @@ layout = html.Div(
 						className="pretty_container",
 						style={'height': 'auto'}
 					),
-				width=6,
+				xl=6,
 				style={'padding': 0}
 				),
 				dbc.Col(
@@ -613,7 +622,7 @@ layout = html.Div(
 						className="pretty_container",
 						style={'height': 'auto'}
 					),
-				width=6,
+				xl=6,
 				style={'padding': 0}
 				),
 			]
