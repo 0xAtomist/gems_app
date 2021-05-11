@@ -9,6 +9,7 @@ from apps import app1
 from layouts import header, sidebar
 
 from data_functions import get_gem_list, get_gem_info, get_filtered_df
+from colours import palette, base_colours
 
 master = get_gem_info()
 
@@ -32,9 +33,10 @@ def render_page_content(pathname):
         return app1.layout
     else:
         return dbc.Jumbotron([
-	    html.H1("404: Not found", className="text-danger"),
+            html.H1("404: Not found", style={'color': palette['red']['50']}),
             html.Hr(),
-            html.P(f"The pathname {pathname} was not recognised...")])
+            html.P(f"The pathname {pathname} was not recognised...")],
+            className='pretty_container')
 
                 
 # this callback uses the current pathname to set the active state of the

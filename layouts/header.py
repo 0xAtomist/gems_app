@@ -9,6 +9,7 @@ from collections import OrderedDict
 
 from app import app
 from data_functions import get_gem_info, get_gem_list, get_data_recent, get_slider
+from colours import base_colours
 
 # Get location info
 master = get_gem_info()
@@ -31,7 +32,7 @@ def generate_layout():
 							style={
 								'height': 'auto',
 								'max-width': '100%',
-								'width': 100,
+								'width': 80,
 								'margin-left': 25,
 							},
 							className='hidden-logo-sm',
@@ -67,39 +68,12 @@ def generate_layout():
                                                                                             id='coda-button',
                                                                                             className="mr-1 btn pull-right",
                                                                                             size='lg',
-                                                                                            color="info",
-                                                                                            style={'margin': 10}
+                                                                                            style={'margin': 10, 'background-color': base_colours['tf_accent'], 'color': base_colours['black']},
                                                                                     ),
                                             href='https://coda.io/d/GEMS_dl7TPWND5QI/Start-here_suoQr#_lu7DY',
                                                                             ),
                                                                         ], align='right')
                                                                     ]),
-                                                                    dbc.Row([
-                                                                        dbc.Col([
-                                                                            html.A(
-                                                                                    dbc.Button(
-                                                                                            'GEMS API',
-                                                                                            id='api-button',
-                                                                                            size='sm',
-                                                                                            className="mr-1",
-                                                                                            color="secondary",
-                                                                                            style={'margin': 10},
-                                                                                    ),
-                                            href='https://tokenfeeds.info/api/v1/gems/all',
-                                                                            ),
-                                                                            html.A(
-                                                                                    dbc.Button(
-                                                                                        'Google Sheets Portfolio',
-                                                                                            id='sheets-button',
-                                                                                            size='sm',
-                                                                                            className="mr-1",
-                                                                                            color="success",
-                                                                                            style={'margin': 10},
-                                                                                    ),
-                                            href='https://docs.google.com/spreadsheets/d/1wxgm4sU_MAJloRxBLU2_cQTaPIMbesmKhxfLoF9bEI0/edit?usp=sharing',
-                                                                            )
-                                                                        ], align='right')
-                                                                    ])
 								],
 								style={'text-align': 'right', 'margin-right': 10},
 							),

@@ -1,3 +1,6 @@
-table {
+.dash-spreadsheet-container table {
+  --accent: #30d5c8 !important;
+  --selected-background: #1f9990 !important;
+  --selected-color: #ffffff !important;
   width: 100%;
 }
