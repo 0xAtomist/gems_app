@@ -1,7 +1,7 @@
 #sidebar {
   text-align: center;
   padding: 1rem 1rem;
-  background-color: #000000;
+  background-color: #272727;
 }
 
 #sidebar h2 {
@@ -49,8 +49,8 @@
 }
 
 .nav-link.active {
-  background-color: #212124 !important;
-  color: #ffffff !important;
+  background-color: #30D5C8 !important;
+  color: #121212 !important;
 }
 
 #page-content {
@@ -102,6 +102,20 @@ src: url('fonts/TTSupermolotCondensed-Regular.ttf') format('truetype');
 
 h1, h2, h3, h5, a, p{
 font-family: Supermolot, sans-serif;
+color: #ffffff;
 }
 
-*/
+.dash-spreadsheet-container table {
+  --accent: #30d5c8 !important;
+  --selected-background: #1f9990 !important;
+  --selected-color: #ffffff !important;
+  width: 100%;
+}
+
+.scrollable-element {
+  scrollbar-color: dark;
+}
+
+hr {
+  border-top: 1px solid #363636;
+}

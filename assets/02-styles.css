@@ -5,8 +5,13 @@
 
 /*background-color: #f2f2f2; */
 
+*{
+ margin: 0;
+ padding: 0;
+}
+
 body {
-  background-color: #e8e8e8;
+  background-color: #121212;
   margin-left: 4%;
   margin-right: 3%;
   margin-top: 2%;
@@ -24,11 +29,11 @@ body {
 
 .pretty_container {
   border-radius: 5px;
-  background-color: #fff;
+  background-color: #363636;
   margin: 10px;
   padding: 15px;
   position: relative;
-  box-shadow: 2px 2px 2px lightgrey;
+  box-shadow: #121212;
 }
 
 .bare_container {
@@ -116,7 +121,7 @@ body {
 
 .mini_container {
   border-radius: 5px;
-  background-color: #f9f9f9;
+  background-color: #363636;
   margin: 10px;
   padding: 15px;
   position: relative;
@@ -168,4 +173,68 @@ body {
   transform: translate(30px, 349px);
 }
 
+
+/*#gem_filter .dash-dropdown {
+  background-color: #30D5C8;
+  color: #ffffff;
+  border: #121212;
+}
+*/
+
+.dash-dropdown {
+  background-color: #272727;
+  color: #30d5c8;
+  border: 0px solid #121212;
+  font-family: Supermolot;
+}
+
+#gem_filter .Select-control, #market_filter .Select-control, #sector_filter .Select-control, #tier_filter .Select-control {
+  background-color: #272727;
+  color: #ffffff;
+  font-size: 13;
+  border: 1px solid #30d5c8;
+}
+
+#gem_filter .Select-placeholder, #market_filter .Select-placeholder, #sector_filter .Select-placeholder, #tier_filter .Select-placeholder {
+  background-color: #272727;
+  color: #30d5c8;
+  font-size: 13;
+  border: 1px solid #30d5c8;
+  font-family: Supermolot;
+}
+
+#gem_filter .Select--multi .Select-value, 
+#market_filter .Select--multi .Select-value, 
+#sector_filter .Select--multi .Select-value, 
+#tier_filter .Select--multi .Select-value {
+  color: #30d5c8;
+  font-size: 13;
+  border: 1px solid #30d5c8;
+  font-family: Supermolot;
+}
+
+/*
+#gem_filter .is-focused.is-open > .Select-control, 
+#market_filter .Select.is-focused, 
+#sector_filter .Select.is-focused, 
+#tier_filter .Select.is-focused {
+  border-color: 1px solid #30d5c8;
+}
+*/
+
+.VirtualizedSelectOption {
+  background-color: #272727;
+  color: #ffffff;
+}
+
+.VirtualizedSelectFocusedOption {
+  background-color: #30d5c8;
+  color: #000000;
+}
+
+/*
+.dash-table-container .dash-spreadsheet-container .dash-spreadsheet-inner table {
+  --hover: #30d5c8
+}
+*/
 
