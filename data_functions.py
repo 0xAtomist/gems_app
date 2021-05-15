@@ -31,7 +31,7 @@ script_dir = os.path.dirname(__file__)
 #@cache.memoize(timeout=20)
 def get_gem_list(master):  # get list of site IDs publishing data
     gem_list = list(master["gems"].keys())
-    if 'ellipsis' in gem_list: gem_list.remove('ellipsis')
+    gem_list.remove('maple')
     return gem_list
 
 #@cache.memoize(timeout=0)
@@ -94,17 +94,17 @@ def get_btc_daily():
 
 @cache.memoize(timeout=20)
 def get_data_recent(gem):  # get most recent reading for site input
-	r = redis.StrictRedis('localhost', charset='utf-8', decode_responses=True)
-	output = r.hgetall(gem)
+    r = redis.StrictRedis('localhost', charset='utf-8', decode_responses=True)
+    output = r.hgetall(gem)
 
-	df = pd.DataFrame.from_dict(output, orient='index').T
-	cols = df.columns.drop(['symbol', 'ath_date', 'name', 'last_updated', 'atl_date', 'image'])
-	df[cols] = df[cols].apply(pd.to_numeric, errors='coerce')
+    df = pd.DataFrame.from_dict(output, orient='index').T
+    cols = df.columns.drop(['symbol', 'ath_date', 'name', 'last_updated', 'atl_date', 'image'])
+    df[cols] = df[cols].apply(pd.to_numeric, errors='coerce')
 
-	#print(df['current_price'][0])
-	#print(df.loc[0]['symbol'], df.loc[0]['last_updated'])
+    #print(df['current_price'][0])
+    #print(df.loc[0]['symbol'], df.loc[0]['last_updated'])
 
-	return df.loc[0]
+    return df.loc[0]
 
 
 @cache.memoize(timeout=20)

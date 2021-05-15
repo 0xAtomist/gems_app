@@ -320,6 +320,16 @@
 				"Tweet Price": 5.36,
 				"Tier": 2,
 				"Chart": "https://dex.guru/token/0xaa99199d1e9644b588796f3215089878440d58e0-eth"
+			},
+			"maple": {
+				"symbol": "MPL",
+				"market": "Uniswap",
+				"sector": "DeFi",
+				"Notes": "Corporate credit market",
+				"Tweet Date": "2021-05-13",
+				"Tweet Price": 19.82,
+				"Tier": 1,
+				"Chart": "https://www.dextools.io/app/uniswap/pair-explorer/0x7b28470032da06051f2e620531adbaeadb285408"
 			}
 		}
 }

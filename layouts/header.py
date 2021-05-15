@@ -48,7 +48,7 @@ def generate_layout():
 								style={'margin-bottom': 0, 'text-align': 'center'},
 							),
 							html.H5(
-								'GEMS Overview',
+								'Performance Overview',
 								style={'margin-top': 5, 'text-align': 'center'},
 								id='page-title',
 							)

@@ -44,7 +44,8 @@ graph_config = {
 		'hoverClosestCartesian','hoverCompareCartesian', 'toggleSpikelines', 'zoom2d', 
 		'sendDataToCloud', 'hoverClosestPie', 'toggleHover', 'resetViewMapbox'
 	],
-	'displaylogo': False
+	'displaylogo': False,
+        'displayModeBar': False,
 }
 
 
@@ -104,24 +105,35 @@ def generate_bar_chart(df, variable, color):
 
     if not df.empty:
         df = df.sort_values(by=[variable])
-        fig = px.bar(df, x='symbol', y=variable)
+        fig = px.bar(df, y=variable, x='symbol')
     else: 
-        fig = px.bar(blank_df, x='symbol', y=variable)
+        fig = px.bar(blank_df, y=variable, x='symbol')
 
+    fig.update_traces(marker_color=color, marker=dict(line=dict(color=base_colours['black'])))
+    fig.update_xaxes(zerolinecolor=base_colours['sidebar'], zerolinewidth=1)
+    fig.update_yaxes(zerolinecolor=base_colours['sidebar'], zerolinewidth=1)
+    
     fig.update_layout(
         plot_bgcolor=base_colours['card'],
         paper_bgcolor=base_colours['card'],
-        margin={'l': 0, 'r': 0, 't': 0, 'b': 0},
-        xaxis=dict(tickangle=45, title=dict(text='')),
-        yaxis=dict(gridcolor=base_colours['sidebar'], title=dict(text='')),
-        height=300,
+        margin={'l': 0, 'r': 10, 't': 0, 'b': 0, 'pad': 0},
+        xaxis=dict(
+            title=dict(text=''),
+            tickfont=dict(family='Supermolot', size=11, color=base_colours['secondary_text']),
+            tickangle=45,
+        ),
+        yaxis=dict(
+            gridcolor=base_colours['secondary_text'],
+            title=dict(text=''),
+            tickfont=dict(family='Supermolot', size=13, color=base_colours['secondary_text']),
+            ticksuffix='   ',
+        ),
         showlegend=False,
         font={'color': base_colours['primary_text']},
+        bargap=0.2,
+        height=350,
+        hoverlabel=dict(font=dict(family='Supermolot', color=base_colours['text'])),
     )
-
-    fig.update_traces(marker_color=color, marker=dict(line=dict(color=base_colours['black'])))
-    fig.update_xaxes(zerolinecolor=base_colours['sidebar'])
-    fig.update_yaxes(zerolinecolor=base_colours['sidebar'])
 
     return fig
 
@@ -156,10 +168,17 @@ def generate_pie_chart(gem_list, change):
     fig.update_layout(
         plot_bgcolor=base_colours['card'],
         paper_bgcolor=base_colours['card'],
-        margin={'l': 0, 'r': 0, 't': 0, 'b': 15},
+        margin={'l': 0, 'r': 0, 't': 10, 'b': 15},
         height=200,
         showlegend=False,
-        #font={'color': base_colours['primary_text']}
+        hoverlabel=dict(font=dict(family='Supermolot', color=base_colours['text'])),
+    )
+
+    fig.update_traces(
+        hoverinfo='label+value',
+        textinfo='percent',
+        marker=dict(line=dict(color=base_colours['tf_accent'], width=1.5)),
+        textfont=dict(family='Supermolot', color=base_colours['text'], size=13),
     )
 
     return fig
@@ -245,7 +264,7 @@ layout = html.Div(
 					[
 						html.Div(
 							[
-								html.P('Status Overview', style={'text-align': 'center'}),
+								html.P('Gainers and Losers', style={'text-align': 'center'}),
 								dbc.Row(
 									[
 										dbc.Col(
@@ -345,7 +364,12 @@ layout = html.Div(
 			dbc.Col(
 				html.Div(
 					[
-						html.P('Data Overview', style={'text-align': 'center'}),
+						html.P('Data Overview', id='table_tooltip', style={'text-align': 'center'}),
+                                                dbc.Tooltip(
+                                                    'Table can be sorted by column and filtered using the dropdowns',
+                                                    target='table_tooltip',
+                                                    style={'font-family': 'Supermolot'}
+                                                ),
 						dash_table.DataTable(
 							id="gems_table",
 							sort_action='native',
@@ -518,8 +542,8 @@ layout = html.Div(
 				dbc.Col(
 					html.Div(
 						[
-                                                        html.P('GEM/USD Multiple', id='gemusd_tooltip', style={'text-align': 'center', 'cursor': 'pointer'}), 
-                                                        dbc.Tooltip('From date of GEMS Alliance tweet', target='gemusd_tooltip'),
+                                                    html.P('GEM/USD Multiple', id='gemusd_tooltip', style={'text-align': 'center', 'cursor': 'pointer'}), 
+                                                        dbc.Tooltip('From date of GEMS Alliance tweet', target='gemusd_tooltip', style={'font-family': 'Supermolot'}),
 							dcc.Graph(
 								id="gemusd_bar",
 								figure=generate_bar_chart(get_filtered_df(get_gem_list(master)), 'gem_usd_x', dash_green),
@@ -536,7 +560,7 @@ layout = html.Div(
 					html.Div(
 						[
                                                         html.P('GEM/BTC Multiple', id='gembtc_tooltip', style={'text-align': 'center', 'cursor': 'pointer'}), 
-                                                        dbc.Tooltip('From date of GEMS Alliance tweet', target='gembtc_tooltip'),
+                                                        dbc.Tooltip('From date of GEMS Alliance tweet', target='gembtc_tooltip', style={'font-family': 'Supermolot'}),
 							dcc.Graph(
 								id="gembtc_bar",
 								figure=generate_bar_chart(get_filtered_df(get_gem_list(master)), 'gem_btc_x', yellow),
@@ -557,7 +581,7 @@ layout = html.Div(
 					html.Div(
 						[
                                                         html.P('ATH Retrace (%)', id='athretrace_tooltip', style={'text-align': 'center', 'cursor': 'pointer'}), 
-                                                        dbc.Tooltip('Retracement of the Current Price relative to the All Time High Price', target='athretrace_tooltip'),
+                                                        dbc.Tooltip('Retracement of the Current Price relative to the All Time High Price', target='athretrace_tooltip', style={'font-family': 'Supermolot'}),
 							dcc.Graph(
 								id="athretrace_bar",
 								figure=generate_bar_chart(get_filtered_df(get_gem_list(master)), 'ath_change_percentage', coral),
@@ -574,7 +598,7 @@ layout = html.Div(
 					html.Div(
 						[
                                                         html.P('Market Cap / FDV Ratio', id='mcfdv_tooltip', style={'text-align': 'center', 'cursor': 'pointer'}), 
-                                                        dbc.Tooltip('Market Cap / FDV Ratio shows the amount of circulating supply relative to the total supply', target='mcfdv_tooltip'),
+                                                        dbc.Tooltip('Market Cap / FDV Ratio shows the amount of circulating supply relative to the total supply', target='mcfdv_tooltip', style={'font-family': 'Supermolot'}),
 							dcc.Graph(
 								id="mcfdv_bar",
 								figure=generate_bar_chart(get_filtered_df(get_gem_list(master)), 'mc_fdv_ratio', teal),
@@ -595,7 +619,7 @@ layout = html.Div(
 					html.Div(
 						[
                                                         html.P('Market Cap (USD)', id='mc_tooltip', style={'text-align': 'center', 'cursor': 'pointer'}), 
-                                                        dbc.Tooltip('Market Cap = Current Price * Circulating Supply', target='mc_tooltip'),
+                                                        dbc.Tooltip('Market Cap = Current Price * Circulating Supply', target='mc_tooltip', style={'font-family': 'Supermolot'}),
 							dcc.Graph(
 								id="mc_bar",
 								figure=generate_bar_chart(get_filtered_df(get_gem_list(master)), 'market_cap', magenta),
@@ -612,7 +636,7 @@ layout = html.Div(
 					html.Div(
 						[
                                                         html.P('Fully Diluted Value (USD)', id='fdv_tooltip', style={'text-align': 'center', 'cursor': 'pointer'}), 
-                                                        dbc.Tooltip('Fully Diluted Value = Current Price * Total Supply', target='fdv_tooltip'),
+                                                        dbc.Tooltip('Fully Diluted Value = Current Price * Total Supply', target='fdv_tooltip', style={'font-family': 'Supermolot'}),
 							dcc.Graph(
 								id="fdv_bar",
 								figure=generate_bar_chart(get_filtered_df(get_gem_list(master)), 'fdv_tot', blue),
