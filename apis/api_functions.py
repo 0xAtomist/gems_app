@@ -19,8 +19,9 @@ script_dir = os.path.dirname(__file__)
 
 
 def get_gem_list(master):  # get list of site IDs publishing data
-	gem_list = list(master["gems"].keys())
-	return gem_list
+    gem_list = list(master["gems"].keys())
+    print(gem_list)
+    return gem_list
 
 
 def get_gem_info():  # load JSON storing client site information
@@ -28,6 +29,7 @@ def get_gem_info():  # load JSON storing client site information
     abs_path_pub = os.path.join(script_dir, rel_path_pub)
     with open(abs_path_pub, 'r') as f:
         master = json.load(f)
+    print(master['gems']['maple'])
     return master
 
 
@@ -40,31 +42,31 @@ def get_data_real(pub):  # get most recent reading for site input
 
 
 def get_api_markets():
-	cg = CoinGeckoAPI()
-	master = get_gem_info()
-	gem_list = get_gem_list(master)
+    cg = CoinGeckoAPI()
+    master = get_gem_info()
 
-	GEM_dict = dict.fromkeys(gem_list, [])
+    markets_list = get_gem_list(master)
+    extra_coins = ['bitcoin', 'ethereum', 'binancecoin']
+    for extra in extra_coins:
+        markets_list.append(extra)
 
-	markets_list = gem_list
-	markets_list.append('bitcoin')
+    gem_markets = cg.get_coins_markets(
+        ids=markets_list,
+        vs_currency='usd',
+        price_change_percentage='1h,24h,7d',
+        sparkline='true'
+    )
 
-	gem_markets = cg.get_coins_markets(
-		ids=markets_list,
-		vs_currency='usd',
-		price_change_percentage='1h,24h,7d',
-		sparkline='true'
-	)
+    df = pd.DataFrame(gem_markets)
 
-	df = pd.DataFrame(gem_markets)
 
-	df_gems = df.set_index('id')
-	# Finalise df
-	df_gems = df_gems.fillna(0)
-	df_gems['symbol'] = df_gems['symbol'].str.upper()
-	df = df_gems.drop('sparkline_in_7d', axis=1)
+    df = df.set_index('id')
+    # Finalise df
+    df = df.fillna(0)
+    df['symbol'] = df['symbol'].str.upper()
+    df = df.drop('sparkline_in_7d', axis=1)
 
-	return df
+    return df
 
 
 def get_btc_history():
