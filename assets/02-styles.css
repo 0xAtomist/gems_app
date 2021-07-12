@@ -1,0 +1,292 @@
+.js-plotly-plot .plotly .modebar {
+  padding-top: 5%;
+  margin-right: 3.5%;
+}
+
+/*background-color: #f2f2f2; */
+
+*{
+ margin: 0;
+ padding: 0;
+}
+
+body {
+  background-color: #121212;
+  margin-left: 4%;
+  margin-right: 3%;
+  margin-top: 2%;
+  margin-bottom: 3%;
+}
+
+.two.columns {
+  width: 16.25%;
+}
+
+.column,
+.columns {
+  margin-left: 0.5%;
+}
+
+.pretty_container {
+  border-radius: 5px;
+  background-color: #363636;
+  margin: 10px;
+  padding: 15px;
+  position: relative;
+  box-shadow: #121212;
+}
+
+.bare_container {
+  margin: 0 0 0 0;
+  padding: 0 0 0 0;
+}
+
+.dcc_control {
+  margin: 0;
+  padding: 5px;
+  width: calc(100%-40px);
+}
+
+.control_label {
+  margin: 0;
+  padding: 10px;
+  padding-bottom: 0px;
+  margin-bottom: 0px;
+  width: calc(100%-40px);
+}
+
+.rc-slider {
+  margin-left: 0px;
+  padding-left: 0px;
+}
+
+.rc-slider-track{
+  background-color: #808080;
+}
+
+.rc-slider-handle{
+  border: 2px solid #808080;
+}
+
+.rc-slider-handle:hover{
+  border: 2px solid #808080;
+}
+
+.rc-slider-dot-active{
+  border: 2px solid #808080;
+}
+
+.flex-display {
+  display: flex;
+}
+
+.container-display {
+  display: flex;
+}
+
+#individual_graph,
+#aggregate_graph {
+  width: calc(100% - 30px);
+  position: absolute;
+}
+
+#count_graph {
+  position: absolute;
+  height: calc(100% - 30px);
+  width: calc(100% - 30px);
+}
+
+#countGraphContainer {
+  flex: 5;
+  position: relative;
+}
+
+/*#header {
+  align-items: center;
+}*/
+
+#learn-more-button {
+  text-align: center;
+  height: 100%;
+  padding: 0 20px;
+  text-transform: none;
+  font-size: 15px;
+  float: right;
+  margin-right: 10px;
+  margin-top: 30px;
+}
+#title {
+  text-align: center;
+}
+
+.mini_container {
+  border-radius: 5px;
+  background-color: #363636;
+  margin: 10px;
+  padding: 15px;
+  position: relative;
+  box-shadow: 2px 2px 2px lightgrey;
+}
+
+#right-column {
+  display: flex;
+  flex-direction: column;
+}
+
+#wells {
+  flex: 1;
+}
+
+#gas {
+  flex: 1;
+}
+
+#aggregate_data {
+  align-items: center;
+}
+
+#oil {
+  flex: 1;
+}
+
+#water {
+  flex: 1;
+}
+
+#tripleContainer {
+  display: flex;
+  flex: 3;
+}
+
+#header {
+  display: flex;
+  flex-direction: column;
+}
+
+#mainContainer {
+  display: flex;
+  flex-direction: column;
+}
+
+#pie_graph > div > div > svg:nth-child(3) > g.infolayer > g.legend {
+  pointer-events: all;
+  transform: translate(30px, 349px);
+}
+
+
+/*#gem_filter .dash-dropdown {
+  background-color: #30D5C8;
+  color: #ffffff;
+  border: #121212;
+}
+*/
+
+.dash-dropdown {
+  background-color: #272727;
+  color: #30d5c8;
+  border: 0px solid #121212;
+  font-family: Supermolot;
+}
+
+#gem_filter .Select-menu-outer,
+#inspect_dropdown .Select-menu-outer,
+#market_filter .Select-menu-outer,
+#sector_filter .Select-menu-outer,
+#tier_filter .Select-menu-outer {
+  background-color: #272727;
+  border: 1px solid #30d5c8;
+}
+
+#gem_filter .Select-control,
+#inspect_dropdown .Select-control,
+#market_filter .Select-control,
+#sector_filter .Select-control,
+#tier_filter .Select-control {
+  background-color: #272727;
+  color: #ffffff;
+  font-size: 13;
+  border: 1px solid #30d5c8;
+}
+
+#gem_filter .Select-placeholder,
+#inspect_dropdown .Select-placeholder,
+#market_filter .Select-placeholder,
+#sector_filter .Select-placeholder,
+#tier_filter .Select-placeholder {
+  background-color: #272727;
+  color: #30d5c8;
+  font-size: 13;
+  border: 1px solid #30d5c8;
+  font-family: Supermolot;
+}
+
+#gem_filter .Select--multi .Select-value, 
+#inspect_dropdown .Select--multi .Select-value, 
+#market_filter .Select--multi .Select-value, 
+#sector_filter .Select--multi .Select-value, 
+#tier_filter .Select--multi .Select-value {
+  color: #30d5c8;
+  font-size: 13;
+  border: 1px solid #30d5c8;
+  font-family: Supermolot;
+}
+
+/*
+#gem_filter .is-focused.is-open > .Select-control, 
+#inspect_dropdown .is-focused.is-open > .Select-control, 
+#market_filter .Select.is-focused, 
+#sector_filter .Select.is-focused, 
+#tier_filter .Select.is-focused {
+  border-color: 1px solid #30d5c8;
+}
+*/
+
+.VirtualizedSelectOption {
+  background-color: #272727;
+  color: #30d5c8;
+}
+
+.dropdown-header {
+  background-color: #272727;
+  color: #30d5c8;
+  border-top: 0px solid #272727;
+}
+
+.dropdown-menu {
+  background-color: #272727;
+  color: #30d5c8;
+  border-top: 0px solid #272727;
+  border: 1px solid #30d5c8;
+}
+
+.dropdown-divider {
+  background-color: #272727;
+  color: #30d5c8;
+  border-top: 1px solid #363636;
+}
+
+.dropdown-item {
+  background-color: #272727;
+  color: #fff;
+}
+
+.dropdown-item:hover {
+  background-color: #30d5c8;
+  color: #121212;
+}
+
+.VirtualizedSelectFocusedOption {
+  background-color: #30d5c8;
+  color: #000000;
+}
+
+/*
+.dash-table-container .dash-spreadsheet-container .dash-spreadsheet-inner table {
+  --hover: #30d5c8
+}
+*/
+
+#inspect_dropdown input {
+  color: #30d5c8
+}
+
