@@ -20,7 +20,6 @@ script_dir = os.path.dirname(__file__)
 
 def get_gem_list(master):  # get list of site IDs publishing data
     gem_list = list(master["gems"].keys())
-    print(gem_list)
     return gem_list
 
 
@@ -29,16 +28,75 @@ def get_gem_info():  # load JSON storing client site information
     abs_path_pub = os.path.join(script_dir, rel_path_pub)
     with open(abs_path_pub, 'r') as f:
         master = json.load(f)
-    print(master['gems']['maple'])
     return master
 
 
-'''
-def get_data_month(pub, start_date, end_date):  # get data for date range inputs
+def get_api_inspections(gem):
+    cg = CoinGeckoAPI()
+
+    token_data = cg.get_coin_by_id(gem)
+
+    token_dict = {
+        'id': gem,
+        'categories': token_data['categories'],
+        'description': token_data['description']['en'],
+        'platforms': list(token_data['platforms'].keys()),
+        'contracts': list(token_data['platforms'].values()),
+        'website': token_data['links']['homepage'][0],
+        'explorer': token_data['links']['blockchain_site'][0],
+        'chat': token_data['links']['chat_url'],
+        'annoucement': token_data['links']['announcement_url'],
+        'twitter': 'https://twitter.com/{}'.format(token_data['links']['twitter_screen_name']),
+        'rank': token_data['market_cap_rank'],
+        'liq_score': token_data['liquidity_score'],
+        'comm_score': token_data['community_score'],
+        'tvl': token_data['market_data']['total_value_locked'],
+        'volume': token_data['market_data']['total_volume']['usd'],
+        'market_cap': token_data['market_data']['market_cap']['usd'],
+        '24h': token_data['market_data']['price_change_percentage_24h']/100,
+        '7d': token_data['market_data']['price_change_percentage_7d']/100,
+        '14d': token_data['market_data']['price_change_percentage_14d']/100,
+        '30d': token_data['market_data']['price_change_percentage_30d']/100,
+        '60d': token_data['market_data']['price_change_percentage_60d']/100,
+        '200d': token_data['market_data']['price_change_percentage_200d']/100,
+        '1y': token_data['market_data']['price_change_percentage_1y']/100
+    }
+    
+    df = pd.Series(token_dict)
+    
+    market_list = []
+
+    for i, market in enumerate(token_data['tickers']):
+        market_dict = {
+            'target': market['target'],
+            'name': market['market']['name'],
+            'price': market['converted_last']['usd'],
+            'volume': market['converted_volume']['usd'],
+            'volume_percent': market['converted_volume']['usd']/token_dict['volume'],
+            'trust': market['trust_score'],
+            'spread': market['bid_ask_spread_percentage'],
+            'last_traded': market['last_traded_at'],
+            'trade_url': market['trade_url'],
+        }
+        market_list.append(market_dict)
+        if i == 9:
+            break
+
+    dff = pd.DataFrame(market_list)
+
+    return df, dff
 
 
-def get_data_real(pub):  # get most recent reading for site input
-'''
+def get_chart_data(gem, period):
+    cg = CoinGeckoAPI()
+    chart_data = cg.get_coin_market_chart_by_id(gem, 'usd', period)
+    df_p = pd.DataFrame(chart_data['prices'], columns=['p_unix_time', 'Price'])
+    df_p['p-Datetime'] = pd.to_datetime(df_p['p_unix_time']/1000, unit='s')
+
+    df_m = pd.DataFrame(chart_data['market_caps'], columns=['m_unix_time', 'Market Cap'])
+    df_m['m-Datetime'] = pd.to_datetime(df_m['m_unix_time']/1000, unit='s')
+
+    return df_p, df_m
 
 
 def get_api_markets():

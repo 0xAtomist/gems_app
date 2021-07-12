@@ -5,7 +5,7 @@ from dash.dependencies import Input, Output
 #import logging
 
 from app import app, server
-from apps import app1
+from apps import app1, inspect_app
 from layouts import header, sidebar
 
 from data_functions import get_gem_list, get_gem_info, get_filtered_df
@@ -25,12 +25,14 @@ app.layout = serve_layout
 
 
 @app.callback(
-    Output("page-content", "children"),
-    [Input("url", "pathname")]
+    Output('page-content', 'children'),
+    [Input('url', 'pathname')]
 )
 def render_page_content(pathname):
-    if pathname in ["/", "/gems-overview"]:
+    if pathname in ['/', '/gems-overview']:
         return app1.layout
+    elif pathname == '/inspect-gem':
+        return inspect_app.layout
     else:
         return dbc.Jumbotron([
             html.H1("404: Not found", style={'color': palette['red']['50']}),
@@ -52,9 +54,9 @@ def toggle_active_links(pathname):
     else: return False
 
 
-@app.callback(Output(f"token-page", "active"), [Input("url", "pathname")])
+@app.callback(Output(f"inspect-page", "active"), [Input("url", "pathname")])
 def toggle_active_links(pathname):
-    if pathname == "/token-overview":
+    if pathname == "/inspect-gem":
         return True
     else: return False
 

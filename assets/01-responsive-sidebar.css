@@ -53,6 +53,13 @@
   color: #121212 !important;
 }
 
+
+#everything-gems .nav-link {
+  background-color: #30D5C8 !important;
+  color: #121212 !important;
+}
+
+
 #page-content {
   padding: 2rem 1rem;
 }
@@ -100,7 +107,7 @@ font-family: Supermolot;
 src: url('fonts/TTSupermolotCondensed-Regular.ttf') format('truetype');
 }
 
-h1, h2, h3, h5, a, p{
+h1, h2, h3, h4, h5, h6, a, p {
 font-family: Supermolot, sans-serif;
 color: #ffffff;
 }

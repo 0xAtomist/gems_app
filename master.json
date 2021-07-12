@@ -141,16 +141,6 @@
 				"Tier": 2,
 				"Chart": "https://chartex.pro/?symbol=UNISWAP%3AAPY.446611"
 			},
-			"basis-share": {
-				"symbol": "BAS",
-				"market": "Uniswap",
-				"sector": "DeFi",
-				"Notes": "Algorithmic stablecoin (can buy on BSC as well, soon)",
-				"Tweet Date": "2021-03-27",
-				"Tweet Price": 49.5,
-				"Tier": 2,
-				"Chart": "https://www.tradingview.com/chart?symbol=UNISWAP%3ABASV2DAI"
-			},
 			"onx-finance": {
 				"symbol": "ONX",
 				"market": "Uniswap",
@@ -321,7 +311,7 @@
 				"Tier": 2,
 				"Chart": "https://dex.guru/token/0xaa99199d1e9644b588796f3215089878440d58e0-eth"
 			},
-			"maple": {
+		"maple": {
 				"symbol": "MPL",
 				"market": "Uniswap",
 				"sector": "DeFi",

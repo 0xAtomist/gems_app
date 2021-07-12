@@ -1,25 +1,24 @@
 import os, sys
 import redis
 import pandas as pd
+#import pyarrow as pa
+
 import json
 import pickle
 
-from api_functions import get_gem_list, get_api_markets
+from api_functions import get_gem_info, get_gem_list, get_api_markets, get_api_inspections, get_chart_data
+
+
+# Get batch data
 
 df = get_api_markets()
 
 r = redis.StrictRedis('localhost', charset='utf-8', decode_responses=True)
 
 for key in df.index:
-#	print(key)
 	r_dict = df.loc[key].to_dict()
-#	print(r_dict)
 	r.hmset(key, r_dict)
 
-output = r.hgetall('mainframe')
-#decoded = {key.decode('utf-8'):value.decode('utf-8') for key, value in output.items()}
-print(output)
-df = pd.DataFrame.from_dict(output, orient='index')
-#print(df)
-
+#output = r.hgetall('mainframe')
+#df = pd.DataFrame.from_dict(output, orient='index')
 

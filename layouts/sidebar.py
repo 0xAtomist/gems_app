@@ -54,7 +54,7 @@ def generate_layout():
                                 ),
                                 dbc.NavLink(
                                     "Inspect GEM *",
-                                    id='inspect-gem',
+                                    id='inspect-page',
                                     href='/inspect-gem',
                                     style={'padding-left': 5, 'color': base_colours['card'], 'font-size': 18}
                                 ),
@@ -179,7 +179,7 @@ def update_btc(n_intervals):
     change_24h = get_data_recent('bitcoin')['price_change_percentage_24h_in_currency']
     if change_24h > 0:
         change_color = palette['green']['50']
-    else:
+    elif change_24h < 0:
         change_color = palette['red']['50']
 
     return [
@@ -201,7 +201,7 @@ def update_eth(n_intervals):
     change_24h = get_data_recent('ethereum')['price_change_percentage_24h_in_currency']
     if change_24h > 0:
         change_color = palette['green']['50']
-    else:
+    elif change_24h < 0:
         change_color = palette['red']['50']
 
     return [
@@ -223,7 +223,7 @@ def update_bnb(n_intervals):
     change_24h = get_data_recent('binancecoin')['price_change_percentage_24h_in_currency']
     if change_24h > 0:
         change_color = palette['green']['50']
-    else:
+    elif change_24h < 0:
         change_color = palette['red']['50']
 
     return [

@@ -188,14 +188,31 @@ body {
   font-family: Supermolot;
 }
 
-#gem_filter .Select-control, #market_filter .Select-control, #sector_filter .Select-control, #tier_filter .Select-control {
+#gem_filter .Select-menu-outer,
+#inspect_dropdown .Select-menu-outer,
+#market_filter .Select-menu-outer,
+#sector_filter .Select-menu-outer,
+#tier_filter .Select-menu-outer {
+  background-color: #272727;
+  border: 1px solid #30d5c8;
+}
+
+#gem_filter .Select-control,
+#inspect_dropdown .Select-control,
+#market_filter .Select-control,
+#sector_filter .Select-control,
+#tier_filter .Select-control {
   background-color: #272727;
   color: #ffffff;
   font-size: 13;
   border: 1px solid #30d5c8;
 }
 
-#gem_filter .Select-placeholder, #market_filter .Select-placeholder, #sector_filter .Select-placeholder, #tier_filter .Select-placeholder {
+#gem_filter .Select-placeholder,
+#inspect_dropdown .Select-placeholder,
+#market_filter .Select-placeholder,
+#sector_filter .Select-placeholder,
+#tier_filter .Select-placeholder {
   background-color: #272727;
   color: #30d5c8;
   font-size: 13;
@@ -204,6 +221,7 @@ body {
 }
 
 #gem_filter .Select--multi .Select-value, 
+#inspect_dropdown .Select--multi .Select-value, 
 #market_filter .Select--multi .Select-value, 
 #sector_filter .Select--multi .Select-value, 
 #tier_filter .Select--multi .Select-value {
@@ -215,6 +233,7 @@ body {
 
 /*
 #gem_filter .is-focused.is-open > .Select-control, 
+#inspect_dropdown .is-focused.is-open > .Select-control, 
 #market_filter .Select.is-focused, 
 #sector_filter .Select.is-focused, 
 #tier_filter .Select.is-focused {
@@ -224,7 +243,36 @@ body {
 
 .VirtualizedSelectOption {
   background-color: #272727;
-  color: #ffffff;
+  color: #30d5c8;
+}
+
+.dropdown-header {
+  background-color: #272727;
+  color: #30d5c8;
+  border-top: 0px solid #272727;
+}
+
+.dropdown-menu {
+  background-color: #272727;
+  color: #30d5c8;
+  border-top: 0px solid #272727;
+  border: 1px solid #30d5c8;
+}
+
+.dropdown-divider {
+  background-color: #272727;
+  color: #30d5c8;
+  border-top: 1px solid #363636;
+}
+
+.dropdown-item {
+  background-color: #272727;
+  color: #fff;
+}
+
+.dropdown-item:hover {
+  background-color: #30d5c8;
+  color: #121212;
 }
 
 .VirtualizedSelectFocusedOption {
@@ -237,4 +285,8 @@ body {
   --hover: #30d5c8
 }
 */
+
+#inspect_dropdown input {
+  color: #30d5c8
+}
 

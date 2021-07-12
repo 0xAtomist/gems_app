@@ -58,25 +58,49 @@ def generate_layout():
 					),
 					dbc.Col(
 						[
-							html.Div(
-								[
-                                                                    dbc.Row([
-                                                                        dbc.Col([
-                                                                            html.A(
-                                                                                    dbc.Button(
-                                                                                        'GEMS: Start here',
-                                                                                            id='coda-button',
-                                                                                            className="mr-1 btn pull-right",
-                                                                                            size='lg',
-                                                                                            style={'margin': 10, 'background-color': base_colours['tf_accent'], 'color': base_colours['black']},
-                                                                                    ),
-                                            href='https://coda.io/d/GEMS_dl7TPWND5QI/Start-here_suoQr#_lu7DY',
+                                                    dbc.Row(
+                                                        [
+                                                            dbc.Col(xl=1),
+                                                            dbc.Col(
+                                                                [
+                                                                    html.Div(
+                                                                        [
+                                                                            dbc.DropdownMenu(
+                                                                                id='everything-gems',
+                                                                                nav=True,
+                                                                                label='Everything GEMS ',
+                                                                                bs_size='lg',
+                                                                                right=True,
+                                                                                className='mb-3',
+                                                                                toggle_style={'border-radius': '4px', 'font-size': 18, 'text-align': 'right', 'max-width': 170},
+                                                                                children=[
+                                                                                    dbc.DropdownMenuItem('GEMS Docs (Coda)', header=True),
+                                                                                    dbc.DropdownMenuItem('Start here', href="https://coda.io/d/GEMS_dl7TPWND5QI/Start-here_suoQr#_lu7DY"),
+                                                                                    dbc.DropdownMenuItem('GEMS', href="https://coda.io/d/GEMS_dl7TPWND5QI/GEMS_sudWp#_lu1pF"),
+                                                                                    dbc.DropdownMenuItem('Upcoming GEMS', href="https://coda.io/d/GEMS_dl7TPWND5QI/Upcoming-GEMS_su3vn#_luLCV"),
+                                                                                    dbc.DropdownMenuItem('Performance', href="https://coda.io/d/GEMS_dl7TPWND5QI/PERFORMANCE_suYBG#_lu6pO"),
+                                                                                    dbc.DropdownMenuItem(divider=True),
+                                                                                    dbc.DropdownMenuItem('Twitter', header=True),
+                                                                                    dbc.DropdownMenuItem("@GEMSAlliance", href="https://twitter.com/GEMSAlliance"),
+                                                                                    dbc.DropdownMenuItem('GEM Listing Tweets', href="https://twitter.com/search?q=(%23holdtight)%20(from%3AtokensFA%2C%20OR%20from%3AGEMSAlliance)&src=typed_query&f=live"),
+                                                                                    dbc.DropdownMenuItem(divider=True),
+                                                                                    dbc.DropdownMenuItem('Telegram', header=True),
+                                                                                    dbc.DropdownMenuItem("GEMS Alliance", href='https://t.me/CryptoProjectsFA'),
+                                                                                    dbc.DropdownMenuItem("GEMS Alliance - TA", href='https://t.me/joinchat/qyUKWrv1M1phNTk0'),
+                                                                                    dbc.DropdownMenuItem("GEMS Alliance - OFFTOPIC", href='https://t.me/joinchat/42zS5ZoLxKZjMTU0'),
+                                                                                ],
                                                                             ),
-                                                                        ], align='right')
-                                                                    ]),
-								],
-								style={'text-align': 'right', 'margin-right': 10},
-							),
+                                                                        ],
+                                                                    ),
+                                                                ],
+                                                                xl=7,
+                                                                lg=9,
+                                                                md=11,
+                                                                align='center',
+                                                            ),
+                                                        ],
+                                                        justify='end',
+                                                    ),
 						],
 						sm=4,
 						style={'padding': 0},
@@ -144,7 +168,7 @@ def generate_layout():
 								html.P(id='active-gem', style={'margin-top': 3}),
 							],
 							className="pretty_container",
-							style={'padding': 0, 'padding-top': 10, 'padding-left': 5, 'min-height': 50, 'height': 'auto'},
+							style={'padding': 0, 'padding-top': 0, 'padding-left': 5, 'min-height': 0, 'height': 'auto'},
 						),
 						lg=6,
 						style={'padding': 0}
@@ -156,7 +180,7 @@ def generate_layout():
 								html.P(id='reading-time', style={'margin-top': 3}),
 							],
 							className="pretty_container",
-							style={'padding': 0, 'padding-top': 10, 'padding-left': 5, 'min-height': 50, 'height': 'auto'},
+							style={'padding': 0, 'padding-top': 0, 'padding-left': 5, 'min-height': 0, 'height': 'auto'},
 						),
 						lg=6,
 						style={'padding': 0},
@@ -173,3 +197,13 @@ def generate_layout():
 
 layout = generate_layout()
 
+
+@app.callback(Output('page-title', 'children'),
+    [Input('url', 'pathname')])
+def update_title(pathname):
+    if pathname in ["/", "/gems-overview"]:
+        return 'Performance Overview'
+    elif pathname == '/inspect-gem':
+        return 'Inspect GEM'
+    else:
+        return ''
