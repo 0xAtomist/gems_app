@@ -188,31 +188,46 @@ body {
   font-family: Supermolot;
 }
 
-#gem_filter .Select-menu-outer,
 #inspect_dropdown .Select-menu-outer,
+#gem_filter .Select-menu-outer,
 #market_filter .Select-menu-outer,
 #sector_filter .Select-menu-outer,
-#tier_filter .Select-menu-outer {
+#tier_filter .Select-menu-outer,
+#gem_filter2 .Select-menu-outer,
+#market_filter2 .Select-menu-outer,
+#sector_filter2 .Select-menu-outer,
+#tier_filter2 .Select-menu-outer {
   background-color: #272727;
   border: 1px solid #30d5c8;
 }
 
-#gem_filter .Select-control,
+
+
 #inspect_dropdown .Select-control,
+#gem_filter .Select-control,
 #market_filter .Select-control,
 #sector_filter .Select-control,
-#tier_filter .Select-control {
+#tier_filter .Select-control,
+#gem_filter2 .Select-control,
+#market_filter2 .Select-control,
+#sector_filter2 .Select-control,
+#tier_filter2 .Select-control {
   background-color: #272727;
   color: #ffffff;
   font-size: 13;
   border: 1px solid #30d5c8;
 }
 
-#gem_filter .Select-placeholder,
+
 #inspect_dropdown .Select-placeholder,
+#gem_filter .Select-placeholder,
 #market_filter .Select-placeholder,
 #sector_filter .Select-placeholder,
-#tier_filter .Select-placeholder {
+#tier_filter .Select-placeholder,
+#gem_filter2 .Select-placeholder,
+#market_filter2 .Select-placeholder,
+#sector_filter2 .Select-placeholder,
+#tier_filter2 .Select-placeholder {
   background-color: #272727;
   color: #30d5c8;
   font-size: 13;
@@ -220,26 +235,38 @@ body {
   font-family: Supermolot;
 }
 
-#gem_filter .Select--multi .Select-value, 
-#inspect_dropdown .Select--multi .Select-value, 
-#market_filter .Select--multi .Select-value, 
-#sector_filter .Select--multi .Select-value, 
-#tier_filter .Select--multi .Select-value {
+#gem_filter .Select--multi .Select-value,
+#market_filter .Select--multi .Select-value,
+#sector_filter .Select--multi .Select-value,
+#tier_filter .Select--multi .Select-value,
+#gem_filter2 .Select--multi .Select-value,
+#market_filter2 .Select--multi .Select-value,
+#sector_filter2 .Select--multi .Select-value,
+#tier_filter2 .Select--multi .Select-value {
   color: #30d5c8;
   font-size: 13;
   border: 1px solid #30d5c8;
   font-family: Supermolot;
 }
 
-/*
-#gem_filter .is-focused.is-open > .Select-control, 
-#inspect_dropdown .is-focused.is-open > .Select-control, 
-#market_filter .Select.is-focused, 
-#sector_filter .Select.is-focused, 
-#tier_filter .Select.is-focused {
+#inspect_dropdown .Select--single>.Select-control .Select-value, .Select-placeholder {
+  color: #30d5c8;
+  font-size: 13;
+  border: 1px solid #30d5c8;
+  font-family: Supermolot;
+}
+
+#inspect_dropdown .has-value.Select--single>.Select-control .Select-value .Select-value-label, .has-value.is-pseudo-focused.Select--single>.Select-control .Select-value .Select-value-label {
+  color: #30d5c8;
+}
+
+.is-open>.Select-control {
+  background-color: #272727;
+}
+
+.is-focused:not(.is-open)>.Select-control {
   border-color: 1px solid #30d5c8;
 }
-*/
 
 .VirtualizedSelectOption {
   background-color: #272727;
@@ -286,7 +313,79 @@ body {
 }
 */
 
-#inspect_dropdown input {
-  color: #30d5c8
+input {
+  background-color: #272727;
+  color: #30d5c8;
+  border: 0px solid #121212;
+  font-family: Supermolot;
 }
 
+.DateRangePickerInput__withBorder {
+    border-radius: 2px;
+    border: 1px solid #30d5c8;
+}
+
+.DateRangePickerInput {
+    border-radius: 2px;
+    background-color: #272727;
+    display: inline-block;
+}
+
+.DateInput_input {
+    border-radius: 2px;
+    border: 1px solid #30d5c8;
+    background: #272727;
+    color: #30d5c8;
+}
+
+.DateRangePickerInput_arrow_svg {
+    vertical-align: middle;
+    fill: #30d5c8;
+    height: 24px;
+    width: 24px;
+}
+
+.DayPicker {
+    background: #272727;
+    position: relative;
+    text-align: left;
+    color: #30d5c8;
+}
+
+.CalendarMonth {
+    background: #272727;
+    position: relative;
+    text-align: left;
+    color: #30d5c8;
+}
+
+.DayPickerNavigation_button__default {
+    border: 1px solid #30d5c8;
+    background-color: #272727;
+    color: #30d5c8;
+}
+
+.DayPickerNavigation_svg__horizontal {
+    height: 19px;
+    width: 19px;
+    fill: #30d5c8;
+    display: block;
+}
+
+.CalendarMonth_caption {
+    color: #fff;
+}
+
+.CalendarDay__default {
+    border: 1px solid #30d5c8;
+    color: #fff;
+    background: #272727;
+}
+
+.DateRangePicker_picker {
+  background-color: #272727;
+}
+
+.DateInput_fangShape {
+  fill: #272727;
+}

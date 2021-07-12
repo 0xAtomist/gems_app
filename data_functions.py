@@ -137,7 +137,20 @@ def get_api_inspections(gem):
 
 
 @cache.memoize(timeout=20)
-def get_chart_data(gem, period):
+def get_chart_range_data(gem, start_date, end_date):
+    r = redis.StrictRedis('localhost')
+    context = pa.default_serialization_context()
+    df = context.deserialize(r.get('{}-trending'.format(gem)))
+    
+    dff = df[(df['Datetime'] > start_date) & (df['Datetime'] < end_date)]
+    dff = dff.reset_index()
+    dff['relative_price'] = dff['price']/dff['price'].iloc[0]
+    dff['relative_cap'] = dff['market_caps']/dff['market_caps'].iloc[0]
+    return dff
+
+
+@cache.memoize(timeout=20)
+def get_period_chart_data(gem, period):
 	cg = CoinGeckoAPI()
 	chart_data = cg.get_coin_market_chart_by_id(gem, 'usd', period)
 	df_p = pd.DataFrame(chart_data['prices'], columns=['p_unix_time', 'Price'])
