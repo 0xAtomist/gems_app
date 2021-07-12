@@ -4,6 +4,7 @@ import dash_bootstrap_components as dbc
 from dash.dependencies import Input, Output
 #import logging
 
+
 from app import app, server
 from apps import app1, inspect_app
 from layouts import header, sidebar
@@ -14,6 +15,7 @@ from colours import palette, base_colours
 master = get_gem_info()
 
 content = html.Div(id="page-content", style={'padding-top': 5}) #, style=CONTENT_STYLE)
+
 
 def serve_layout():
 	return html.Div(
@@ -94,3 +96,4 @@ if __name__ == "__main__":
 	#app.logger.handlers = gunicorn_logger.handlers
 	#app.logger.setLevel(gunicorn_logger.level)
 	app.run_server(host='0.0.0.0', port=8000, debug=True)
+

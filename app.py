@@ -31,5 +31,3 @@ cache = Cache(server, config={
 })
 
 cache.clear()
-
-
