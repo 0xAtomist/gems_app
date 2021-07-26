@@ -24,6 +24,7 @@ def generate_layout():
 		[
 			dcc.Interval(id='live-interval', interval=1*60*1000, n_intervals=0),
 			dcc.Store(id='filter-store', storage_type='session'),
+			dcc.Store(id='filter-trend', storage_type='session'),
 			dbc.Row(
 				[
 					dbc.Col(
@@ -205,5 +206,7 @@ def update_title(pathname):
         return 'Performance Overview'
     elif pathname == '/inspect-gem':
         return 'Inspect GEM'
+    elif pathname == '/trends':
+        return 'Trending Data'
     else:
         return ''

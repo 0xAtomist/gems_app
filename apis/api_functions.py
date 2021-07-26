@@ -90,13 +90,12 @@ def get_api_inspections(gem):
 def get_chart_data(gem, period):
     cg = CoinGeckoAPI()
     chart_data = cg.get_coin_market_chart_by_id(gem, 'usd', period)
-    df_p = pd.DataFrame(chart_data['prices'], columns=['p_unix_time', 'Price'])
-    df_p['p-Datetime'] = pd.to_datetime(df_p['p_unix_time']/1000, unit='s')
-
-    df_m = pd.DataFrame(chart_data['market_caps'], columns=['m_unix_time', 'Market Cap'])
-    df_m['m-Datetime'] = pd.to_datetime(df_m['m_unix_time']/1000, unit='s')
-
-    return df_p, df_m
+    df_p = pd.DataFrame(chart_data['prices'], columns=['unix_time', 'price'])
+    df_p['Datetime'] = pd.to_datetime(df_p['unix_time']/1000, unit='s')
+    df_m = pd.DataFrame(chart_data['market_caps'], columns=['unix_time', 'market_caps'])
+    df_m['Datetime'] = pd.to_datetime(df_m['unix_time']/1000, unit='s')
+    df_p['market_caps'] = df_m['market_caps']
+    return df_p
 
 
 def get_api_markets():

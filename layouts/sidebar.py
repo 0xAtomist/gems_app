@@ -14,11 +14,13 @@ from colours import palette, base_colours
 sidebar_header = dbc.Row(
     [
         dbc.Col(
-            html.Img(
-                src='assets/Color logo - no background.png',
-                style={'max-width': '100%', 'width': 200, 'margin': 0, 'height': 'auto'}, 
-                className='hidden-logo-md'
-            ),
+            html.A([
+                html.Img(
+                    src='assets/Color logo - no background.png',
+                    style={'max-width': '100%', 'width': 200, 'margin': 0, 'height': 'auto'}, 
+                    className='hidden-logo-md'
+                )
+            ], href='https://tokenfeeds.info'),
             width=12,
             style={'padding-right': '5px', 'padding-left': '5px'}
         )
@@ -59,10 +61,10 @@ def generate_layout():
                                     style={'padding-left': 5, 'color': base_colours['card'], 'font-size': 18}
                                 ),
                                 dbc.NavLink(
-                                    "Trending Data *", 
+                                    "Trending Data", 
                                     id='trends-page',
                                     href='/trends', 
-                                    style={'padding-left': 5, 'color': base_colours['card'], 'font-size': 18}
+                                    style={'padding-left': 5, 'color': '#ffffff', 'font-size': 18}
                                 ),
                                 dbc.NavLink(
                                     "Macro Market *", 
@@ -155,7 +157,7 @@ def generate_layout():
                         [
                             dbc.Col([
                                 html.Hr(),
-                                html.P('version 0.0.3', style={'font-size': 11, 'font-style': 'italic', 'color': base_colours['cg_cell']}),
+                                html.P('version 0.0.4', style={'font-size': 11, 'font-style': 'italic', 'color': base_colours['cg_cell']}),
                             ], xl=12),
                         ],
                         style={'text-align': 'center'},

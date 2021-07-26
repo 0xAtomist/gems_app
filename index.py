@@ -6,7 +6,7 @@ from dash.dependencies import Input, Output
 
 
 from app import app, server
-from apps import app1, inspect_app
+from apps import app1, inspect_app, trending_app
 from layouts import header, sidebar
 
 from data_functions import get_gem_list, get_gem_info, get_filtered_df
@@ -35,6 +35,8 @@ def render_page_content(pathname):
         return app1.layout
     elif pathname == '/inspect-gem':
         return inspect_app.layout
+    elif pathname == '/trends':
+        return trending_app.layout
     else:
         return dbc.Jumbotron([
             html.H1("404: Not found", style={'color': palette['red']['50']}),
