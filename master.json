@@ -263,11 +263,11 @@
 			},
 			"arc-governance": {
 				"symbol": "ARCX",
-				"market": "Gate.io",
+				"market": "SushiSwap",
 				"sector": "DeFi",
 				"Notes": "Rehypothecation of interest bearing assets",
 				"Tweet Date": "2021-04-12",
-				"Tweet Price": 8780,
+				"Tweet Price": 0.8780,
 				"Tier": 1,
 				"Chart": "https://www.gate.io/trade/ARCX_USDT"
 			},
@@ -311,7 +311,7 @@
 				"Tier": 2,
 				"Chart": "https://dex.guru/token/0xaa99199d1e9644b588796f3215089878440d58e0-eth"
 			},
-		"maple": {
+			"maple": {
 				"symbol": "MPL",
 				"market": "Uniswap",
 				"sector": "DeFi",

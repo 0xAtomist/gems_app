@@ -1,7 +1,6 @@
 import os, sys
-from datetime import datetime
+from datetime import datetime, timedelta, date
 import json
-from datetime import date
 
 from dash.dependencies import Input, Output, State
 import dash_core_components as dcc
@@ -73,100 +72,50 @@ def get_gem_options():
 	return gem_options
 
 
-def generate_price_trend(gem_list, start_date, end_date):
+def generate_trend(gem_list, start_date, end_date, y_var, y_text, hover_temp):
     fig_range = go.Figure()
     for i, gem in enumerate(gem_list):
         symbol = master['gems'][gem]['symbol']
         dff = get_chart_range_data(gem, start_date, end_date)
-        fig_range.add_trace(go.Scatter(x=dff['Datetime'], y=dff['relative_price'], name=symbol,
-                            line=dict(color=gem_style[i][0], dash=gem_style[i][1])))
+        fig_range.add_trace(
+            go.Scatter(
+                x=dff['Datetime'], 
+                y=dff[y_var], 
+                name=symbol, 
+                hovertemplate=hover_temp,
+                line=dict(color=gem_style[i][0], dash=gem_style[i][1]),
+                textfont=dict(family='Supermolot', color=base_colours['text'], size=13)
+            )
+        )
     fig_range.update_layout(
-        plot_bgcolor='#363636',
-        paper_bgcolor='#363636',
+        plot_bgcolor='#434343',
+        paper_bgcolor=base_colours['card'],
         margin={'l': 0, 'r': 10, 't': 0, 'b': 0, 'pad': 0},
         xaxis=dict(
             title=dict(text=''),
-            tickfont=dict(color='#b0b3b8'),
+            titlefont=dict(family='Supermolot', size=14, color=base_colours['primary_text']),
+            tickfont=dict(family='Supermolot', size=12, color=base_colours['secondary_text']),
             showgrid=False,
         ),
         yaxis=dict(
-            gridcolor='#b0b3b8',
-            title=dict(text='Relative Price'),
-            tickfont=dict(color='#b0b3b8'),
+            gridcolor=base_colours['secondary_text'],
+            title=dict(text=y_text),
+            titlefont=dict(family='Supermolot', size=14, color=base_colours['primary_text']),
+            tickfont=dict(family='Supermolot', size=12, color=base_colours['secondary_text']),
             ticksuffix='   ',
+            tickprefix='',
         ),
         showlegend=True,
-        font={'color': '#fff'},
-        hoverlabel=dict(font=dict(color='#fff')),
-        #hovermode='x',
+        font={'color': base_colours['primary_text']},
+        hoverlabel=dict(font=dict(family='Supermolot', color=base_colours['black'])),
+        hovermode='x',
         height=650,
-        #width='auto',
+        legend=dict(font=dict(family='Supermolot', color=base_colours['text']))
     )
-    return fig_range
 
+    fig_range.update_xaxes(zerolinecolor=base_colours['sidebar'], zerolinewidth=1) #, rangeslider_visible=True)
+    fig_range.update_yaxes(zerolinecolor=base_colours['sidebar'], zerolinewidth=1)
 
-def generate_market_cap_trend(gem_list, start_date, end_date):
-    fig_range = go.Figure()
-    for i, gem in enumerate(gem_list):
-        symbol = master['gems'][gem]['symbol']
-        dff = get_chart_range_data(gem, start_date, end_date)
-        fig_range.add_trace(go.Scatter(x=dff['Datetime'], y=dff['market_caps'], name=symbol,
-                            line=dict(color=gem_style[i][0], dash=gem_style[i][1])))
-    fig_range.update_layout(
-        plot_bgcolor='#363636',
-        paper_bgcolor='#363636',
-        margin={'l': 0, 'r': 10, 't': 0, 'b': 0, 'pad': 0},
-        xaxis=dict(
-            title=dict(text=''),
-            tickfont=dict(color='#b0b3b8'),
-            showgrid=False,
-        ),
-        yaxis=dict(
-            gridcolor='#b0b3b8',
-            title=dict(text='Market Cap'),
-            tickfont=dict(color='#b0b3b8'),
-            ticksuffix='   ',
-            tickprefix='$',
-        ),
-        showlegend=True,
-        font={'color': '#fff'},
-        hoverlabel=dict(font=dict(color='#fff')),
-        #hovermode='x',
-        height=650,
-        #width='auto',
-    )
-    return fig_range
-
-
-def generate_mc_relative_trend(gem_list, start_date, end_date):
-    fig_range = go.Figure()
-    for i, gem in enumerate(gem_list):
-        symbol = master['gems'][gem]['symbol']
-        dff = get_chart_range_data(gem, start_date, end_date)
-        fig_range.add_trace(go.Scatter(x=dff['Datetime'], y=dff['relative_cap'], name=symbol,
-                            line=dict(color=gem_style[i][0], dash=gem_style[i][1])))
-    fig_range.update_layout(
-        plot_bgcolor='#363636',
-        paper_bgcolor='#363636',
-        margin={'l': 0, 'r': 10, 't': 0, 'b': 0, 'pad': 0},
-        xaxis=dict(
-            title=dict(text=''),
-            tickfont=dict(color='#b0b3b8'),
-            showgrid=False,
-        ),
-        yaxis=dict(
-            gridcolor='#b0b3b8',
-            title=dict(text='Relative Market Cap'),
-            tickfont=dict(color='#b0b3b8'),
-            ticksuffix='   ',
-        ),
-        showlegend=True,
-        font={'color': '#fff'},
-        hoverlabel=dict(font=dict(color='#fff')),
-        #hovermode='x',
-        height=650,
-        #width='auto',
-    )
     return fig_range
 
 
@@ -233,10 +182,6 @@ def filter_gem_list(gem_filter, tier_filter, sector_filter, market_filter):
 
 	return list(filtered_gem_list)
 
-
-fig_price = generate_price_trend(get_gem_list(master), '2021-01-01', '2021-07-12')
-
-fig_market_cap = generate_market_cap_trend(get_gem_list(master), '2021-01-01', '2021-07-12')
 
 
 layout = html.Div(
@@ -311,9 +256,9 @@ layout = html.Div(
                                                             display_format='DD-MMM-YYYY',
                                                             min_date_allowed=date(2020, 1, 1),
                                                             max_date_allowed=date.today(),
-                                                            initial_visible_month=date.today(),
+                                                            initial_visible_month=date.today()-timedelta(90),
                                                             end_date=date.today(),
-                                                            start_date='2021-01-01'
+                                                            start_date=date.today()-timedelta(90)
                                                         ),
                                                     ],
                                                 ),
@@ -347,7 +292,11 @@ layout = html.Div(
                                     target='mc_trend_tip',
                                     style={'font-family': 'Supermolot'}
                                 ),
-                                dcc.Graph(id='trend_market_cap', figure=fig_market_cap, config=graph_config)
+                                dcc.Graph(
+                                    id='trend_market_cap',
+                                    config=graph_config,
+                                    figure=generate_trend(get_gem_list(master), datetime.strftime(date.today()-timedelta(90), '%Y-%m-%d'), datetime.strftime(date.today(), '%Y-%m-%d'), 'market_caps', 'Market Cap', '$%{y:,.0f}')
+                                )
                             ],
                             className="pretty_container",
                             style={'height': 'auto', 'min-height': 600},
@@ -370,7 +319,11 @@ layout = html.Div(
                                     target='relative_price_tip',
                                     style={'font-family': 'Supermolot'}
                                 ),
-                                dcc.Graph(id='trend_price', figure=fig_price, config=graph_config)
+                                dcc.Graph(
+                                    id='trend_price',
+                                    config=graph_config,
+                                    figure=generate_trend(get_gem_list(master), datetime.strftime(date.today()-timedelta(90), '%Y-%m-%d'), datetime.strftime(date.today(), '%Y-%m-%d'), 'relative_price', 'Relative Price', '%{y:.2f}')
+                                )
                             ],
                             className="pretty_container",
                             style={'height': 'auto', 'min-height': 600},
@@ -393,7 +346,11 @@ layout = html.Div(
                                     target='relative_mc_tip',
                                     style={'font-family': 'Supermolot'}
                                 ),
-                                dcc.Graph(id='trend_mc_relative', figure=fig_price, config=graph_config)
+                                dcc.Graph(
+                                    id='trend_mc_relative', 
+                                    config=graph_config,
+                                    figure=generate_trend(get_gem_list(master), datetime.strftime(date.today()-timedelta(90), '%Y-%m-%d'), datetime.strftime(date.today(), '%Y-%m-%d'), 'relative_cap', 'Relative Market Cap', '%{y:.2f}')
+                                )
                             ],
                             className="pretty_container",
                             style={'height': 'auto', 'min-height': 600},
@@ -432,7 +389,7 @@ def update_filter_trend(gem_filter, tier_filter, sector_filter, market_filter):
 @cache.memoize(timeout=20)
 def update_trend_price(filtered_json, start_date, end_date):
     filtered_gem_list = json.loads(filtered_json)
-    return generate_price_trend(filtered_gem_list, start_date, end_date)
+    return generate_trend(filtered_gem_list, start_date, end_date, 'relative_price', 'Relative Price', '%{y:.2f}')
 
 
 @app.callback(Output('trend_market_cap', 'figure'),
@@ -442,7 +399,7 @@ def update_trend_price(filtered_json, start_date, end_date):
 @cache.memoize(timeout=20)
 def update_trend_market_cap(filtered_json, start_date, end_date):
     filtered_gem_list = json.loads(filtered_json)
-    return generate_market_cap_trend(filtered_gem_list, start_date, end_date)
+    return generate_trend(filtered_gem_list, start_date, end_date, 'market_caps', 'Market Cap ($)', '$%{y:,.0f}')
 
 
 @app.callback(Output('trend_mc_relative', 'figure'),
@@ -452,5 +409,15 @@ def update_trend_market_cap(filtered_json, start_date, end_date):
 @cache.memoize(timeout=20)
 def update_trend_mc_relative(filtered_json, start_date, end_date):
     filtered_gem_list = json.loads(filtered_json)
-    return generate_mc_relative_trend(filtered_gem_list, start_date, end_date)
+    return generate_trend(filtered_gem_list, start_date, end_date, 'relative_cap', 'Relative Market Cap', '%{y:.2f}')
+
+
+@app.callback(Output('trend_date_picker', 'initial_visible_month'),
+	Input('trend_date_picker', 'end_date'),
+            State('trend_date_picker', 'start_date'))
+@cache.memoize(timeout=20)
+def update_date_place(end_date, start_date):
+    print(start_date, type(start_date))
+    return datetime.strptime(start_date, '%Y-%m-%d')
+
 

@@ -42,47 +42,6 @@ def get_gem_info():  # load JSON storing client site information
     return master
 
 
-'''
-def get_api_markets():
-	cg = CoinGeckoAPI()
-	master = get_gem_info()
-	gem_list = get_gem_list(master)
-
-	GEM_dict = dict.fromkeys(gem_list, [])
-
-	markets_list = gem_list
-	markets_list.append('bitcoin')
-
-	gem_markets = cg.get_coins_markets(
-		ids=markets_list,
-		vs_currency='usd',
-		price_change_percentage='1h,24h,7d',
-		sparkline='true'
-	)
-
-	df = pd.DataFrame(gem_markets)
-
-	df_gems = df.set_index('id')
-	# Finalise df
-	df_gems = df_gems.fillna(0)
-	df_gems['symbol'] = df_gems['symbol'].str.upper()
-	df = df_gems.drop('sparkline_in_7d', axis=1)
-
-	return df
-
-
-def get_btc_history():
-    r = requests.get('https://ftx.com/api/markets/BTC-PERP/candles?resolution=86400')
-
-    btc_history = r.json()['result']
-
-    df_btc = pd.DataFrame.from_dict(btc_history)
-    df_btc['time'] = df_btc['time']/1000
-    #print(df_btc)
-    return df_btc
-'''
-
-
 @cache.memoize(timeout=20)
 def get_api_inspections(gem):
 	cg = CoinGeckoAPI()
@@ -137,6 +96,22 @@ def get_api_inspections(gem):
 
 
 @cache.memoize(timeout=20)
+def get_gem_inspection(gem):
+    r = redis.StrictRedis('localhost')
+    context = pa.default_serialization_context()
+    df = context.deserialize(r.get('{}-inspect'.format(gem)))
+    return df
+
+
+@cache.memoize(timeout=20)
+def get_gem_markets(gem):
+    r = redis.StrictRedis('localhost')
+    context = pa.default_serialization_context()
+    df = context.deserialize(r.get('{}-markets'.format(gem)))
+    return df
+
+
+@cache.memoize(timeout=20)
 def get_chart_range_data(gem, start_date, end_date):
     r = redis.StrictRedis('localhost')
     context = pa.default_serialization_context()
@@ -150,14 +125,11 @@ def get_chart_range_data(gem, start_date, end_date):
 
 
 @cache.memoize(timeout=20)
-def get_period_chart_data(gem, period):
-	cg = CoinGeckoAPI()
-	chart_data = cg.get_coin_market_chart_by_id(gem, 'usd', period)
-	df_p = pd.DataFrame(chart_data['prices'], columns=['p_unix_time', 'Price'])
-	df_p['p-Datetime'] = pd.to_datetime(df_p['p_unix_time']/1000, unit='s')
-	df_m = pd.DataFrame(chart_data['market_caps'], columns=['m_unix_time', 'Market Cap'])
-	df_m['m-Datetime'] = pd.to_datetime(df_m['m_unix_time']/1000, unit='s')
-	return df_p, df_m
+def get_chart_period_data(gem, period):
+    r = redis.StrictRedis('localhost')
+    context = pa.default_serialization_context()
+    df = context.deserialize(r.get('{}-{}d-chart'.format(gem, period)))
+    return df
 
 
 @cache.memoize(timeout=20)
@@ -197,13 +169,15 @@ def get_extended_data(gem):
     gem_now = df['current_price']
     tweet_time = datetime.timestamp(datetime.strptime(tweet_date, '%Y-%m-%d'))
     btc_tweet = df_btc.loc[df_btc['time'] == tweet_time]['close'].values[0]
+    df['btc_usd_x'] = btc_now/btc_tweet
     gem_tweet = tweet_price
 
     df['fdv_tot'] = df['current_price'] * df['total_supply']
     df['mc_fdv_ratio'] = df['market_cap'] / df['fdv_tot']
     df['gem_usd_x'] = df['current_price'] / tweet_price - 1
-    df['btc_usd_x'] = btc_now/btc_tweet
     df['gem_btc_x'] = (gem_now/btc_now) / (gem_tweet/btc_tweet) - 1
+    df['ath_gem_usd_x'] = df['ath'] / tweet_price - 1
+    df['ath_gem_btc_x'] = (df['ath']/btc_now) / (gem_tweet/btc_tweet) - 1
     df['20x']  = tweet_price * 20
     df['50x'] = tweet_price * 50
 
@@ -213,7 +187,6 @@ def get_extended_data(gem):
 @cache.memoize(timeout=20)
 def get_filtered_df(filtered_gem_list):
     #print(filtered_gem_list)
-    if 'ellipsis' in filtered_gem_list: filtered_gem_list.remove('ellipsis')
     if filtered_gem_list:
         dfs = []
         for gem in filtered_gem_list:

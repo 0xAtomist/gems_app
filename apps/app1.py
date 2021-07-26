@@ -109,12 +109,12 @@ def generate_bar_chart(df, variable, color):
     else: 
         fig = px.bar(blank_df, y=variable, x='symbol')
 
-    fig.update_traces(marker_color=color, marker=dict(line=dict(color=base_colours['black'])))
+    fig.update_traces(marker_color=color, marker=dict(line=dict(color=base_colours['black'])), hovertemplate=None)
     fig.update_xaxes(zerolinecolor=base_colours['sidebar'], zerolinewidth=1)
     fig.update_yaxes(zerolinecolor=base_colours['sidebar'], zerolinewidth=1)
     
     fig.update_layout(
-        plot_bgcolor=base_colours['card'],
+        plot_bgcolor='#434343',
         paper_bgcolor=base_colours['card'],
         margin={'l': 0, 'r': 10, 't': 0, 'b': 0, 'pad': 0},
         xaxis=dict(
@@ -133,6 +133,7 @@ def generate_bar_chart(df, variable, color):
         bargap=0.2,
         height=350,
         hoverlabel=dict(font=dict(family='Supermolot', color=base_colours['text'])),
+        hovermode='x',
     )
 
     return fig
@@ -176,6 +177,7 @@ def generate_pie_chart(gem_list, change):
 
     fig.update_traces(
         hoverinfo='label+value',
+        hovertemplate=None,
         textinfo='percent',
         marker=dict(line=dict(color=base_colours['tf_accent'], width=1.5)),
         textfont=dict(family='Supermolot', color=base_colours['text'], size=13),
@@ -191,7 +193,8 @@ def generate_table_data(df):
     df['ath_change_percentage'] = df['ath_change_percentage']/100
     df['last_updated'] = pd.to_datetime(df['last_updated'], format='%Y-%m-%dT%H:%M:%S.%fZ').dt.strftime('%Y/%m/%d %H:%M')
     return df.to_dict('records')
-		
+
+
 def filter_gem_list(gem_filter, tier_filter, sector_filter, market_filter):
 	gem_list = get_gem_list(master)
 	gems = []
@@ -542,7 +545,45 @@ layout = html.Div(
 				dbc.Col(
 					html.Div(
 						[
-                                                    html.P('GEM/USD Multiple', id='gemusd_tooltip', style={'text-align': 'center', 'cursor': 'pointer'}), 
+                                                    html.P('ATH GEM/USD Multiple', id='ath_gemusd_tooltip', style={'text-align': 'center', 'cursor': 'pointer'}), 
+                                                        dbc.Tooltip('From date of GEMS Alliance tweet', target='ath_gemusd_tooltip', style={'font-family': 'Supermolot'}),
+							dcc.Graph(
+								id="ath_gemusd_bar",
+								figure=generate_bar_chart(get_filtered_df(get_gem_list(master)), 'ath_gem_usd_x', dash_green),
+								config=graph_config
+							),
+						],
+						className="pretty_container",
+						style={'height': 'auto'}
+					),
+				xl=6,
+				style={'padding': 0}
+				),
+				dbc.Col(
+					html.Div(
+						[
+                                                        html.P('ATH GEM/BTC Multiple', id='ath_gembtc_tooltip', style={'text-align': 'center', 'cursor': 'pointer'}), 
+                                                        dbc.Tooltip('From date of GEMS Alliance tweet', target='gembtc_tooltip', style={'font-family': 'Supermolot'}),
+							dcc.Graph(
+								id="ath_gembtc_bar",
+								figure=generate_bar_chart(get_filtered_df(get_gem_list(master)), 'ath_gem_btc_x', yellow),
+								config=graph_config
+							),
+						],
+						className="pretty_container",
+						style={'height': 'auto'}
+					),
+				xl=6,
+				style={'padding': 0}
+				),
+			]
+		),
+		dbc.Row(
+			[
+				dbc.Col(
+					html.Div(
+						[
+                                                    html.P('Current GEM/USD Multiple', id='gemusd_tooltip', style={'text-align': 'center', 'cursor': 'pointer'}), 
                                                         dbc.Tooltip('From date of GEMS Alliance tweet', target='gemusd_tooltip', style={'font-family': 'Supermolot'}),
 							dcc.Graph(
 								id="gemusd_bar",
@@ -559,7 +600,7 @@ layout = html.Div(
 				dbc.Col(
 					html.Div(
 						[
-                                                        html.P('GEM/BTC Multiple', id='gembtc_tooltip', style={'text-align': 'center', 'cursor': 'pointer'}), 
+                                                        html.P('Current GEM/BTC Multiple', id='gembtc_tooltip', style={'text-align': 'center', 'cursor': 'pointer'}), 
                                                         dbc.Tooltip('From date of GEMS Alliance tweet', target='gembtc_tooltip', style={'font-family': 'Supermolot'}),
 							dcc.Graph(
 								id="gembtc_bar",
