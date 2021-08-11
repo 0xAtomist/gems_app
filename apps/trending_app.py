@@ -33,16 +33,16 @@ graph_config = {
     'displayModeBar': False,
 }
 
+# Set line styles for the list of GEMS
 gem_style = []
-
 for item in px.colors.qualitative.Pastel:
     gem_style.append([item, None])
-
 for item in px.colors.qualitative.Pastel:
     gem_style.append([item, 'dash'])
-    
 for item in px.colors.qualitative.Pastel:
     gem_style.append([item, 'dot'])
+for item in px.colors.qualitative.Pastel:
+    gem_style.append([item, 'dashdot'])
 
 
 def get_options(variable):

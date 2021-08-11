@@ -15,13 +15,16 @@ r = redis.StrictRedis('localhost')
 gem_list = get_gem_list(get_gem_info())
 
 for gem in gem_list:
+    print(gem)
     # Write inspection data
-    df_inspect, dff_inspect = get_api_inspections(gem)
-    context = pa.default_serialization_context()
-    r.set('{}-inspect'.format(gem), context.serialize(df_inspect).to_buffer().to_pybytes())
-
-    context = pa.default_serialization_context()
-    r.set('{}-markets'.format(gem), context.serialize(dff_inspect).to_buffer().to_pybytes())
+    try:
+        df_inspect, dff_inspect = get_api_inspections(gem)
+        context = pa.default_serialization_context()
+        r.set('{}-inspect'.format(gem), context.serialize(df_inspect).to_buffer().to_pybytes())
+        context = pa.default_serialization_context()
+        r.set('{}-markets'.format(gem), context.serialize(dff_inspect).to_buffer().to_pybytes())
+    except TypeError:
+        pass
 
     # Write chart data
     for period in [1, 7, 14, 30, 90, 180, 365, 'max']:

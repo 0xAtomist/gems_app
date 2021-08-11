@@ -9,7 +9,9 @@
 				"Tweet Date": "2021-03-02",
 				"Tweet Price": 0.010,
 				"Tier": 1,
-				"Chart": "https://www.tradingview.com/chart/?symbol=BINANCE%3AMFTUSDT"
+				"Chart": "https://www.tradingview.com/chart/?symbol=BINANCE%3AMFTUSDT",
+				"Rewards": "",
+				"Reward Details": ""
 			},
 			"api3": {
 				"symbol": "API3",
@@ -19,7 +21,9 @@
 				"Tweet Date": "2021-01-12",
 				"Tweet Price": 4.500,
 				"Tier": 1,
-				"Chart": "https://www.tradingview.com/chart?symbol=HUOBI%3AAPI3USDT"
+				"Chart": "https://www.tradingview.com/chart?symbol=HUOBI%3AAPI3USDT",
+				"Rewards": "OK",
+				"Reward Details": "Locked for 1 year"
 			},
 			"melon": {
 				"symbol": "MLN",
@@ -29,7 +33,9 @@
 				"Tweet Date": "2021-02-03",
 				"Tweet Price": 40,
 				"Tier": 1,
-				"Chart": "https://www.tradingview.com/chart?symbol=HUOBI%3AMLNUSD"
+				"Chart": "https://www.tradingview.com/chart?symbol=HUOBI%3AMLNUSD",
+				"Rewards": "",
+				"Reward Details": ""
 			},
 			"cartesi": {
 				"symbol": "CTSI",
@@ -39,7 +45,9 @@
 				"Tweet Date": "2021-02-22",
 				"Tweet Price": 0.170,
 				"Tier": 1,
-				"Chart": "https://www.tradingview.com/chart/?symbol=BINANCE%3AMFTUSDT"
+				"Chart": "https://www.tradingview.com/chart/?symbol=BINANCE%3AMFTUSDT",
+				"Rewards": "",
+				"Reward Details": ""
 			},
 			"rari-governance-token": {
 				"symbol": "RGT",
@@ -49,7 +57,9 @@
 				"Tweet Date": "2021-02-07",
 				"Tweet Price": 4.300,
 				"Tier": 1,
-				"Chart": "https://chartex.pro/?symbol=UNISWAP%3ARGT.6CC623"
+				"Chart": "https://chartex.pro/?symbol=UNISWAP%3ARGT.6CC623",
+				"Rewards": "No",
+				"Reward Details": ""
 			},
 			"rook": {
 				"symbol": "ROOK",
@@ -59,7 +69,9 @@
 				"Tweet Date": "2020-12-19",
 				"Tweet Price": 76,
 				"Tier": 1,
-				"Chart": "https://www.tradingview.com/chart?symbol=FTX%3AROOKUSD"
+				"Chart": "https://www.tradingview.com/chart?symbol=FTX%3AROOKUSD",
+				"Rewards": "OK",
+				"Reward Details": "Usage-based rewards (trading/borrowing)"
 			},
 			"yield": {
 				"symbol": "YLD",
@@ -69,7 +81,9 @@
 				"Tweet Date": "2020-12-29",
 				"Tweet Price": 11,
 				"Tier": 2,
-				"Chart": "https://chartex.pro/?symbol=UNISWAP%3AYLD.EAFF9F"
+				"Chart": "https://chartex.pro/?symbol=UNISWAP%3AYLD.EAFF9F",
+				"Rewards": "",
+				"Reward Details": ""
 			},
 			"auction": {
 				"symbol": "AUCTION",
@@ -79,7 +93,9 @@
 				"Tweet Date": "2021-03-06",
 				"Tweet Price": 24,
 				"Tier": 2,
-				"Chart": "https://www.tradingview.com/chart?symbol=BINANCE%3AAUCTIONBUSD"
+				"Chart": "https://www.tradingview.com/chart?symbol=BINANCE%3AAUCTIONBUSD",
+				"Rewards": "",
+				"Reward Details": ""
 			},
 			"meta": {
 				"symbol": "MTA",
@@ -89,7 +105,9 @@
 				"Tweet Date": "2020-12-19",
 				"Tweet Price": 1.15,
 				"Tier": 1,
-				"Chart": "https://www.tradingview.com/chart?symbol=HUOBI%3AMTAUSDT"
+				"Chart": "https://www.tradingview.com/chart?symbol=HUOBI%3AMTAUSDT",
+				"Rewards": "Yes",
+				"Reward Details": ""
 			},
 			"float-protocol": {
 				"symbol": "BANK",
@@ -99,7 +117,9 @@
 				"Tweet Date": "2021-03-13",
 				"Tweet Price": 635,
 				"Tier": 2,
-				"Chart": "https://chartex.pro/?symbol=UNISWAP%3ABANK.B42921"
+				"Chart": "https://chartex.pro/?symbol=UNISWAP%3ABANK.B42921",
+				"Rewards": "",
+				"Reward Details": ""
 			},
 			"index-cooperative": {
 				"symbol": "INDEX",
@@ -109,7 +129,9 @@
 				"Tweet Date": "2021-01-03",
 				"Tweet Price": 4.5,
 				"Tier": 1,
-				"Chart": "https://chartex.pro/?symbol=UNISWAP%3AINDEX.464CAB"
+				"Chart": "https://chartex.pro/?symbol=UNISWAP%3AINDEX.464CAB",
+				"Rewards": "",
+				"Reward Details": ""
 			},
 			"union-protocol-governance-token": {
 				"symbol": "UNN",
@@ -119,7 +141,9 @@
 				"Tweet Date": "2021-03-13",
 				"Tweet Price": 0.08,
 				"Tier": 2,
-				"Chart": "https://chartex.pro/?symbol=UNISWAP%3AUNN.773A9D"
+				"Chart": "https://chartex.pro/?symbol=UNISWAP%3AUNN.773A9D",
+				"Rewards": "",
+				"Reward Details": ""
 			},
 			"inverse-finance": {
 				"symbol": "INV",
@@ -129,7 +153,9 @@
 				"Tweet Date": "2021-03-26",
 				"Tweet Price": 989,
 				"Tier": 2,
-				"Chart": "https://chartex.pro/?symbol=UNISWAP%3AINV.9DFB68"
+				"Chart": "https://chartex.pro/?symbol=UNISWAP%3AINV.9DFB68",
+				"Rewards": "",
+				"Reward Details": ""
 			},
 			"apy-finance": {
 				"symbol": "APY",
@@ -139,7 +165,9 @@
 				"Tweet Date": "2021-01-12",
 				"Tweet Price": 0.37,
 				"Tier": 2,
-				"Chart": "https://chartex.pro/?symbol=UNISWAP%3AAPY.446611"
+				"Chart": "https://chartex.pro/?symbol=UNISWAP%3AAPY.446611",
+				"Rewards": "",
+				"Reward Details": ""
 			},
 			"onx-finance": {
 				"symbol": "ONX",
@@ -149,7 +177,9 @@
 				"Tweet Date": "2021-03-17",
 				"Tweet Price": 2.31,
 				"Tier": 2,
-				"Chart": "https://chartex.pro/?symbol=UNISWAP%3AONX.411033"
+				"Chart": "https://chartex.pro/?symbol=UNISWAP%3AONX.411033",
+				"Rewards": "",
+				"Reward Details": ""
 			},
 			"lien": {
 				"symbol": "LIEN",
@@ -159,7 +189,9 @@
 				"Tweet Date": "2020-12-19",
 				"Tweet Price": 36.5,
 				"Tier": 2,
-				"Chart": "https://chartex.pro/?symbol=UNISWAP%3ALIEN.A7557E"
+				"Chart": "https://chartex.pro/?symbol=UNISWAP%3ALIEN.A7557E",
+				"Rewards": "",
+				"Reward Details": ""
 			},
 			"offshift": {
 				"symbol": "XFT",
@@ -169,7 +201,9 @@
 				"Tweet Date": "2020-12-19",
 				"Tweet Price": 1,
 				"Tier": 2,
-				"Chart": "https://chartex.pro/?symbol=UNISWAP%3AXFT.22E6BE"
+				"Chart": "https://chartex.pro/?symbol=UNISWAP%3AXFT.22E6BE",
+				"Rewards": "",
+				"Reward Details": ""
 			},
 			"furucombo": {
 				"symbol": "COMBO",
@@ -179,7 +213,9 @@
 				"Tweet Date": "2021-02-05",
 				"Tweet Price": 4,
 				"Tier": 1,
-				"Chart": "https://chartex.pro/?symbol=UNISWAP%3ACOMBO.930278"
+				"Chart": "https://chartex.pro/?symbol=UNISWAP%3ACOMBO.930278",
+				"Rewards": "Yes",
+				"Reward Details": ""
 			},
 			"defidollar-dao": {
 				"symbol": "DFD",
@@ -189,7 +225,9 @@
 				"Tweet Date": "2021-02-06",
 				"Tweet Price": 0.55,
 				"Tier": 1,
-				"Chart": "https://www.dextools.io/app/sushiswap/pair-explorer/0xb12aa722a3a4566645f079b6f10c89a3205b6c2c"
+				"Chart": "https://www.dextools.io/app/sushiswap/pair-explorer/0xb12aa722a3a4566645f079b6f10c89a3205b6c2c",
+				"Rewards": "Yes",
+				"Reward Details": "https://forum.dusd.finance/t/liquidity-mining-update-june/52"
 			},
 			"plotx": {
 				"symbol": "PLOT",
@@ -199,7 +237,9 @@
 				"Tweet Date": "2021-02-21",
 				"Tweet Price": 0.12,
 				"Tier": 2,
-				"Chart": "https://chartex.pro/?symbol=UNISWAP%3APLOT.0C66BB"
+				"Chart": "https://chartex.pro/?symbol=UNISWAP%3APLOT.0C66BB",
+				"Rewards": "",
+				"Reward Details": ""
 			},
 			"holyheld-2": {
 				"symbol": "MOVE",
@@ -209,7 +249,9 @@
 				"Tweet Date": "2021-02-04",
 				"Tweet Price": 1.35,
 				"Tier": 2,
-				"Chart": "https://www.dextools.io/app/sushiswap/pair-explorer/0x87b918e76c92818db0c76a4e174447aee6e6d23f"
+				"Chart": "https://www.dextools.io/app/sushiswap/pair-explorer/0x87b918e76c92818db0c76a4e174447aee6e6d23f",
+				"Rewards": "",
+				"Reward Details": ""
 			},
 			"xtoken": {
 				"symbol": "XTK",
@@ -219,7 +261,9 @@
 				"Tweet Date": "2021-02-28",
 				"Tweet Price": 0.15,
 				"Tier": 1,
-				"Chart": "https://chartex.pro/?symbol=UNISWAP%3AXTK.B3ADEB"
+				"Chart": "https://chartex.pro/?symbol=UNISWAP%3AXTK.B3ADEB",
+				"Rewards": "",
+				"Reward Details": ""
 			},
 			"xvix": {
 				"symbol": "XVIX",
@@ -229,7 +273,9 @@
 				"Tweet Date": "2021-01-16",
 				"Tweet Price": 14.8,
 				"Tier": 2,
-				"Chart": "https://chartex.pro/?symbol=UNISWAP%3AXVIX.3AE9EC"
+				"Chart": "https://chartex.pro/?symbol=UNISWAP%3AXVIX.3AE9EC",
+				"Rewards": "",
+				"Reward Details": ""
 			},
 			"gambit": {
 				"symbol": "GMT",
@@ -239,7 +285,9 @@
 				"Tweet Date": "2021-03-08",
 				"Tweet Price": 15,
 				"Tier": 2,
-				"Chart": "https://goswapp-bsc.web.app/0x99e92123eb77bc8f999316f622e5222498438784"
+				"Chart": "https://goswapp-bsc.web.app/0x99e92123eb77bc8f999316f622e5222498438784",
+				"Rewards": "",
+				"Reward Details": ""
 			},
 			"tokencard": {
 				"symbol": "TKN",
@@ -249,7 +297,9 @@
 				"Tweet Date": "2021-04-03",
 				"Tweet Price": 0.35,
 				"Tier": 2,
-				"Chart": "https://chartex.pro/?symbol=UNISWAP%3ATKN.77E73A"
+				"Chart": "https://chartex.pro/?symbol=UNISWAP%3ATKN.77E73A",
+				"Rewards": "",
+				"Reward Details": ""
 			},
 			"bondappetit-gov-token": {
 				"symbol": "BAG",
@@ -259,7 +309,9 @@
 				"Tweet Date": "2021-04-09",
 				"Tweet Price": 5.35,
 				"Tier": 2,
-				"Chart": "https://www.dextools.io/app/uniswap/pair-explorer/0xf3bc6f13bc030e7c294da2aad27b99807bc5f8fd"
+				"Chart": "https://www.dextools.io/app/uniswap/pair-explorer/0xf3bc6f13bc030e7c294da2aad27b99807bc5f8fd",
+				"Rewards": "",
+				"Reward Details": ""
 			},
 			"arc-governance": {
 				"symbol": "ARCX",
@@ -269,7 +321,9 @@
 				"Tweet Date": "2021-04-12",
 				"Tweet Price": 0.8780,
 				"Tier": 1,
-				"Chart": "https://www.gate.io/trade/ARCX_USDT"
+				"Chart": "https://www.dextools.io/app/sushiswap/pair-explorer/0x87c33321e1755ab54b0a27d4969a72b953486e75",
+				"Rewards": "No",
+				"Reward Details": ""
 			},
 			"stabilize": {
 				"symbol": "STBZ",
@@ -279,7 +333,9 @@
 				"Tweet Date": "2021-04-21",
 				"Tweet Price": 5.16,
 				"Tier": 2,
-				"Chart": "https://www.dextools.io/app/uniswap/pair-explorer/0xdb28312a8d26d59978d9b86ca185707b1a26725b"
+				"Chart": "https://www.dextools.io/app/uniswap/pair-explorer/0xdb28312a8d26d59978d9b86ca185707b1a26725b",
+				"Rewards": "",
+				"Reward Details": ""
 			},
 			"moar": {
 				"symbol": "MOAR",
@@ -289,7 +345,9 @@
 				"Tweet Date": "2021-04-21",
 				"Tweet Price": 4,
 				"Tier": 2,
-				"Chart": "https://dex.guru/token/0x187eff9690e1f1a61d578c7c492296eaab82701a-eth"
+				"Chart": "https://dex.guru/token/0x187eff9690e1f1a61d578c7c492296eaab82701a-eth",
+				"Rewards": "",
+				"Reward Details": ""
 			},
 			"mixsome": {
 				"symbol": "SOME",
@@ -299,7 +357,9 @@
 				"Tweet Date": "2021-04-23",
 				"Tweet Price": 0.25,
 				"Tier": 2,
-				"Chart": "https://www.dextools.io/app/uniswap/pair-explorer/0xfac08a488f366f245f65781305b7c1ce204761f1"
+				"Chart": "https://www.dextools.io/app/uniswap/pair-explorer/0xfac08a488f366f245f65781305b7c1ce204761f1",
+				"Rewards": "",
+				"Reward Details": ""
 			},
 			"alphr": {
 				"symbol": "ALPHR",
@@ -309,7 +369,9 @@
 				"Tweet Date": "2021-04-12",
 				"Tweet Price": 5.36,
 				"Tier": 2,
-				"Chart": "https://dex.guru/token/0xaa99199d1e9644b588796f3215089878440d58e0-eth"
+				"Chart": "https://dex.guru/token/0xaa99199d1e9644b588796f3215089878440d58e0-eth",
+				"Rewards": "",
+				"Reward Details": ""
 			},
 			"maple": {
 				"symbol": "MPL",
@@ -319,7 +381,44 @@
 				"Tweet Date": "2021-05-13",
 				"Tweet Price": 19.82,
 				"Tier": 1,
-				"Chart": "https://www.dextools.io/app/uniswap/pair-explorer/0x7b28470032da06051f2e620531adbaeadb285408"
+				"Chart": "https://www.dextools.io/app/uniswap/pair-explorer/0x7b28470032da06051f2e620531adbaeadb285408",
+				"Rewards": "",
+				"Reward Details": ""
+			},
+			"charged-particles": {
+				"symbol": "IONX",
+				"market": "Uniswap",
+				"sector": "NFT",
+				"Notes": "Programmable NFTs",
+				"Tweet Date": "2021-07-27",
+				"Tweet Price": 0,
+				"Tier": 1,
+				"Chart": "https://www.dextools.io/app/uniswap/pair-explorer/0x60f6e2200bfef8b4d120028faff4d9a4486526f4",
+				"Rewards": "Yes",
+				"Reward Details": "192,308 $IONX each week, for 24 months, starting in July 2021"
+			},
+			"bios": {
+				"symbol": "BIOS",
+				"market": "SushiSwap",
+				"sector": "DeFi",
+				"Notes": "Cross chain yield aggregation protocol",
+				"Tweet Date": "2021-07-27",
+				"Tweet Price": 0,
+				"Tier": 1,
+				"Chart": "https://www.dextools.io/app/sushiswap/pair-explorer/0xe9a889e6963f122a98f8083d951c71329c726c0a",
+				"Rewards": "No",
+				"Reward Details": ""
+			},
+			"usd-coin": {
+				"symbol": "USDC",
+				"market": "Uniswap",
+				"sector": "Stablecoin",
+				"Notes": "USD Stablecoin",
+				"Tweet Date": "2021-05-13",
+				"Tweet Price": 1.00,
+				"Tier": 1,
+				"Rewards": "No",
+				"Reward Details": ""
 			}
 		}
 }
