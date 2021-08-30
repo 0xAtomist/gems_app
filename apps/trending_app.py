@@ -119,69 +119,80 @@ def generate_trend(gem_list, start_date, end_date, y_var, y_text, hover_temp):
     return fig_range
 
 
-def filter_gem_list(gem_filter, tier_filter, sector_filter, market_filter):
-	gem_list = get_gem_list(master)
-	gems = []
-	tiers = []
-	sectors = []
-	markets = []
-	for option in get_gem_options():
-		gems.append(option['value'])
-	for option in get_options('Tier'):
-		tiers.append(option['value'])
-	for option in get_options('sector'):
-		sectors.append(option['value'])
-	for option in get_options('market'):
-		markets.append(option['value'])
+def filter_gem_list(gem_filter, tier_filter, sector_filter, market_filter, rewards_filter):
+    gem_list = get_gem_list(master)
+    gems = []
+    tiers = []
+    sectors = []
+    markets = []
+    rewards = []
+    for option in get_gem_options():
+        gems.append(option['value'])
+    for option in get_options('Tier'):
+        tiers.append(option['value'])
+    for option in get_options('sector'):
+        sectors.append(option['value'])
+    for option in get_options('market'):
+        markets.append(option['value'])
+    for option in get_options('Rewards'):
+        rewards.append(option['value'])
 
-	filtered_gem_list = []
+    filtered_gem_list = []
 
-	gem_filter_list = []
-	for f_gem in gems:
-		if f_gem in gem_filter:
-			for gem in gem_list:
-				if f_gem == gem:
-					gem_filter_list.append(gem)
-	if not gem_filter_list:
-		gem_filter_list = get_gem_list(master)
-	
-	tier_filter_list = []
-	for tier in tiers:
-		if tier in tier_filter:
-			for gem in gem_list:
-				if tier == master['gems'][gem]['Tier']:
-					tier_filter_list.append(gem)
-	if not tier_filter_list:
-		tier_filter_list = get_gem_list(master)
+    gem_filter_list = []
+    for f_gem in gems:
+        if f_gem in gem_filter:
+            for gem in gem_list:
+                if f_gem == gem:
+                    gem_filter_list.append(gem)
+    if not gem_filter_list:
+        gem_filter_list = get_gem_list(master)
 
-	sector_filter_list = []
-	for sector in sectors:
-		if sector in sector_filter:
-			for gem in gem_list:
-				if sector == master['gems'][gem]['sector']:
-					sector_filter_list.append(gem)
-	if not sector_filter_list:
-		sector_filter_list = get_gem_list(master)
+    tier_filter_list = []
+    for tier in tiers:
+        if tier in tier_filter:
+            for gem in gem_list:
+                if tier == master['gems'][gem]['Tier']:
+                    tier_filter_list.append(gem)
+    if not tier_filter_list:
+        tier_filter_list = get_gem_list(master)
 
-	market_filter_list= []
-	for market in markets:
-		if market in market_filter:
-			for gem in gem_list:
-				if market == master['gems'][gem]['market']:
-					market_filter_list.append(gem)
-	if not market_filter_list:
-		market_filter_list = get_gem_list(master)
+    sector_filter_list = []
+    for sector in sectors:
+        if sector in sector_filter:
+            for gem in gem_list:
+                if sector == master['gems'][gem]['sector']:
+                    sector_filter_list.append(gem)
+    if not sector_filter_list:
+        sector_filter_list = get_gem_list(master)
 
-	all_present = set()
+    market_filter_list= []
+    for market in markets:
+        if market in market_filter:
+            for gem in gem_list:
+                if market == master['gems'][gem]['market']:
+                    market_filter_list.append(gem)
+    if not market_filter_list:
+        market_filter_list = get_gem_list(master)
 
-	for gem in get_gem_list(master):
-		if gem in gem_filter_list and gem in tier_filter_list and gem in sector_filter_list and gem in market_filter_list:
-			all_present.add(gem)
+    rewards_filter_list= []
+    for reward in rewards:
+        if reward in rewards_filter:
+            for gem in gem_list:
+                if reward == master['gems'][gem]['Rewards']:
+                    rewards_filter_list.append(gem)
+    if not rewards_filter_list:
+        rewards_filter_list = get_gem_list(master)
 
-	filtered_gem_list = all_present
+    all_present = set()
 
-	return list(filtered_gem_list)
+    for gem in get_gem_list(master):
+        if gem in gem_filter_list and gem in tier_filter_list and gem in sector_filter_list and gem in market_filter_list and gem in rewards_filter_list:
+            all_present.add(gem)
 
+    filtered_gem_list = all_present
+
+    return list(filtered_gem_list)
 
 
 layout = html.Div(
@@ -250,6 +261,14 @@ layout = html.Div(
                                             [
                                                 html.Div(
                                                     [
+							html.P("Filter by Rewards", style={'margin-bottom': 2}),
+							dcc.Dropdown(
+								id='rewards_filter2',
+								options=get_options('Rewards'),
+								multi=True,
+								value=[],
+								style={'width': 'calc(100%-40px)', 'margin-bottom': 10},
+							),
 							html.P("Select Date Range of Trends", style={'margin-bottom': 2}),
                                                         dcc.DatePickerRange(
                                                             id='trend_date_picker',
@@ -263,8 +282,8 @@ layout = html.Div(
                                                     ],
                                                 ),
                                             ],
-                                            md={'width': 3, 'offset': 1},
-                                            align='center',
+                                            md=4,
+                                            #align='center',
                                         ),
                                     ],
                                     style={'padding-right': 10, 'padding-left': 10},
@@ -370,14 +389,15 @@ layout = html.Div(
 	[Input('gem_filter2', 'value'),
 	    Input('tier_filter2', 'value'),
 	    Input('sector_filter2', 'value'),
-            Input('market_filter2', 'value')])
+            Input('market_filter2', 'value'),
+            Input('rewards_filter2', 'value')])
 @cache.memoize(timeout=20)
-def update_filter_trend(gem_filter, tier_filter, sector_filter, market_filter):
-    if not gem_filter and not tier_filter and not sector_filter and not market_filter:
+def update_filter_trend(gem_filter, tier_filter, sector_filter, market_filter, rewards_filter):
+    if not gem_filter and not tier_filter and not sector_filter and not market_filter and not rewards_filter:
         filtered_json = json.dumps(get_gem_list(master))
         return filtered_json
     else:
-        filtered_gem_list = filter_gem_list(gem_filter, tier_filter, sector_filter, market_filter)
+        filtered_gem_list = filter_gem_list(gem_filter, tier_filter, sector_filter, market_filter, rewards_filter)
         filtered_json = json.dumps(filtered_gem_list)
         return filtered_json
 
@@ -417,7 +437,6 @@ def update_trend_mc_relative(filtered_json, start_date, end_date):
             State('trend_date_picker', 'start_date'))
 @cache.memoize(timeout=20)
 def update_date_place(end_date, start_date):
-    print(start_date, type(start_date))
     return datetime.strptime(start_date, '%Y-%m-%d')
 
 
