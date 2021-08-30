@@ -193,10 +193,12 @@ body {
 #market_filter .Select-menu-outer,
 #sector_filter .Select-menu-outer,
 #tier_filter .Select-menu-outer,
+#rewards_filter .Select-menu-outer,
 #gem_filter2 .Select-menu-outer,
 #market_filter2 .Select-menu-outer,
 #sector_filter2 .Select-menu-outer,
-#tier_filter2 .Select-menu-outer {
+#tier_filter2 .Select-menu-outer,
+#rewards_filter2 .Select-menu-outer {
   background-color: #272727;
   border: 1px solid #30d5c8;
 }
@@ -208,10 +210,12 @@ body {
 #market_filter .Select-control,
 #sector_filter .Select-control,
 #tier_filter .Select-control,
+#rewards_filter .Select-control,
 #gem_filter2 .Select-control,
 #market_filter2 .Select-control,
 #sector_filter2 .Select-control,
-#tier_filter2 .Select-control {
+#tier_filter2 .Select-control,
+#rewards_filter2 .Select-control {
   background-color: #272727;
   color: #ffffff;
   font-size: 13;
@@ -224,10 +228,12 @@ body {
 #market_filter .Select-placeholder,
 #sector_filter .Select-placeholder,
 #tier_filter .Select-placeholder,
+#rewards_filter .Select-placeholder,
 #gem_filter2 .Select-placeholder,
 #market_filter2 .Select-placeholder,
 #sector_filter2 .Select-placeholder,
-#tier_filter2 .Select-placeholder {
+#tier_filter2 .Select-placeholder,
+#rewards_filter2 .Select-placeholder {
   background-color: #272727;
   color: #30d5c8;
   font-size: 13;
@@ -239,10 +245,12 @@ body {
 #market_filter .Select--multi .Select-value,
 #sector_filter .Select--multi .Select-value,
 #tier_filter .Select--multi .Select-value,
+#rewards_filter .Select--multi .Select-value,
 #gem_filter2 .Select--multi .Select-value,
 #market_filter2 .Select--multi .Select-value,
 #sector_filter2 .Select--multi .Select-value,
-#tier_filter2 .Select--multi .Select-value {
+#tier_filter2 .Select--multi .Select-value,
+#rewards_filter2 .Select--multi .Select-value {
   color: #30d5c8;
   font-size: 13;
   border: 1px solid #30d5c8;
@@ -388,4 +396,79 @@ input {
 
 .DateInput_fangShape {
   fill: #272727;
+}
+
+
+@font-face {
+  font-family: 'Sparks-Dotline-Extrathick';
+  src: url(Sparks-Dotline-Extrathick.ttf);
+  font-weight: normal;
+  font-style: normal;
+}        
+	
+.sparks {
+  font-variant-ligatures: normal;
+}        
+.dotline-extrathick {
+  font-family: Sparks-Dotline-Extrathick;
+  font-size: 26px;
+}
+
+
+@font-face {
+  font-family: 'Sparks-Dotline-Extrathick';
+  src: url('https://tools.aftertheflood.com/sparks/output/eot/Sparks-Dotline-Extrathick.eot');
+  src: url('https://tools.aftertheflood.com/sparks/output/eot/Sparks-Dotline-Extrathick.eot?#iefix') format('embedded-opentype'),
+       url('https://tools.aftertheflood.com/sparks/output/woff2/Sparks-Dotline-Extrathick.woff2') format('woff2'),
+       url('https://tools.aftertheflood.com/sparks/output/woff/Sparks-Dotline-Extrathick.woff') format('woff'),
+       url('https://tools.aftertheflood.com/sparks/output/ttf/Sparks-Dotline-Extrathick.ttf') format('truetype'),
+       url('https://tools.aftertheflood.com/sparks/output/svg/Sparks-Dotline-Extrathick.svg#Sparks-Dotline-Extrathick') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+.sparks {
+  font-variant-ligatures: normal;
+}
+.bar-narrow {
+  font-family: Sparks-Bar-Medium;
+}
+.bar-medium {
+  font-family: Sparks-Bar-Medium;
+}
+.bar-wide {
+  font-family: Sparks-Bar-Wide;
+}
+.bar-extrawide {
+  font-family: Sparks-Bar-Wide;
+  font-size:18px
+}
+.dot-extrasmall {
+  font-family: Sparks-Dot-Extrasmall;
+}
+.dot-small {
+  font-family: Sparks-Dot-Small;
+}
+.dot-medium {
+  font-family: Sparks-Dot-Medium;
+}
+.dot-large {
+  font-family: Sparks-Dot-Large;
+}
+.dot-extralarge {
+  font-family: Sparks-Dot-Extralarge;
+}
+.dotline-extrathin {
+  font-family: Sparks-Dotline-Extrathin;
+}
+.dotline-thin {
+  font-family: Sparks-Dotline-Thin;
+}
+.dotline-medium {
+  font-family: Sparks-Dotline-Medium;
+}
+.dotline-thick {
+  font-family: Sparks-Dotline-Thick;
+}
+.dotline-extrathick {
+  font-family: Sparks-Dotline-Extrathick;
 }

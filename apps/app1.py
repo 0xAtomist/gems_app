@@ -1,6 +1,7 @@
 import os, sys
 from datetime import datetime
 import json
+import ast
 
 from dash.dependencies import Input, Output, State
 import dash_core_components as dcc
@@ -13,6 +14,7 @@ from dash.dependencies import Input, Output, State
 import plotly.graph_objs as go
 import plotly.express as px
 
+import numpy as np
 import pandas as pd
 from collections import OrderedDict
 
@@ -131,7 +133,7 @@ def generate_bar_chart(df, variable, color):
         showlegend=False,
         font={'color': base_colours['primary_text']},
         bargap=0.2,
-        height=350,
+        height=360,
         hoverlabel=dict(font=dict(family='Supermolot', color=base_colours['text'])),
         hovermode='x',
     )
@@ -170,7 +172,7 @@ def generate_pie_chart(gem_list, change):
         plot_bgcolor=base_colours['card'],
         paper_bgcolor=base_colours['card'],
         margin={'l': 0, 'r': 0, 't': 10, 'b': 15},
-        height=200,
+        height=240,
         showlegend=False,
         hoverlabel=dict(font=dict(family='Supermolot', color=base_colours['text'])),
     )
@@ -186,77 +188,116 @@ def generate_pie_chart(gem_list, change):
     return fig
 
 
+def make_sparkline(srs):
+    """
+    :param df_wide: dataframe in "wide" format with the sparkline periods as columns
+    :return: a series formatted for the sparkline fonts.
+             Example:  '453{10,40,30,80}690'
+    """
+    spark_list = []
+    idx = srs.index
+    for i, item in enumerate(srs):
+        item = ast.literal_eval(item)
+        maxm = max(item['price'])
+        minm = min(item['price'])
+        short_item = item['price'][::12]
+        spark_norm = (np.array(short_item) - minm) / (maxm - minm) * 100
+        #spark_norm = np.array(short_item) / maxm * 100
+        spark_norm = spark_norm.astype(int)
+        start = str(round(item['price'][0], 2))
+        end = str(round(item['price'][-1], 2))
+        spark = '{' + str(spark_norm.tolist()).replace(' ', '')[1:-1] + '}'
+        print(idx[i], spark)
+        spark_list.append(spark)
+
+    return pd.Series(spark_list, index=idx)
+
+
 def generate_table_data(df):
     df['1h_col'] = df['1h_col']/100
     df['24h_col'] = df['24h_col']/100
     df['7d_col'] = df['7d_col']/100
     df['ath_change_percentage'] = df['ath_change_percentage']/100
     df['last_updated'] = pd.to_datetime(df['last_updated'], format='%Y-%m-%dT%H:%M:%S.%fZ').dt.strftime('%Y/%m/%d %H:%M')
+    #print(df['sparkline_in_7d'])
+    #df['sparkline'] = make_sparkline(df['sparkline_in_7d'])
     return df.to_dict('records')
 
 
-def filter_gem_list(gem_filter, tier_filter, sector_filter, market_filter):
-	gem_list = get_gem_list(master)
-	gems = []
-	tiers = []
-	sectors = []
-	markets = []
-	for option in get_gem_options():
-		gems.append(option['value'])
-	for option in get_options('Tier'):
-		tiers.append(option['value'])
-	for option in get_options('sector'):
-		sectors.append(option['value'])
-	for option in get_options('market'):
-		markets.append(option['value'])
+def filter_gem_list(gem_filter, tier_filter, sector_filter, market_filter, rewards_filter):
+    gem_list = get_gem_list(master)
+    gems = []
+    tiers = []
+    sectors = []
+    markets = []
+    rewards = []
+    for option in get_gem_options():
+        gems.append(option['value'])
+    for option in get_options('Tier'):
+        tiers.append(option['value'])
+    for option in get_options('sector'):
+        sectors.append(option['value'])
+    for option in get_options('market'):
+        markets.append(option['value'])
+    for option in get_options('Rewards'):
+        rewards.append(option['value'])
 
-	filtered_gem_list = []
+    filtered_gem_list = []
 
-	gem_filter_list = []
-	for f_gem in gems:
-		if f_gem in gem_filter:
-			for gem in gem_list:
-				if f_gem == gem:
-					gem_filter_list.append(gem)
-	if not gem_filter_list:
-		gem_filter_list = get_gem_list(master)
-	
-	tier_filter_list = []
-	for tier in tiers:
-		if tier in tier_filter:
-			for gem in gem_list:
-				if tier == master['gems'][gem]['Tier']:
-					tier_filter_list.append(gem)
-	if not tier_filter_list:
-		tier_filter_list = get_gem_list(master)
+    gem_filter_list = []
+    for f_gem in gems:
+        if f_gem in gem_filter:
+            for gem in gem_list:
+                if f_gem == gem:
+                    gem_filter_list.append(gem)
+    if not gem_filter_list:
+        gem_filter_list = get_gem_list(master)
 
-	sector_filter_list = []
-	for sector in sectors:
-		if sector in sector_filter:
-			for gem in gem_list:
-				if sector == master['gems'][gem]['sector']:
-					sector_filter_list.append(gem)
-	if not sector_filter_list:
-		sector_filter_list = get_gem_list(master)
+    tier_filter_list = []
+    for tier in tiers:
+        if tier in tier_filter:
+            for gem in gem_list:
+                if tier == master['gems'][gem]['Tier']:
+                    tier_filter_list.append(gem)
+    if not tier_filter_list:
+        tier_filter_list = get_gem_list(master)
 
-	market_filter_list= []
-	for market in markets:
-		if market in market_filter:
-			for gem in gem_list:
-				if market == master['gems'][gem]['market']:
-					market_filter_list.append(gem)
-	if not market_filter_list:
-		market_filter_list = get_gem_list(master)
+    sector_filter_list = []
+    for sector in sectors:
+        if sector in sector_filter:
+            for gem in gem_list:
+                if sector == master['gems'][gem]['sector']:
+                    sector_filter_list.append(gem)
+    if not sector_filter_list:
+        sector_filter_list = get_gem_list(master)
 
-	all_present = set()
+    market_filter_list= []
+    for market in markets:
+        if market in market_filter:
+            for gem in gem_list:
+                if market == master['gems'][gem]['market']:
+                    market_filter_list.append(gem)
+    if not market_filter_list:
+        market_filter_list = get_gem_list(master)
 
-	for gem in get_gem_list(master):
-		if gem in gem_filter_list and gem in tier_filter_list and gem in sector_filter_list and gem in market_filter_list:
-			all_present.add(gem)
+    rewards_filter_list= []
+    for reward in rewards:
+        if reward in rewards_filter:
+            for gem in gem_list:
+                if reward == master['gems'][gem]['Rewards']:
+                    rewards_filter_list.append(gem)
+    if not rewards_filter_list:
+        rewards_filter_list = get_gem_list(master)
 
-	filtered_gem_list = all_present
+    all_present = set()
 
-	return list(filtered_gem_list)
+    for gem in get_gem_list(master):
+        if gem in gem_filter_list and gem in tier_filter_list and gem in sector_filter_list and gem in market_filter_list and gem in rewards_filter_list:
+            all_present.add(gem)
+
+    filtered_gem_list = all_present
+
+    return list(filtered_gem_list)
 
 
 layout = html.Div(
@@ -313,7 +354,7 @@ layout = html.Div(
 								)
 							],
 							className="pretty_container",
-                                                        style={'height': 'auto', 'min-height': 320, 'padding-bottom': '10px'},
+                                                        style={'height': 'auto', 'min-height': 380, 'padding-bottom': '10px'},
 						),
 					],
 					xl=8,
@@ -352,11 +393,19 @@ layout = html.Div(
 								options=get_options('Tier'),
 								multi=True,
 								value=[],
+								style={'width': 'calc(100%-40px)', 'margin-bottom': 10},
+							),
+							html.P("Filter by Rewards", style={'margin-bottom': 2}),
+							dcc.Dropdown(
+								id='rewards_filter',
+								options=get_options('Rewards'),
+								multi=True,
+								value=[],
 								style={'width': 'calc(100%-40px)', 'margin-bottom': 0},
 							),
 						],
 						className="pretty_container",
-						style={'height': 'auto', 'min-height': 320}
+						style={'height': 'auto', 'min-height': 380}
 					),
 				xl=4,
 				style={'padding': 0}
@@ -391,7 +440,7 @@ layout = html.Div(
 									"format": FormatTemplate.percentage(1)},
 								{"name": ["7d"], "id": "7d_col", "type": "numeric",
 									"format": FormatTemplate.percentage(1)},
-								#{"name": ["Sparkline"], "id": "sparkline_col", "type": "numeric"},
+								#{"name": ["Sparkline"], "id": "sparkline", "type": "text"},
 								{"name": ["Market Cap"], "id": "market_cap", "type": "numeric",
 									"format": Format(
 										precision=0,
@@ -513,6 +562,13 @@ layout = html.Div(
                                                                 'padding': '10px',
                                                         },
 							style_cell_conditional=[
+                                                                {'if': {'column_id': 'sparkline'},
+                                                                    'font-family': 'Sparks-Dotline-Medium',
+                                                                    'fontSize': 24,
+                                                                    'padding': '0px',
+                                                                    'padding-top': '5px',
+                                                                    #'max-width': '50px',
+                                                                },
                                                                 {'if': {'column_id': 'name'},
                                                                     'min-width': '80px',
                                                                     'max-width': '140px',
@@ -701,14 +757,15 @@ layout = html.Div(
 	[Input('gem_filter', 'value'),
 	    Input('tier_filter', 'value'),
 	    Input('sector_filter', 'value'),
-            Input('market_filter', 'value')])
+            Input('market_filter', 'value'),
+            Input('rewards_filter', 'value')])
 @cache.memoize(timeout=20)
-def update_filter_store(gem_filter, tier_filter, sector_filter, market_filter):
-    if not gem_filter and not tier_filter and not sector_filter and not market_filter:
+def update_filter_store(gem_filter, tier_filter, sector_filter, market_filter, rewards_filter):
+    if not gem_filter and not tier_filter and not sector_filter and not market_filter and not rewards_filter:
         filtered_json = json.dumps(get_gem_list(master))
         return filtered_json
     else:
-        filtered_gem_list = filter_gem_list(gem_filter, tier_filter, sector_filter, market_filter)
+        filtered_gem_list = filter_gem_list(gem_filter, tier_filter, sector_filter, market_filter, rewards_filter)
         filtered_json = json.dumps(filtered_gem_list)
         return filtered_json
 
@@ -748,6 +805,26 @@ def update_24h_pie(filtered_json, n_intervals):
 def update_7d_pie(filtered_json, n_intervals):
     filtered_gem_list = json.loads(filtered_json)
     return generate_pie_chart(filtered_gem_list, '7d')
+
+
+@app.callback(Output('ath_gemusd_bar', 'figure'),
+	[Input('filter-store', 'data'),
+	    Input('live-interval', 'n_intervals')])
+@cache.memoize(timeout=20)
+def update_ath_gemusd_bar(filtered_json, n_intervals):
+    filtered_gem_list = json.loads(filtered_json)
+    df = get_filtered_df(filtered_gem_list)
+    return generate_bar_chart(df, 'ath_gem_usd_x', dash_green)
+
+
+@app.callback(Output('ath_gembtc_bar', 'figure'),
+	[Input('filter-store', 'data'),
+	    Input('live-interval', 'n_intervals')])
+@cache.memoize(timeout=20)
+def update_ath_gembtc_bar(filtered_json, n_intervals):
+    filtered_gem_list = json.loads(filtered_json)
+    df = get_filtered_df(filtered_gem_list)
+    return generate_bar_chart(df, 'ath_gem_btc_x', yellow)
 
 
 @app.callback(Output('gemusd_bar', 'figure'),

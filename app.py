@@ -14,7 +14,7 @@ app = dash.Dash(
     __name__,
     server=server,
     suppress_callback_exceptions=True,
-    external_stylesheets=[dbc.themes.BOOTSTRAP]
+    external_stylesheets=[dbc.themes.BOOTSTRAP, "https://tools.aftertheflood.com/sparks/styles/font-faces.css"]
 )
 
 app.css.config.serve_locally = True

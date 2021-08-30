@@ -147,8 +147,8 @@ def get_data_recent(gem):  # get most recent reading for site input
     output = r.hgetall(gem)
 
     df = pd.DataFrame.from_dict(output, orient='index').T
-    cols = df.columns.drop(['symbol', 'ath_date', 'name', 'last_updated', 'atl_date', 'image'])
-    df[cols] = df[cols].apply(pd.to_numeric, errors='coerce')
+    num_cols = df.columns.drop(['symbol', 'ath_date', 'name', 'last_updated', 'atl_date', 'image', 'sparkline_in_7d'])
+    df[num_cols] = df[num_cols].apply(pd.to_numeric, errors='coerce')
 
     #print(df['current_price'][0])
     #print(df.loc[0]['symbol'], df.loc[0]['last_updated'])
