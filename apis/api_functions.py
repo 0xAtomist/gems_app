@@ -121,8 +121,8 @@ def get_api_markets():
     # Finalise df
     df = df.fillna(0)
     df['symbol'] = df['symbol'].str.upper()
-    print(df['sparkline_in_7d'])
-    #df = df.drop('sparkline_in_7d', axis=1)
+    #print(df['sparkline_in_7d'])
+    df = df.drop('sparkline_in_7d', axis=1)
 
     return df
 

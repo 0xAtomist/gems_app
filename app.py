@@ -17,6 +17,32 @@ app = dash.Dash(
     external_stylesheets=[dbc.themes.BOOTSTRAP, "https://tools.aftertheflood.com/sparks/styles/font-faces.css"]
 )
 
+
+app.index_string = '''
+<!DOCTYPE html>
+<html>
+    <head>
+        {%metas%}
+        <title>{%title%}</title>
+        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3415489682836828"
+            crossorigin="anonymous"></script>
+        {%favicon%}
+        {%css%}
+    </head>
+    <body>
+        <div>My Custom header</div>
+        {%app_entry%}
+        <footer>
+            {%config%}
+            {%scripts%}
+            {%renderer%}
+        </footer>
+        <div>My Custom footer</div>
+    </body>
+</html>
+'''
+
+
 app.css.config.serve_locally = True
 app.title = 'GEMS Alliance: Performance'
 app.server.secret_key = auth_conf['flask']['SECRET_KEY']
