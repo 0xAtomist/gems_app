@@ -32,8 +32,6 @@ script_dir = os.path.dirname(__file__)
 def get_gem_list(master):  # get list of site IDs publishing data
     gem_list = list(master["gems"].keys())
     gem_list.remove('usd-coin')
-    gem_list.remove('xvix')
-    gem_list.remove('gambit')
     return gem_list
 
 #@cache.memoize(timeout=0)

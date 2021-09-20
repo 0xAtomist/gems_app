@@ -14,6 +14,8 @@ r = redis.StrictRedis('localhost')
 
 gem_list = get_gem_list(get_gem_info())
 
+gem_list.reverse()
+
 for gem in gem_list:
     print(gem)
     # Write inspection data

@@ -103,7 +103,7 @@ def get_api_markets():
     master = get_gem_info()
 
     markets_list = get_gem_list(master)
-    extra_coins = ['bitcoin', 'ethereum', 'binancecoin']
+    extra_coins = ['bitcoin', 'ethereum', 'binancecoin', 'chainlink', 'solana', 'fantom', 'polkadot', 'usd-coin', 'cardano', 'ripple']
     for extra in extra_coins:
         markets_list.append(extra)
 

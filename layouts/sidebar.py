@@ -67,6 +67,12 @@ def generate_layout():
                                     style={'padding-left': 5, 'color': '#ffffff', 'font-size': 18}
                                 ),
                                 dbc.NavLink(
+                                    "Staking Data", 
+                                    id='staking-page',
+                                    href='/staking', 
+                                    style={'padding-left': 5, 'color': '#ffffff', 'font-size': 18}
+                                ),
+                                dbc.NavLink(
                                     "Macro Market *", 
                                     id='macro-page',
                                     href='/macro', 
@@ -157,7 +163,7 @@ def generate_layout():
                         [
                             dbc.Col([
                                 html.Hr(),
-                                html.P('version 0.0.4', style={'font-size': 11, 'font-style': 'italic', 'color': base_colours['cg_cell']}),
+                                html.P('version 0.0.5', style={'font-size': 11, 'font-style': 'italic', 'color': base_colours['cg_cell']}),
                             ], xl=12),
                         ],
                         style={'text-align': 'center'},

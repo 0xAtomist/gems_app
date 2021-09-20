@@ -1,3 +1,4 @@
+import pandas as pd
 import dash_core_components as dcc
 import dash_html_components as html
 import dash_bootstrap_components as dbc
@@ -6,10 +7,10 @@ from dash.dependencies import Input, Output
 
 
 from app import app, server
-from apps import app1, inspect_app, trending_app
+from apps import app1, inspect_app, trending_app, staking_app
 from layouts import header, sidebar
 
-from data_functions import get_gem_list, get_gem_info, get_filtered_df
+from data_functions import get_gem_list, get_gem_info, get_filtered_df, get_data_recent
 from colours import palette, base_colours
 
 master = get_gem_info()
@@ -37,6 +38,8 @@ def render_page_content(pathname):
         return inspect_app.layout
     elif pathname == '/trends':
         return trending_app.layout
+    elif pathname == '/staking':
+        return staking_app.layout
     else:
         return dbc.Jumbotron([
             html.H1("404: Not found", style={'color': palette['red']['50']}),
@@ -79,6 +82,13 @@ def toggle_active_links(pathname):
     else: return False
 
 
+@app.callback(Output(f"staking-page", "active"), [Input("url", "pathname")])
+def toggle_active_links(pathname):
+    if pathname == "/staking":
+        return True
+    else: return False
+
+
 @app.callback(Output(f"wallet-page", "active"), [Input("url", "pathname")])
 def toggle_active_links(pathname):
     if pathname == "/wallet":
@@ -89,7 +99,27 @@ def toggle_active_links(pathname):
 @server.route('/api/v1/gems/all')
 def api_gems():
     df = get_filtered_df(get_gem_list(master))
-    json_msg = df.to_json(orient='split')
+    json_msg = df.to_json(orient='table')
+    return json_msg
+
+
+@server.route('/api/v1/large-caps/all')
+def api_large_caps():
+    large_caps = ['bitcoin', 'ethereum', 'binancecoin', 'chainlink', 'solana', 'fantom', 'polkadot', 'usd-coin', 'cardano', 'ripple']
+    dfs = []
+    for coin in large_caps:
+        s = get_data_recent(coin)
+        df = pd.DataFrame(s).transpose()
+        df['id'] = coin
+        df = df.set_index('id')
+        dfs.append(df)
+    df_master = pd.concat(dfs)
+    df_master.rename(columns={
+        'price_change_percentage_1h_in_currency': '1h_col',
+        'price_change_percentage_24h_in_currency': '24h_col',
+        'price_change_percentage_7d_in_currency': '7d_col'
+    }, inplace=True)
+    json_msg = df_master.to_json(orient='table')
     return json_msg
 
 

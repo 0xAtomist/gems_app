@@ -208,5 +208,7 @@ def update_title(pathname):
         return 'Inspect GEM'
     elif pathname == '/trends':
         return 'Trending Data'
+    elif pathname == '/staking':
+        return 'GMX Staking Data'
     else:
         return ''

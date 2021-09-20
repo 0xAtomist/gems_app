@@ -14,7 +14,9 @@ r = redis.StrictRedis('localhost')
 
 gem_list = get_gem_list(get_gem_info())
 
-for gem in gem_list:
+gem_list.reverse()
+
+for gem in list(gem_list):
     # Write inspection data
     df_max = get_chart_data(gem, 'max')
     time.sleep(1)
