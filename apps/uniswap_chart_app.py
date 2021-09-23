@@ -79,8 +79,28 @@ def generate_candle(df, var, interval, period, y_text):
   
   def generate_table_data(df):
     return df.to_dict('records')
-  
-  
+ 
+    
+def get_candle_options():
+	options = []
+	candle_list = ['15m', '30m', '1h', '4h', '1D', '3D', '1W']
+    value_list = ['15Min', '30Min', '1h', '4h', '1D', '3D', '1W']
+	df = pd.DataFrame(data={'candle': candle_list, 'value': value_list})
+	for i in df.index:
+		options.append({'label': df.loc[i]['candle'], 'value': df.loc[i]['value']})
+	return options
+
+
+def get_period_options():
+	options = []
+	period_list = ['24h', '7d', '14d', '30d', '90d', '180d', '1y']
+    value_list = [1, 7, 14, 30, 90, 180, 365]
+	df = pd.DataFrame(data={'period': period_list, 'value': value_list})
+	for i in df.index:
+		options.append({'label': df.loc[i]['period'], 'value': df.loc[i]['value']})
+	return options
+
+
 layout = html.Div(
     [
         dbc.Row(
@@ -95,37 +115,87 @@ layout = html.Div(
                                             [
                                                 html.Div(
                                                     [
+                                                        html.H2('GMX'),
                                                     ],
+                                                    id='uni_name_div',
+                                                    style={'display': 'inline-block', 'width': '100%', 'padding-left': 20, 'vertical-align': 'middle'}
                                                 ),
                                             ],
-                                            md=4,
+                                            md=3,
                                             style={'padding-right': 10, 'padding-left': 10},
                                         ),
                                         dbc.Col(
                                             [
                                                 html.Div(
                                                     [
+                                                        html.H2(id='uni_price'),
                                                     ],
+                                                    id='uni_price_div',
+                                                    style={'display': 'inline-block', 'width': '100%', 'padding-left': 20, 'vertical-align': 'middle'}
                                                 ),
                                             ],
-                                            md=4,
+                                            md=3,
                                             style={'padding-right': 10, 'padding-left': 10},
                                         ),
                                         dbc.Col(
                                             [
                                                 html.Div(
                                                     [
+                                                        html.P("Pair", style={'margin-bottom': 2}),
+                                                        dcc.Dropdown(
+                                                            id='currency_filter',
+                                                            options=[{'label': 'USD', 'value': 'usd'}, {'label': 'ETH', 'value': 'eth'}],
+                                                            multi=False,
+                                                            value='1h',
+                                                            style={'width': 'calc(100%-40px)', 'margin-bottom': 10},
+                                                        ),
                                                     ],
                                                 ),
                                             ],
-                                            md=4,
-                                            #align='center',
+                                            md=2,
+                                            style={'padding-right': 10, 'padding-left': 10},
+                                        ),
+                                        dbc.Col(
+                                            [
+                                                html.Div(
+                                                    [
+                                                        html.P("Interval", style={'margin-bottom': 2}),
+                                                        dcc.Dropdown(
+                                                            id='candle_filter',
+                                                            options=get_candle_options(),
+                                                            multi=False,
+                                                            value='1h',
+                                                            style={'width': 'calc(100%-40px)', 'margin-bottom': 10},
+                                                        ),
+                                                    ],
+                                                ),
+                                            ],
+                                            md=2,
+                                            style={'padding-right': 10, 'padding-left': 10},
+                                        ),
+                                        dbc.Col(
+                                            [
+                                                html.Div(
+                                                    [
+                                                        html.P("Period", style={'margin-bottom': 2}),
+                                                        dcc.Dropdown(
+                                                            id='period_filter',
+                                                            options=get_period_options(),
+                                                            multi=False,
+                                                            value=7,
+                                                            style={'width': 'calc(100%-40px)', 'margin-bottom': 10},
+                                                        ),
+                                                    ],
+                                                ),
+                                            ],
+                                            md=2,
+                                            style={'padding-right': 10, 'padding-left': 10},
                                         ),
                                     ],
                                     style={'padding-right': 10, 'padding-left': 10},
                                 ),
                             ],
-                            id='trending_ribbon',
+                            id='uni_ribbon',
                             className="pretty_container",
                             style={'height': 'auto', 'min-height': 60, 'padding': 10},
                         ),
@@ -150,7 +220,7 @@ layout = html.Div(
                                 dcc.Graph(
                                     id='uni_candlestick',
                                     config=graph_config,
-                                    figure=generate_candle(get_candle_data(get_uni_data('gmx', 'usd_price', 7), '1h', 'GMX/USD')
+                                    figure=generate_candle(get_candle_data(get_uni_data('gmx', 'usd_price', 7), '1h', 'GMX/USD'))
                                 )
                             ],
                             className="pretty_container",
@@ -165,3 +235,29 @@ layout = html.Div(
     ],
     id='uniswap-container',
 )
+
+        
+@app.callback(Output('uni_candlestick', 'figure'),
+	[Input('chart-interval', 'n_intervals'),
+            Input('candle_filter', 'value'),
+            Input('period_filter', 'value'),
+            Input('currency_filter', 'value')])
+def update_uni_trend(n_intervals, interval, period, currency):
+    if currency == 'usd':
+        return generate_candle(get_candle_data(get_uni_data('gmx', period), 'usd_price', interval), 'GMX/USD')
+    elif currency == 'eth':
+        return generate_candle(get_candle_data(get_uni_data('gmx', period), 'eth_price', interval), 'GMX/ETH')
+
+ 
+@app.callback(Output('uni_price, 'children'),
+	[Input('chart-interval', 'n_intervals'),
+            Input('currency_filter', 'value')])
+def update_uni_price(n_intervals, currency):
+    df = get_uni_data('gmx', 1)
+    if currency == 'usd':
+        return '{} USD'.format(df['usd_price'].iloc[-1])
+    elif currency == 'eth':
+        return '{} ETH'.format(df['eth_price'].iloc[-1])
+
+       
+        
