@@ -209,7 +209,7 @@ def get_filtered_df(filtered_gem_list):
         return pd.DataFrame()
 
 
-def get_uni_data(gem, var, period):
+def get_uni_data(gem, period):
     r = redis.StrictRedis('localhost')
     context = pa.default_serialization_context()
     df = context.deserialize(r.get('{}-uniswap'.format(gem)))
@@ -218,7 +218,7 @@ def get_uni_data(gem, var, period):
     return df
 
 
-def get_candle_data(df, interval):
+def get_candle_data(df, var, interval):
     df_candle = df[var].resample(interval).ohlc()
     return df_candle
 
