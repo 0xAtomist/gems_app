@@ -209,6 +209,20 @@ def get_filtered_df(filtered_gem_list):
         return pd.DataFrame()
 
 
+def get_uni_data(gem, var, period):
+    r = redis.StrictRedis('localhost')
+    context = pa.default_serialization_context()
+    df = context.deserialize(r.get('{}-uniswap'.format(gem)))
+    start_date = datetime.today() - timedelta(days=period)
+    df = df[~(df.index < start_date)]    
+    return df
+
+
+def get_candle_data(df, interval):
+    df_candle = df[var].resample(interval).ohlc()
+    return df_candle
+
+
 def get_slider(gem):  # get settings for date range slider
     today = pd.Timestamp.today()
     tweet_date = get_gem_info()['gems'][gem]['Tweet Date']  # get product start date from publishers.json
