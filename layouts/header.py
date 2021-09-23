@@ -23,6 +23,7 @@ def generate_layout():
 	return html.Div(
 		[
 			dcc.Interval(id='live-interval', interval=1*60*1000, n_intervals=0),
+			dcc.Interval(id='chart-interval', interval=10*1000, n_intervals=0),
 			dcc.Store(id='filter-store', storage_type='session'),
 			dcc.Store(id='filter-trend', storage_type='session'),
 			dbc.Row(
