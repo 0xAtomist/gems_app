@@ -30,6 +30,7 @@ graph_config = {
     'displayModeBar': False,
 }
 
+PAGE_SIZE = 25
 
 def generate_candle(df, var, candle, y_text):
     data_ohlc = get_candle_data(df, var, candle)
@@ -116,7 +117,8 @@ def generate_candle(df, var, candle, y_text):
     return fig
   
   
-def generate_table_data(df):
+def generate_table_data(df, page_current, page_size):
+	df.iloc[page_current*page_size:(page_current+ 1)*page_size].to_dict('records')
     return df.to_dict('records')
  
     
@@ -270,6 +272,131 @@ layout = html.Div(
                 ),
             ],
         ),
+	dbc.Row(
+		dbc.Col(
+			html.Div(
+				[
+					html.P('Uniswap Transactions', id='uni_table_tooltip', style={'text-align': 'center'}),
+					dbc.Tooltip(
+					    'Table can be sorted by column and filtered using the dropdowns',
+					    target='uni_table_tooltip',
+					    style={'font-family': 'Supermolot'}
+					),
+					dash_table.DataTable(
+						id="uni_table",
+						sort_action='native',
+						sort_by=[{'column_id': 'Datetime', 'direction': 'desc'}],
+						style_table={'overflowY': 'auto', 'border': '{} {} {}'.format('1px', 'solid', base_colours['cg_border'])},
+						fixed_rows={'headers': True},
+						#style_as_list_view=True,
+						columns=[
+							{"name": ["Datetime"], "id": "datetime", "type": "numeric"},
+							{"name": ["Age"], "id": "age", "type": "text"},
+							{"name": ["Action"], "id": "action", "type": "text"},
+							{"name": ["GMX"], "id": "n_GMX", "type": "numeric",
+							{"name": ["ETH"], "id": "n_ETH", "type": "numeric",
+								"format": Format(
+									precision=0,
+									scheme=Scheme.fixed,
+									group=Group.yes, 
+									groups=3,
+								)
+							},
+							 
+							 	"format": Format(
+									precision=5,
+									scheme=Scheme.fixed,
+								)
+							},
+							{"name": ["USD"], "id": "n_USD", "type": "numeric",
+							 	"format": Format(
+									precision=3,
+									scheme=Scheme.fixed,
+									symbol=Symbol.yes, 
+									symbol_prefix='$'
+								)
+							},
+							{"name": ["Txn Hash"], "id": "tx_hash", "type": "text"},
+							{"name": ["Arbiscan"], "id": "arbiscan", "type"="text", "presentation"="markdown"},
+							{"name": ["Address"], "id": "address", "type"="text", "presentation"="markdown"},
+						],
+						page_current=0,
+						page_size=PAGE_SIZE,
+						page_action='custom',
+						data=generate_table_data(get_uni_data('gmx', 7), 0, PAGE_SIZE),
+						style_header={
+							'text-align': 'right',
+							'background-color': base_colours['background'],
+							'color': base_colours['text'],
+							'font-size': 14,
+							'font-weight': 'bold',
+							'whiteSpace': 'normal',
+							'height': 'auto',
+							'font-family': 'Supermolot',
+						},
+						style_header_conditional=[
+							{'if': {'column_id': 'action'}, 'textAlign': 'left'},
+							{'if': {'column_id': 'txn_hash'}, 'textAlign': 'left'},
+							{'if': {'column_id': 'arbiscan'}, 'textAlign': 'left'},
+							{'if': {'column_id': 'address'}, 'textAlign': 'left'},
+							{'if': {'column_id': 'datetime'}, 'textAlign': 'left'},
+							{'if': {'column_id': 'age'}, 'textAlign': 'left'},
+						],
+						style_data_conditional=[
+							#{'if': {'row_index': 'odd'},
+							# 'backgroundColor': base_colours['card'],
+							# 'color': base_colours['text']},
+							#{'if': {'row_index': 'even'},
+							# 'backgroundColor': base_colours['alt_row'],
+							# 'color': base_colours['text']},
+							{'if': {'column_id': 'datetime'}, 'color': base_colours['text']},
+							{'if': 
+								{
+									'filter_query': '{action} == BUY',
+									'column_id': 'action'
+								},
+								'color': palette['green']['50']
+							},
+							{'if': 
+								{
+									'filter_query': '{action} == BUY',
+									'column_id': 'action'
+								},
+								'color': palette['red']['50']
+							},
+							{'if': {'state': 'active'},
+								'backgroundColor': '#1f9990',
+								'border': '1px solid #30d5c8',
+								'color': '#ffffff',
+							},
+						],
+						style_cell={
+							'background-color': base_colours['cg_bg'],
+							'color': base_colours['cg_cell'],
+							'font-family': "sans-serif", 
+							'font-size': 13,
+							'border': '{} {} {}'.format('1px', 'solid', base_colours['cg_border']),
+							'height': 'auto',
+							'whiteSpace': 'normal',
+							'padding': '10px',
+						},
+						style_cell_conditional=[
+							{'if': {'column_id': 'action'}, 'textAlign': 'left'},
+							{'if': {'column_id': 'txn_hash'}, 'textAlign': 'left'},
+							{'if': {'column_id': 'arbiscan'}, 'textAlign': 'left'},
+							{'if': {'column_id': 'address'}, 'textAlign': 'left'},
+							{'if': {'column_id': 'datetime'}, 'textAlign': 'left'},
+							{'if': {'column_id': 'age'}, 'textAlign': 'left'},
+						],
+					)
+				],
+				className="pretty_container",
+				style={'height': 'auto'}
+			),
+		width=12,
+		style={'padding': 0}
+		),
+	),
     ],
     id='uniswap-container',
 )
@@ -298,5 +425,12 @@ def update_uni_price(n_intervals, currency):
     elif currency == 'eth':
         return '{} ETH'.format(round(df['gmxeth'].iloc[-1], 5))
 
-       
+
+@app.callback(
+    Output('uni_table', 'data'),
+	Input('period_filter'', "value"),
+    Input('uni_table'', "page_current"),
+    Input('uni_table'', "page_size"))
+def update_table(interval, page_current, page_size):
+    return generate_table_data(get_uni_data('gmx', interval), page_current, page_size)
         
