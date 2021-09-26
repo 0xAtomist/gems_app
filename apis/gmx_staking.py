@@ -115,10 +115,10 @@ while True:
                         r.append(str(df['timestamp'].iloc[i]), value)
                 else:
                     print('no large withdrawals')
-        print(time.time())
+        #print(time.time())
     except Exception as e:
         print(e)
-    time.sleep(10)
+    time.sleep(1)
 
 
 

@@ -6,6 +6,15 @@ import redis
 import pyarrow as pa
 
 
+GMX_contract = "0xfc5a1a6eb076a2c7ad06ed22c90d7e710e35ad0a"
+sGMX_contract = "0x908c4d94d34924765f1edc22a1dd098397c59dd4"
+
+GMX_ETH_LP = '0x80a9ae39310abf666a87c743d6ebbd0e8c42158e'
+ETH_USDC_LP = '0x17c14d2c404d167802b16c450d3c99f88f2c4f4d'
+
+API_key = "YWR5E9YUBPE2X6KNXG99D2MX1UHPYDFDBGT"
+
+
 def get_all_LP_tx(LP_contract, top_pair, bottom_pair, decimal_ratio, blocklength, iterations):
     r_all = []
     for i in range(iterations):
@@ -21,44 +30,47 @@ def get_all_LP_tx(LP_contract, top_pair, bottom_pair, decimal_ratio, blocklength
     output_dict = {}
 
     for i, result in enumerate(r_all):
-        tx = result['hash']
-        timestamp = result['timeStamp']
-        blocknumber = result['blockNumber']
-        
-        if tx in output_dict.keys():
-            pass
-        else:
-            output_dict[tx] = {'timestamp': timestamp, 'blocknumber': blocknumber}
+        try:
+            tx = result['hash']
+            timestamp = result['timeStamp']
+            blocknumber = result['blockNumber']
+            
+            if tx in output_dict.keys():
+                pass
+            else:
+                output_dict[tx] = {'timestamp': timestamp, 'blocknumber': blocknumber}
 
 
-        if result['to'] == LP_contract:
-            in_out = 'in'
-            
-            if result['tokenSymbol'] == top_pair:
-                token = top_pair
-                amt = float(result['value'])*1e-18
-                output_dict[tx]['in amt'] = amt
-                output_dict[tx]['in token'] = token
+            if result['to'] == LP_contract:
+                in_out = 'in'
                 
-            elif result['tokenSymbol'] == bottom_pair:
-                token = bottom_pair
-                amt = float(result['value'])*1e-18
-                output_dict[tx]['in amt'] = amt
-                output_dict[tx]['in token'] = token
-        elif result['from'] == LP_contract:
-            in_out = 'out'
-            
-            if result['tokenSymbol'] == top_pair:
-                token = top_pair
-                amt = float(result['value'])*1e-18
-                output_dict[tx]['out amt'] = amt
-                output_dict[tx]['out token'] = token
+                if result['tokenSymbol'] == top_pair:
+                    token = top_pair
+                    amt = float(result['value'])*1e-18
+                    output_dict[tx]['in amt'] = amt
+                    output_dict[tx]['in token'] = token
+                    
+                elif result['tokenSymbol'] == bottom_pair:
+                    token = bottom_pair
+                    amt = float(result['value'])*1e-18
+                    output_dict[tx]['in amt'] = amt
+                    output_dict[tx]['in token'] = token
+            elif result['from'] == LP_contract:
+                in_out = 'out'
                 
-            elif result['tokenSymbol'] == bottom_pair:
-                token = bottom_pair
-                amt = float(result['value'])*1e-18
-                output_dict[tx]['out amt'] = amt
-                output_dict[tx]['out token'] = token
+                if result['tokenSymbol'] == top_pair:
+                    token = top_pair
+                    amt = float(result['value'])*1e-18
+                    output_dict[tx]['out amt'] = amt
+                    output_dict[tx]['out token'] = token
+                    
+                elif result['tokenSymbol'] == bottom_pair:
+                    token = bottom_pair
+                    amt = float(result['value'])*1e-18
+                    output_dict[tx]['out amt'] = amt
+                    output_dict[tx]['out token'] = token
+        except Exception as e:
+            print(e)
                     
     df = pd.DataFrame.from_dict(output_dict, orient='index')
     df['timestamp'] = pd.to_datetime(df['timestamp'], unit='s')
@@ -76,32 +88,40 @@ def get_all_LP_tx(LP_contract, top_pair, bottom_pair, decimal_ratio, blocklength
     
     df['price'] = price_list
     
-    return df.dropna().drop_duplicates(subset=['timestamp']).set_index('timestamp', drop=False)
+    df = df.dropna().drop_duplicates(subset=['timestamp']).set_index('timestamp', drop=False)
+
+    return df
 
 
 def get_usd_dataset(df_top, df_bottom):
     usd_list = []
     eth_list = []
+    vol_list = []
     for i, dt in enumerate(df_top.index):
         idx = df_bottom.index.unique().get_loc(dt, method='nearest')
         ethusd_price = df_bottom['price'].iloc[idx]
         gmxusd_price = df_top['price'].iloc[i] * ethusd_price
         usd_list.append(gmxusd_price)
         eth_list.append(ethusd_price)
-    
+        if df_top['in token'].iloc[i] == 'GMX':
+            vol = df_top['in amt'].iloc[i] * gmxusd_price
+        elif df_top['in token'].iloc[i] == 'WETH':
+            vol = df_top['in amt'].iloc[i] * ethusd_price
+        vol_list.append(vol)
+
     df_top['usd_price'] = usd_list
     df_top['eth_price'] = eth_list
-    # print(df_top)
+    df_top['volume'] = vol_list
     return df_top
 
 
-df_usd = get_usd_dataset(get_all_LP_tx(GMX_ETH_LP, 'GMX', 'WETH', 1, 300000, 5), 
-                         get_all_LP_tx(ETH_USDC_LP, 'WETH', 'USDC', 1e12, 100000, 15))
-
 r = redis.StrictRedis('localhost')
-
 context = pa.default_serialization_context()
-r.set('gmx-uniswap', context.serialize(df).to_buffer().to_pybytes())
 
+
+df = get_usd_dataset(get_all_LP_tx(GMX_ETH_LP, 'GMX', 'WETH', 1, 300000, 5), 
+                     get_all_LP_tx(ETH_USDC_LP, 'WETH', 'USDC', 1e12, 100000, 15))
+#print(df)
+r.set('gmx-uniswap', context.serialize(df).to_buffer().to_pybytes())
 #output = context.deserialize(r.get('api3-trending'))
 #print(output)

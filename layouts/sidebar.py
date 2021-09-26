@@ -49,40 +49,40 @@ def generate_layout():
                         dbc.Nav(
                             [
                                 dbc.NavLink(
-                                    "Overview",
+                                    "GEMS Overview",
                                     id='gems-page',
                                     href='/gems-overview',
-                                    style={'padding-left': 5, 'color': '#ffffff', 'font-size': 18}
+                                    style={'padding-left': 5, 'color': '#ffffff', 'font-size': 16}
                                 ),
                                 dbc.NavLink(
                                     "Inspect GEM *",
                                     id='inspect-page',
                                     href='/inspect-gem',
-                                    style={'padding-left': 5, 'color': base_colours['card'], 'font-size': 18}
+                                    style={'padding-left': 5, 'color': base_colours['card'], 'font-size': 16}
                                 ),
                                 dbc.NavLink(
                                     "Trending Data", 
                                     id='trends-page',
                                     href='/trends', 
-                                    style={'padding-left': 5, 'color': '#ffffff', 'font-size': 18}
+                                    style={'padding-left': 5, 'color': '#ffffff', 'font-size': 16}
                                 ),
                                 dbc.NavLink(
-                                    "Staking Data", 
+                                    "GMX Staking", 
                                     id='staking-page',
-                                    href='/staking', 
-                                    style={'padding-left': 5, 'color': '#ffffff', 'font-size': 18}
+                                    href='/gmx-staking', 
+                                    style={'padding-left': 5, 'color': '#ffffff', 'font-size': 16}
                                 ),
                                 dbc.NavLink(
-                                    "Macro Market *", 
-                                    id='macro-page',
-                                    href='/macro', 
-                                    style={'padding-left': 5, 'color': base_colours['card'], 'font-size': 18}
+                                    "GMX Chart", 
+                                    id='arbitrum-page',
+                                    href='/gmx-chart', 
+                                    style={'padding-left': 5, 'color': '#ffffff', 'font-size': 16}
                                 ),
                                 dbc.NavLink(
                                     "Wallet Tracker *", 
                                     id='wallet-page',
                                     href='/wallet', 
-                                    style={'padding-left': 5, 'color': base_colours['card'], 'font-size': 18}
+                                    style={'padding-left': 5, 'color': base_colours['card'], 'font-size': 16}
                                 )
                             ],
                             vertical=True,
@@ -143,17 +143,17 @@ def generate_layout():
                                     ),
                                     href='https://tokenfeeds.info/api/v1/gems/all',
                                 ),
-                                html.A(
-                                    dbc.Button(
-                                        'Portfolio Tracker',
-                                        id='sheets-button',
-                                        size='sm',
-                                        className="mr-1",
-                                        style={'margin': 10, 'background-color': base_colours['tf_accent3'], 'color': base_colours['black'], 'border-color': base_colours['black']},
-                                        block=True,
-                                    ),
-                                    href='https://docs.google.com/spreadsheets/d/1wxgm4sU_MAJloRxBLU2_cQTaPIMbesmKhxfLoF9bEI0/edit?usp=sharing',
-                                ),
+#                                html.A(
+#                                    dbc.Button(
+#                                        'Portfolio Tracker',
+#                                        id='sheets-button',
+#                                        size='sm',
+#                                        className="mr-1",
+#                                        style={'margin': 10, 'background-color': base_colours['tf_accent3'], 'color': base_colours['black'], 'border-color': base_colours['black']},
+#                                        block=True,
+#                                    ),
+#                                    href='https://docs.google.com/spreadsheets/d/1wxgm4sU_MAJloRxBLU2_cQTaPIMbesmKhxfLoF9bEI0/edit?usp=sharing',
+#                                ),
                                 ], xl=12),
                         ],
                         style={'padding-right': '1rem'},
@@ -163,7 +163,7 @@ def generate_layout():
                         [
                             dbc.Col([
                                 html.Hr(),
-                                html.P('version 0.0.5', style={'font-size': 11, 'font-style': 'italic', 'color': base_colours['cg_cell']}),
+                                html.P('version 0.0.6', style={'font-size': 11, 'font-style': 'italic', 'color': base_colours['cg_cell']}),
                             ], xl=12),
                         ],
                         style={'text-align': 'center'},

@@ -81,6 +81,7 @@ def generate_layout():
                                                                                     dbc.DropdownMenuItem('GEMS', href="https://coda.io/d/GEMS_dl7TPWND5QI/GEMS_sudWp#_lu1pF"),
                                                                                     dbc.DropdownMenuItem('Upcoming GEMS', href="https://coda.io/d/GEMS_dl7TPWND5QI/Upcoming-GEMS_su3vn#_luLCV"),
                                                                                     dbc.DropdownMenuItem('Performance', href="https://coda.io/d/GEMS_dl7TPWND5QI/PERFORMANCE_suYBG#_lu6pO"),
+                                                                                    dbc.DropdownMenuItem('GEM Sources', href="https://coda.io/d/GEMS_dl7TPWND5QI/Gem-Sources_su_ct#_lu2V3"),
                                                                                     dbc.DropdownMenuItem(divider=True),
                                                                                     dbc.DropdownMenuItem('Twitter', header=True),
                                                                                     dbc.DropdownMenuItem("@GEMSAlliance", href="https://twitter.com/GEMSAlliance"),
@@ -209,7 +210,9 @@ def update_title(pathname):
         return 'Inspect GEM'
     elif pathname == '/trends':
         return 'Trending Data'
-    elif pathname == '/staking':
+    elif pathname == '/gmx-staking':
         return 'GMX Staking Data'
+    elif pathname == '/gmx-chart':
+        return 'GMX Uniswap Chart'
     else:
         return ''

@@ -209,18 +209,35 @@ def get_filtered_df(filtered_gem_list):
         return pd.DataFrame()
 
 
+@cache.memoize(timeout=20)
 def get_uni_data(gem, period):
     r = redis.StrictRedis('localhost')
     context = pa.default_serialization_context()
     df = context.deserialize(r.get('{}-uniswap'.format(gem)))
     start_date = datetime.today() - timedelta(days=period)
-    df = df[~(df.index < start_date)]    
+    df = df[~(df.index < start_date)]
+    df['gmxeth'] = df['usd_price']/df['eth_price']
     return df
 
 
-def get_candle_data(df, var, interval):
-    df_candle = df[var].resample(interval).ohlc()
+@cache.memoize(timeout=20)
+def get_candle_data(df, var, candle):
+    df_candle = df[var].resample(candle).ohlc()
     return df_candle
+
+
+@cache.memoize(timeout=20)
+def get_volume_data(df, candle):
+    df_vol = df['volume'].resample(candle).sum()
+    return df_vol
+
+
+@cache.memoize(timeout=20)
+def get_staked_data(gem):
+    r = redis.StrictRedis('localhost')
+    context = pa.default_serialization_context()
+    df = context.deserialize(r.get('{}-staked'.format(gem)))
+    return df
 
 
 def get_slider(gem):  # get settings for date range slider

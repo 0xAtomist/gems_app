@@ -198,7 +198,10 @@ body {
 #market_filter2 .Select-menu-outer,
 #sector_filter2 .Select-menu-outer,
 #tier_filter2 .Select-menu-outer,
-#rewards_filter2 .Select-menu-outer {
+#rewards_filter2 .Select-menu-outer,
+#candle_filter .Select-menu-outer,
+#period_filter .Select-menu-outer,
+#currency_filter .Select-menu-outer {
   background-color: #272727;
   border: 1px solid #30d5c8;
 }
@@ -215,7 +218,10 @@ body {
 #market_filter2 .Select-control,
 #sector_filter2 .Select-control,
 #tier_filter2 .Select-control,
-#rewards_filter2 .Select-control {
+#rewards_filter2 .Select-control,
+#candle_filter .Select-control,
+#period_filter .Select-control,
+#currency_filter .Select-control {
   background-color: #272727;
   color: #ffffff;
   font-size: 13;
@@ -233,7 +239,10 @@ body {
 #market_filter2 .Select-placeholder,
 #sector_filter2 .Select-placeholder,
 #tier_filter2 .Select-placeholder,
-#rewards_filter2 .Select-placeholder {
+#rewards_filter2 .Select-placeholder,
+#candle_filter .Select-placeholder,
+#period_filter .Select-placeholder,
+#currency_filter .Select-placeholder {
   background-color: #272727;
   color: #30d5c8;
   font-size: 13;
@@ -257,14 +266,22 @@ body {
   font-family: Supermolot;
 }
 
-#inspect_dropdown .Select--single>.Select-control .Select-value, .Select-placeholder {
+
+
+#inspect_dropdown .Select--single>.Select-control .Select-value, .Select-placeholder,
+#candle_filter .Select--single>.Select-control .Select-value, .Select-placeholder,
+#period_filter .Select--single>.Select-control .Select-value, .Select-placeholder,
+#currency_filter .Select--single>.Select-control .Select-value, .Select-placeholder {
   color: #30d5c8;
   font-size: 13;
   border: 1px solid #30d5c8;
   font-family: Supermolot;
 }
 
-#inspect_dropdown .has-value.Select--single>.Select-control .Select-value .Select-value-label, .has-value.is-pseudo-focused.Select--single>.Select-control .Select-value .Select-value-label {
+#inspect_dropdown .has-value.Select--single>.Select-control .Select-value .Select-value-label, .has-value.is-pseudo-focused.Select--single>.Select-control .Select-value .Select-value-label,
+#candle_filter .has-value.Select--single>.Select-control .Select-value .Select-value-label, .has-value.is-pseudo-focused.Select--single>.Select-control .Select-value .Select-value-label,
+#period_filter .has-value.Select--single>.Select-control .Select-value .Select-value-label, .has-value.is-pseudo-focused.Select--single>.Select-control .Select-value .Select-value-label,
+#currency_filter .has-value.Select--single>.Select-control .Select-value .Select-value-label, .has-value.is-pseudo-focused.Select--single>.Select-control .Select-value .Select-value-label {
   color: #30d5c8;
 }
 

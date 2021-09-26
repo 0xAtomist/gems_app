@@ -7,7 +7,7 @@ from dash.dependencies import Input, Output
 
 
 from app import app, server
-from apps import app1, inspect_app, trending_app, staking_app
+from apps import app1, inspect_app, trending_app, staking_app, uniswap_chart_app
 from layouts import header, sidebar
 
 from data_functions import get_gem_list, get_gem_info, get_filtered_df, get_data_recent
@@ -38,8 +38,10 @@ def render_page_content(pathname):
         return inspect_app.layout
     elif pathname == '/trends':
         return trending_app.layout
-    elif pathname == '/staking':
+    elif pathname == '/gmx-staking':
         return staking_app.layout
+    elif pathname == '/gmx-chart':
+        return uniswap_chart_app.layout
     else:
         return dbc.Jumbotron([
             html.H1("404: Not found", style={'color': palette['red']['50']}),
@@ -75,16 +77,16 @@ def toggle_active_links(pathname):
     else: return False
 
 
-@app.callback(Output(f"macro-page", "active"), [Input("url", "pathname")])
+@app.callback(Output(f"arbitrum-page", "active"), [Input("url", "pathname")])
 def toggle_active_links(pathname):
-    if pathname == "/macro":
+    if pathname == "/gmx-chart":
         return True
     else: return False
 
 
 @app.callback(Output(f"staking-page", "active"), [Input("url", "pathname")])
 def toggle_active_links(pathname):
-    if pathname == "/staking":
+    if pathname == "/gmx-staking":
         return True
     else: return False
 

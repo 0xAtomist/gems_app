@@ -1,6 +1,7 @@
 import os, sys
 from datetime import datetime, timedelta, date
 import json
+import pandas as pd
 
 from dash.dependencies import Input, Output, State
 import dash_core_components as dcc
@@ -12,10 +13,11 @@ from dash_table.Format import Format, Scheme, Sign, Symbol, Group
 from dash.dependencies import Input, Output, State
 import plotly.graph_objs as go
 import plotly.express as px
+from plotly.subplots import make_subplots
 
 from app import app, cache
 from colours import *
-from data_functions import get_uni_data, et_candle_date
+from data_functions import get_uni_data, get_candle_data, get_volume_data
 
 
 graph_config = {
@@ -29,20 +31,38 @@ graph_config = {
 }
 
 
-def generate_candle(df, var, interval, period, y_text):
-    start_date = datetime.today() - timedelta(days=period)
-    df = df[~(df.index < start_date)]
+def generate_candle(df, var, candle, y_text):
+    data_ohlc = get_candle_data(df, var, candle)
+    data_vol = get_volume_data(df, candle)
+    if data_ohlc['close'].iloc[-1] >= data_ohlc['open'].iloc[-1]:
+        price_color = palette['green']['50']
+    elif data_ohlc['close'].iloc[-1] < data_ohlc['open'].iloc[-1]:
+        price_color = palette['red']['50']
+    else:
+        price_color = color=base_colours['secondary_text']
 
-    data_ohlc = df[var].resample(interval).ohlc()
-    
-    fig = go.Figure(data=go.Candlestick(x=data_ohlc.index,
+    data_ohlc = data_ohlc.dropna()
+    data_vol = data_vol.dropna()
+    fig = make_subplots(specs=[[{"secondary_y": True}]])
+    fig.add_trace(go.Candlestick(x=data_ohlc.index,
                     open=data_ohlc['open'],
                     high=data_ohlc['high'],
                     low=data_ohlc['low'],
                     close=data_ohlc['close'],
-                    increasing_line_color= alette['green']['50'],
-                    decreasing_line_color = palette['red']['50']
+                    increasing_line_color= palette['green']['50'],
+                    decreasing_line_color = palette['red']['50'],
+                    increasing_fillcolor= palette['green']['50'],
+                    decreasing_fillcolor = palette['red']['50'],
+                    name='{} Price'.format(y_text)
     ))
+    fig.add_trace(go.Bar(x=data_vol.index, y=data_vol, marker={'color': '#30D5C8'}, name='USD Volume') , secondary_y=True)
+    fig.add_trace(go.Scatter(x=[min(df.index), max(df.index)], 
+                            y=[df[var].iloc[-1], df[var].iloc[-1]], 
+                            mode='lines', 
+                            line=dict(color=price_color, width=1, dash='dot'),
+                            hoverinfo='skip',
+    ))
+
     fig.update_xaxes(showspikes=True, spikecolor="grey", spikethickness=2, spikesnap="cursor", spikemode="across")
     fig.update_yaxes(showspikes=True, spikecolor="grey", spikethickness=2, spikesnap="cursor", spikemode="across")
     fig.update_layout(spikedistance=-1, hoverdistance=100, hovermode='x')
@@ -55,6 +75,7 @@ def generate_candle(df, var, interval, period, y_text):
             titlefont=dict(family='Supermolot', size=14, color=base_colours['primary_text']),
             tickfont=dict(family='Supermolot', size=12, color=base_colours['secondary_text']),
             showgrid=False,
+            # range=[min(df.index), max(df.index)+(max(df.index)-min(df.index))*0.1]
         ),
         yaxis=dict(
             gridcolor=base_colours['secondary_text'],
@@ -63,13 +84,31 @@ def generate_candle(df, var, interval, period, y_text):
             tickfont=dict(family='Supermolot', size=12, color=base_colours['secondary_text']),
             ticksuffix='   ',
             tickprefix='',
+            range=[min(df[var])*0.75, max(df[var])*1.05]
+        ),
+        yaxis2=dict(
+            showgrid=False,
+            #title=dict(text='USD Volume'),
+            #titlefont=dict(family='Supermolot', size=14, color=base_colours['primary_text']),
+            #tickfont=dict(family='Supermolot', size=12, color=base_colours['secondary_text']),
+            #ticksuffix='   ',
+            #tickprefix='',
+            range=[0, max(data_vol)*6],
+            showticklabels=False
         ),
         showlegend=False,
         font={'color': base_colours['primary_text']},
         hoverlabel=dict(font=dict(family='Supermolot', color=base_colours['black'])),
         hovermode='x',
-        height=650,
-        legend=dict(font=dict(family='Supermolot', color=base_colours['text']))
+        height=550,
+        legend=dict(font=dict(family='Supermolot', color=base_colours['text'])),
+        annotations=[dict(xref='paper', x=0.95, y=df[var].iloc[-1],
+                                  xanchor='left', yanchor='middle',
+                                  text=round(df[var].iloc[-1], 4),
+                                  font=dict(family='Supermolot', color=base_colours['black'], size=12),
+                                  bgcolor=price_color,
+                                  showarrow=False,
+        )]
     )
 
     fig.update_xaxes(zerolinecolor=base_colours['sidebar'], zerolinewidth=1, rangeslider_visible=False)
@@ -77,28 +116,28 @@ def generate_candle(df, var, interval, period, y_text):
     return fig
   
   
-  def generate_table_data(df):
+def generate_table_data(df):
     return df.to_dict('records')
  
     
 def get_candle_options():
-	options = []
-	candle_list = ['15m', '30m', '1h', '4h', '1D', '3D', '1W']
+    options = []
+    candle_list = ['15m', '30m', '1h', '4h', '1D', '3D', '1W']
     value_list = ['15Min', '30Min', '1h', '4h', '1D', '3D', '1W']
-	df = pd.DataFrame(data={'candle': candle_list, 'value': value_list})
-	for i in df.index:
-		options.append({'label': df.loc[i]['candle'], 'value': df.loc[i]['value']})
-	return options
+    df = pd.DataFrame(data={'candle': candle_list, 'value': value_list})
+    for i in df.index:
+            options.append({'label': df.loc[i]['candle'], 'value': df.loc[i]['value']})
+    return options
 
 
 def get_period_options():
-	options = []
-	period_list = ['24h', '7d', '14d', '30d', '90d', '180d', '1y']
-    value_list = [1, 7, 14, 30, 90, 180, 365]
-	df = pd.DataFrame(data={'period': period_list, 'value': value_list})
-	for i in df.index:
-		options.append({'label': df.loc[i]['period'], 'value': df.loc[i]['value']})
-	return options
+    options = []
+    period_list = ['24h', '2d', '7d', '14d', '30d', '90d', '180d', '1y']
+    value_list = [1, 2, 7, 14, 30, 90, 180, 365]
+    df = pd.DataFrame(data={'period': period_list, 'value': value_list})
+    for i in df.index:
+            options.append({'label': df.loc[i]['period'], 'value': df.loc[i]['value']})
+    return options
 
 
 layout = html.Div(
@@ -118,11 +157,11 @@ layout = html.Div(
                                                         html.H2('GMX'),
                                                     ],
                                                     id='uni_name_div',
-                                                    style={'display': 'inline-block', 'width': '100%', 'padding-left': 20, 'vertical-align': 'middle'}
+                                                    style={'vertical-align': 'middle'},
                                                 ),
                                             ],
                                             md=3,
-                                            style={'padding-right': 10, 'padding-left': 10},
+                                            style={'padding-right': 10, 'padding-left': 30, 'vertical-align': 'middle', 'padding-top': 20},
                                         ),
                                         dbc.Col(
                                             [
@@ -131,11 +170,10 @@ layout = html.Div(
                                                         html.H2(id='uni_price'),
                                                     ],
                                                     id='uni_price_div',
-                                                    style={'display': 'inline-block', 'width': '100%', 'padding-left': 20, 'vertical-align': 'middle'}
                                                 ),
                                             ],
                                             md=3,
-                                            style={'padding-right': 10, 'padding-left': 10},
+                                            style={'padding-right': 10, 'padding-left': 10, 'vertical-align': 'middle', 'padding-top': 20},
                                         ),
                                         dbc.Col(
                                             [
@@ -146,7 +184,7 @@ layout = html.Div(
                                                             id='currency_filter',
                                                             options=[{'label': 'USD', 'value': 'usd'}, {'label': 'ETH', 'value': 'eth'}],
                                                             multi=False,
-                                                            value='1h',
+                                                            value='usd',
                                                             style={'width': 'calc(100%-40px)', 'margin-bottom': 10},
                                                         ),
                                                     ],
@@ -159,7 +197,7 @@ layout = html.Div(
                                             [
                                                 html.Div(
                                                     [
-                                                        html.P("Interval", style={'margin-bottom': 2}),
+                                                        html.P("Candle", style={'margin-bottom': 2}),
                                                         dcc.Dropdown(
                                                             id='candle_filter',
                                                             options=get_candle_options(),
@@ -177,7 +215,7 @@ layout = html.Div(
                                             [
                                                 html.Div(
                                                     [
-                                                        html.P("Period", style={'margin-bottom': 2}),
+                                                        html.P("Interval", style={'margin-bottom': 2}),
                                                         dcc.Dropdown(
                                                             id='period_filter',
                                                             options=get_period_options(),
@@ -197,7 +235,7 @@ layout = html.Div(
                             ],
                             id='uni_ribbon',
                             className="pretty_container",
-                            style={'height': 'auto', 'min-height': 60, 'padding': 10},
+                            style={'height': 'auto', 'min-height': 50, 'padding': 10},
                         ),
                     ],
                     xl=12,
@@ -220,7 +258,7 @@ layout = html.Div(
                                 dcc.Graph(
                                     id='uni_candlestick',
                                     config=graph_config,
-                                    figure=generate_candle(get_candle_data(get_uni_data('gmx', 'usd_price', 7), '1h', 'GMX/USD'))
+                                    figure=generate_candle(get_uni_data('gmx', 7), 'usd_price', '1h', 'GMX/USD')
                                 )
                             ],
                             className="pretty_container",
@@ -244,20 +282,21 @@ layout = html.Div(
             Input('currency_filter', 'value')])
 def update_uni_trend(n_intervals, interval, period, currency):
     if currency == 'usd':
-        return generate_candle(get_candle_data(get_uni_data('gmx', period), 'usd_price', interval), 'GMX/USD')
+        return generate_candle(get_uni_data('gmx', period), 'usd_price', interval, 'GMX/USD')
     elif currency == 'eth':
-        return generate_candle(get_candle_data(get_uni_data('gmx', period), 'eth_price', interval), 'GMX/ETH')
+        return generate_candle(get_uni_data('gmx', period), 'gmxeth', interval, 'GMX/ETH')
 
  
-@app.callback(Output('uni_price, 'children'),
+@app.callback(Output('uni_price', 'children'),
 	[Input('chart-interval', 'n_intervals'),
             Input('currency_filter', 'value')])
 def update_uni_price(n_intervals, currency):
     df = get_uni_data('gmx', 1)
+    print(df)
     if currency == 'usd':
-        return '{} USD'.format(df['usd_price'].iloc[-1])
+        return '{} USD'.format(round(df['usd_price'].iloc[-1], 2))
     elif currency == 'eth':
-        return '{} ETH'.format(df['eth_price'].iloc[-1])
+        return '{} ETH'.format(round(df['gmxeth'].iloc[-1], 5))
 
        
         
