@@ -38,37 +38,34 @@ def get_all_LP_tx(LP_contract, top_pair, bottom_pair, decimal_ratio, blocklength
             if tx in output_dict.keys():
                 pass
             else:
-                output_dict[tx] = {'timestamp': timestamp, 'blocknumber': blocknumber}
-
+                output_dict[tx] = {'timestamp': timestamp, 'blocknumber': blocknumber, 'txn_hash': tx}
 
             if result['to'] == LP_contract:
-                in_out = 'in'
-                
+                amt = float(result['value'])*1e-18
+                output_dict[tx]['in amt'] = amt
+                output_dict[tx]['address'] = result['from']
+                    
                 if result['tokenSymbol'] == top_pair:
                     token = top_pair
-                    amt = float(result['value'])*1e-18
-                    output_dict[tx]['in amt'] = amt
                     output_dict[tx]['in token'] = token
                     
                 elif result['tokenSymbol'] == bottom_pair:
                     token = bottom_pair
-                    amt = float(result['value'])*1e-18
-                    output_dict[tx]['in amt'] = amt
                     output_dict[tx]['in token'] = token
+                    
             elif result['from'] == LP_contract:
-                in_out = 'out'
+                amt = float(result['value'])*1e-18
+                output_dict[tx]['out amt'] = amt
+                output_dict[tx]['address'] = result['to']
                 
                 if result['tokenSymbol'] == top_pair:
                     token = top_pair
-                    amt = float(result['value'])*1e-18
-                    output_dict[tx]['out amt'] = amt
                     output_dict[tx]['out token'] = token
                     
                 elif result['tokenSymbol'] == bottom_pair:
                     token = bottom_pair
-                    amt = float(result['value'])*1e-18
-                    output_dict[tx]['out amt'] = amt
                     output_dict[tx]['out token'] = token
+                    
         except Exception as e:
             print(e)
                     
@@ -97,6 +94,11 @@ def get_usd_dataset(df_top, df_bottom):
     usd_list = []
     eth_list = []
     vol_list = []
+    n_GMX_list = []
+    n_ETH_list = []
+    n_USD_list = []
+    action_list = []
+    
     for i, dt in enumerate(df_top.index):
         idx = df_bottom.index.unique().get_loc(dt, method='nearest')
         ethusd_price = df_bottom['price'].iloc[idx]
@@ -104,14 +106,31 @@ def get_usd_dataset(df_top, df_bottom):
         usd_list.append(gmxusd_price)
         eth_list.append(ethusd_price)
         if df_top['in token'].iloc[i] == 'GMX':
+            n_GMX = df_top['in amt'].iloc[i]
+            n_ETH = df_top['in amt'].iloc[i] * df['usd_price'].iloc[i]/df['eth_price'].iloc[i]
+            n_USD = df_top['in amt'].iloc[i] * df['usd_price'].iloc[i]
             vol = df_top['in amt'].iloc[i] * gmxusd_price
+            action = 'SELL'
         elif df_top['in token'].iloc[i] == 'WETH':
+            n_GMX = df_top['in amt'].iloc[i] * df['eth_price'].iloc[i]/df['usd_price'].iloc[i]
+		    n_ETH = df_top['in amt'].iloc[i]
+		    n_USD = df_top['in amt'].iloc[i] * df['eth_price'].iloc[i]
             vol = df_top['in amt'].iloc[i] * ethusd_price
+            action = 'BUY'
+        n_GMX_list.append(n_GMX)
+        n_ETH_list.append(n_ETH)
+        n_ETH_list.append(n_USD)
         vol_list.append(vol)
+        action_list.append(action)
 
     df_top['usd_price'] = usd_list
     df_top['eth_price'] = eth_list
+    df_top['n_GMX'] = n_GMX_list
+    df_top['n_ETH'] = n_USD_list
+    df_top['nUSD'] = vol_list
     df_top['volume'] = vol_list
+    df_top['action'] = action_list
+
     return df_top
 
 
