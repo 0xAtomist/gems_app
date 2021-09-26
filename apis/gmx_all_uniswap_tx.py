@@ -38,7 +38,7 @@ def get_all_LP_tx(LP_contract, top_pair, bottom_pair, decimal_ratio, blocklength
             if tx in output_dict.keys():
                 pass
             else:
-                output_dict[tx] = {'timestamp': timestamp, 'blocknumber': blocknumber, 'txn_hash': tx}
+                output_dict[tx] = {'timestamp': timestamp, 'blocknumber': blocknumber, 'tx_hash': tx}
 
             if result['to'] == LP_contract:
                 amt = float(result['value'])*1e-18
