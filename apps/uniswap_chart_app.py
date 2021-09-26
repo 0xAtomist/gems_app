@@ -317,7 +317,7 @@ layout = html.Div(
 								)
 							},
 							{"name": ["Txn Hash"], "id": "tx_hash", "type": "text"},
-							{"name": ["Arbiscan"], "id": "arbiscan", "type"="text", "presentation"="markdown"},
+							# {"name": ["Arbiscan"], "id": "arbiscan", "type"="text", "presentation"="markdown"},
 							{"name": ["Address"], "id": "address", "type"="text", "presentation"="markdown"},
 						],
 						page_current=0,
