@@ -114,7 +114,7 @@ def generate_staked_trend(df, dff, y_var, y_text, hover_temp):
 #            scaleanchor='y1',
             #range=[min(dff[y_var]), max(dff[y_var])]
         ),
-        showlegend=False,
+        showlegend=True,
         font={'color': base_colours['primary_text']},
         hoverlabel=dict(font=dict(family='Supermolot', color=base_colours['black'])),
         hovermode='x',
