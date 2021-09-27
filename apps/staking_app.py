@@ -119,7 +119,13 @@ def generate_staked_trend(df, dff, y_var, y_text, hover_temp):
         hoverlabel=dict(font=dict(family='Supermolot', color=base_colours['black'])),
         hovermode='x',
         height=550,
-        legend=dict(font=dict(family='Supermolot', color=base_colours['text']))
+        legend=dict(
+            font=dict(family='Supermolot', color=base_colours['text']),
+            yanchor="top",
+            y=0.99,
+            xanchor="left",
+            x=0.01
+        )
     )
 
     fig_range.update_xaxes(zerolinecolor=base_colours['sidebar'], zerolinewidth=1) #, rangeslider_visible=True)

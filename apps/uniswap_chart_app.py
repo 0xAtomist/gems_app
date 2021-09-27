@@ -27,10 +27,9 @@ graph_config = {
         'sendDataToCloud', 'hoverClosestPie', 'toggleHover', 'resetViewMapbox'
     ],
     'displaylogo': False,
-    'displayModeBar': False,
+    'displayModeBar': True,
 }
 
-PAGE_SIZE = 25
 
 def generate_candle(df, var, candle, y_text):
     data_ohlc = get_candle_data(df, var, candle)
@@ -109,17 +108,22 @@ def generate_candle(df, var, candle, y_text):
                                   font=dict(family='Supermolot', color=base_colours['black'], size=12),
                                   bgcolor=price_color,
                                   showarrow=False,
-        )]
+        )],
+        # style of new shapes
+        dragmode='drawline',
+        newshape=dict(line_color=base_colours['primary_text'],opacity=0.5)
     )
+    
+    fig.show(config={'modeBarButtonsToAdd':['drawline', 'drawrect', 'eraseshape']})
 
     fig.update_xaxes(zerolinecolor=base_colours['sidebar'], zerolinewidth=1, rangeslider_visible=False)
     fig.update_yaxes(zerolinecolor=base_colours['sidebar'], zerolinewidth=1)
     return fig
   
   
-def generate_table_data(df, page_current, page_size):
-	df.iloc[page_current*page_size:(page_current+ 1)*page_size].to_dict('records')
-    return df.to_dict('records')
+def generate_table_data(df):
+    df['timestamp'] = df.timestamp.dt.strftime('%Y-%m-%d %H:%M')
+    return df.sort_index(ascending=False).to_dict('records')
  
     
 def get_candle_options():
@@ -284,31 +288,15 @@ layout = html.Div(
 					),
 					dash_table.DataTable(
 						id="uni_table",
-						sort_action='native',
-						sort_by=[{'column_id': 'Datetime', 'direction': 'desc'}],
+						#sort_action='native',
+						sort_by=[{'column_id': 'timestamp', 'direction': 'asc'}],
 						style_table={'overflowY': 'auto', 'border': '{} {} {}'.format('1px', 'solid', base_colours['cg_border'])},
 						fixed_rows={'headers': True},
 						#style_as_list_view=True,
 						columns=[
-							{"name": ["Datetime"], "id": "datetime", "type": "numeric"},
-							{"name": ["Age"], "id": "age", "type": "text"},
+							{"name": ["Datetime"], "id": "timestamp", "type": "numeric"},
 							{"name": ["Action"], "id": "action", "type": "text"},
-							{"name": ["GMX"], "id": "n_GMX", "type": "numeric",
-							{"name": ["ETH"], "id": "n_ETH", "type": "numeric",
-								"format": Format(
-									precision=0,
-									scheme=Scheme.fixed,
-									group=Group.yes, 
-									groups=3,
-								)
-							},
-							 
-							 	"format": Format(
-									precision=5,
-									scheme=Scheme.fixed,
-								)
-							},
-							{"name": ["USD"], "id": "n_USD", "type": "numeric",
+							{"name": ["Price"], "id": "usd_price", "type": "numeric",
 							 	"format": Format(
 									precision=3,
 									scheme=Scheme.fixed,
@@ -316,14 +304,39 @@ layout = html.Div(
 									symbol_prefix='$'
 								)
 							},
+							{"name": ["GMX"], "id": "n_GMX", "type": "numeric",
+								"format": Format(
+									precision=0,
+									scheme=Scheme.fixed,
+									group=Group.yes, 
+									groups=3
+								)
+                                                        },
+							{"name": ["ETH"], "id": "n_ETH", "type": "numeric",
+								"format": Format(
+									precision=2,
+									scheme=Scheme.fixed,
+								)
+                                                        },
+							{"name": ["USD"], "id": "nUSD", "type": "numeric",
+							 	"format": Format(
+									precision=3,
+									scheme=Scheme.fixed,
+									group=Group.yes, 
+									groups=3,
+									symbol=Symbol.yes, 
+									symbol_prefix='$'
+								)
+							},
 							{"name": ["Txn Hash"], "id": "tx_hash", "type": "text"},
-							# {"name": ["Arbiscan"], "id": "arbiscan", "type"="text", "presentation"="markdown"},
-							{"name": ["Address"], "id": "address", "type"="text", "presentation"="markdown"},
+                                                        # {"name": ["Arbiscan"], "id": "arbiscan", "type": "text", "presentation": "markdown"},
+                                                        {"name": ["Address"], "id": "address", "type": "text"}# , "presentation": "markdown"},
 						],
-						page_current=0,
-						page_size=PAGE_SIZE,
-						page_action='custom',
-						data=generate_table_data(get_uni_data('gmx', 7), 0, PAGE_SIZE),
+						#page_current=0,
+						#page_size=PAGE_SIZE,
+						page_action='none',
+                                                virtualization=True,
+						data=generate_table_data(get_uni_data('gmx', 7)),
 						style_header={
 							'text-align': 'right',
 							'background-color': base_colours['background'],
@@ -336,11 +349,9 @@ layout = html.Div(
 						},
 						style_header_conditional=[
 							{'if': {'column_id': 'action'}, 'textAlign': 'left'},
-							{'if': {'column_id': 'txn_hash'}, 'textAlign': 'left'},
-							{'if': {'column_id': 'arbiscan'}, 'textAlign': 'left'},
+							{'if': {'column_id': 'tx_hash'}, 'textAlign': 'left'},
 							{'if': {'column_id': 'address'}, 'textAlign': 'left'},
-							{'if': {'column_id': 'datetime'}, 'textAlign': 'left'},
-							{'if': {'column_id': 'age'}, 'textAlign': 'left'},
+							{'if': {'column_id': 'timestamp'}, 'textAlign': 'left'},
 						],
 						style_data_conditional=[
 							#{'if': {'row_index': 'odd'},
@@ -349,17 +360,17 @@ layout = html.Div(
 							#{'if': {'row_index': 'even'},
 							# 'backgroundColor': base_colours['alt_row'],
 							# 'color': base_colours['text']},
-							{'if': {'column_id': 'datetime'}, 'color': base_colours['text']},
+							{'if': {'column_id': 'timestamp'}, 'color': base_colours['text']},
 							{'if': 
-								{
-									'filter_query': '{action} == BUY',
+							    	{
+							    		'filter_query': '{action} = BUY',
 									'column_id': 'action'
 								},
 								'color': palette['green']['50']
 							},
 							{'if': 
 								{
-									'filter_query': '{action} == BUY',
+									'filter_query': '{action} = SELL',
 									'column_id': 'action'
 								},
 								'color': palette['red']['50']
@@ -382,16 +393,14 @@ layout = html.Div(
 						},
 						style_cell_conditional=[
 							{'if': {'column_id': 'action'}, 'textAlign': 'left'},
-							{'if': {'column_id': 'txn_hash'}, 'textAlign': 'left'},
-							{'if': {'column_id': 'arbiscan'}, 'textAlign': 'left'},
+							{'if': {'column_id': 'tx_hash'}, 'textAlign': 'left'},
 							{'if': {'column_id': 'address'}, 'textAlign': 'left'},
-							{'if': {'column_id': 'datetime'}, 'textAlign': 'left'},
-							{'if': {'column_id': 'age'}, 'textAlign': 'left'},
+							{'if': {'column_id': 'timestamp'}, 'textAlign': 'left'},
 						],
 					)
 				],
 				className="pretty_container",
-				style={'height': 'auto'}
+                                style={'height': 'auto', 'padding-bottom': 60}
 			),
 		width=12,
 		style={'padding': 0}
@@ -428,9 +437,8 @@ def update_uni_price(n_intervals, currency):
 
 @app.callback(
     Output('uni_table', 'data'),
-	Input('period_filter'', "value"),
-    Input('uni_table'', "page_current"),
-    Input('uni_table'', "page_size"))
-def update_table(interval, page_current, page_size):
-    return generate_table_data(get_uni_data('gmx', interval), page_current, page_size)
+	[Input('chart-interval', 'n_intervals'),
+	Input('period_filter','value')])
+def update_table(n_intervals, interval):
+    return generate_table_data(get_uni_data('gmx', interval))
         

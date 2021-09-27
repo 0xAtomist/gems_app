@@ -163,7 +163,14 @@ def generate_layout():
                         [
                             dbc.Col([
                                 html.Hr(),
-                                html.P('version 0.0.6', style={'font-size': 11, 'font-style': 'italic', 'color': base_colours['cg_cell']}),
+                                html.P('version 0.0.7', style={'font-size': 11, 'font-style': 'italic', 'color': base_colours['cg_cell']}),
+                                html.A([
+                                    html.Img(
+                                        src='assets/twitter-16.png',
+#                                        style={'max-width': '100%', 'width': 200, 'margin': 0, 'height': 'auto'},
+                                        className='hidden-logo-md'
+                                    )
+                                ], href='https://twitter.com/0xAtomist'),
                             ], xl=12),
                         ],
                         style={'text-align': 'center'},

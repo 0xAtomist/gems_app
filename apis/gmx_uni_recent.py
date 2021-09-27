@@ -93,7 +93,7 @@ def get_usd_dataset(df_top, df_bottom):
     n_ETH_list = []
     n_USD_list = []
     action_list = []
-    
+
     for i, dt in enumerate(df_top.index):
         idx = df_bottom.index.unique().get_loc(dt, method='nearest')
         ethusd_price = df_bottom['price'].iloc[idx]
@@ -102,32 +102,31 @@ def get_usd_dataset(df_top, df_bottom):
         eth_list.append(ethusd_price)
         if df_top['in token'].iloc[i] == 'GMX':
             n_GMX = df_top['in amt'].iloc[i]
-            n_ETH = df_top['in amt'].iloc[i] * df['usd_price'].iloc[i]/df['eth_price'].iloc[i]
-            n_USD = df_top['in amt'].iloc[i] * df['usd_price'].iloc[i]
+            n_ETH = df_top['in amt'].iloc[i] * gmxusd_price/ethusd_price
+            n_USD = df_top['in amt'].iloc[i] * gmxusd_price
             vol = df_top['in amt'].iloc[i] * gmxusd_price
             action = 'SELL'
         elif df_top['in token'].iloc[i] == 'WETH':
-            n_GMX = df_top['in amt'].iloc[i] * df['eth_price'].iloc[i]/df['usd_price'].iloc[i]
-		    n_ETH = df_top['in amt'].iloc[i]
-		    n_USD = df_top['in amt'].iloc[i] * df['eth_price'].iloc[i]
+            n_GMX = df_top['in amt'].iloc[i] * ethusd_price/gmxusd_price
+            n_ETH = df_top['in amt'].iloc[i]
+            n_USD = df_top['in amt'].iloc[i] * ethusd_price
             vol = df_top['in amt'].iloc[i] * ethusd_price
             action = 'BUY'
         n_GMX_list.append(n_GMX)
         n_ETH_list.append(n_ETH)
-        n_ETH_list.append(n_USD)
+        n_USD_list.append(n_USD)
         vol_list.append(vol)
         action_list.append(action)
 
     df_top['usd_price'] = usd_list
     df_top['eth_price'] = eth_list
     df_top['n_GMX'] = n_GMX_list
-    df_top['n_ETH'] = n_USD_list
-    df_top['nUSD'] = vol_list
+    df_top['n_ETH'] = n_ETH_list
+    df_top['nUSD'] = n_USD_list
     df_top['volume'] = vol_list
     df_top['action'] = action_list
 
     return df_top
-
 
 
 r = redis.StrictRedis('localhost')
