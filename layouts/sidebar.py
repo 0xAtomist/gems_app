@@ -2,7 +2,7 @@ import os, sys
 import dash_bootstrap_components as dbc
 import dash_html_components as html
 import dash_core_components as dcc
-from dash.dependencies import Input, Output
+from dash.dependencies import Input, Output, State
 
 # path to this file location
 script_dir = os.path.dirname(__file__)
@@ -17,14 +17,35 @@ sidebar_header = dbc.Row(
             html.A([
                 html.Img(
                     src='assets/Color logo - no background.png',
-                    style={'max-width': '100%', 'width': 200, 'margin': 0, 'height': 'auto'}, 
+                    style={'max-width': '100%', 'width': 220, 'margin': 0, 'height': 'auto'}, 
                     className='hidden-logo-md'
                 )
             ], href='https://tokenfeeds.info'),
-            width=12,
+            lg=12,
+            width='auto',
             style={'padding-right': '5px', 'padding-left': '5px'}
-        )
-    ]
+        ),
+        dbc.Col(
+            html.Button(
+                # use the Bootstrap navbar-toggler classes to style the toggle
+                html.Span(className="navbar-toggler-icon"),
+                className="navbar-toggler navbar-dark bg-dark",
+                # the navbar-toggler classes don't set color, so we do it here
+                style={
+                    "color": "rgba(0,0,0,.5)",
+                    "border-color": "rgba(0,0,0,.1)",
+                },
+                id="toggle",
+            ),
+            # the column containing the toggle will be only as wide as the
+            # toggle, resulting in the toggle being right aligned
+            width="auto",
+            # vertically align the toggle in the center
+            align="center",
+        ),
+
+    ],
+    justify='between'
 )
 
 def generate_layout():
@@ -46,49 +67,50 @@ def generate_layout():
             dbc.Collapse(
                 [
                     dbc.Row([
-                        dbc.Nav(
-                            [
-                                dbc.NavLink(
-                                    "GEMS Overview",
-                                    id='gems-page',
-                                    href='/gems-overview',
-                                    style={'padding-left': 5, 'color': '#ffffff', 'font-size': 16}
-                                ),
-                                dbc.NavLink(
-                                    "Inspect GEM *",
-                                    id='inspect-page',
-                                    href='/inspect-gem',
-                                    style={'padding-left': 5, 'color': base_colours['card'], 'font-size': 16}
-                                ),
-                                dbc.NavLink(
-                                    "Trending Data", 
-                                    id='trends-page',
-                                    href='/trends', 
-                                    style={'padding-left': 5, 'color': '#ffffff', 'font-size': 16}
-                                ),
-                                dbc.NavLink(
-                                    "GMX Staking", 
-                                    id='staking-page',
-                                    href='/gmx-staking', 
-                                    style={'padding-left': 5, 'color': '#ffffff', 'font-size': 16}
-                                ),
-                                dbc.NavLink(
-                                    "GMX Chart", 
-                                    id='arbitrum-page',
-                                    href='/gmx-chart', 
-                                    style={'padding-left': 5, 'color': '#ffffff', 'font-size': 16}
-                                ),
-                                dbc.NavLink(
-                                    "Wallet Tracker *", 
-                                    id='wallet-page',
-                                    href='/wallet', 
-                                    style={'padding-left': 5, 'color': base_colours['card'], 'font-size': 16}
-                                )
-                            ],
-                            vertical=True,
-                            pills=True,
-                            style={'padding-left': 15},
-                        ),
+                        dbc.Col([
+                            dbc.Nav(
+                                [
+                                    dbc.NavLink(
+                                        "GEMS Overview",
+                                        id='gems-page',
+                                        href='/gems-overview',
+                                        style={'padding-left': 5, 'color': '#ffffff', 'font-size': 16}
+                                    ),
+                                    dbc.NavLink(
+                                        "Inspect GEM *",
+                                        id='inspect-page',
+                                        href='/inspect-gem',
+                                        style={'padding-left': 5, 'color': base_colours['card'], 'font-size': 16}
+                                    ),
+                                    dbc.NavLink(
+                                        "Trending Data", 
+                                        id='trends-page',
+                                        href='/trends', 
+                                        style={'padding-left': 5, 'color': '#ffffff', 'font-size': 16}
+                                    ),
+                                    dbc.NavLink(
+                                        "GMX Staking", 
+                                        id='staking-page',
+                                        href='/gmx-staking', 
+                                        style={'padding-left': 5, 'color': '#ffffff', 'font-size': 16}
+                                    ),
+                                    dbc.NavLink(
+                                        "GMX Chart", 
+                                        id='arbitrum-page',
+                                        href='/gmx-chart', 
+                                        style={'padding-left': 5, 'color': '#ffffff', 'font-size': 16}
+                                    ),
+                                    dbc.NavLink(
+                                        "Wallet Tracker *", 
+                                        id='wallet-page',
+                                        href='/wallet', 
+                                        style={'padding-left': 5, 'color': base_colours['card'], 'font-size': 16}
+                                    )
+                                ],
+                                vertical=True,
+                                pills=True,
+                            ),
+                        ], xl=12),
                     ]),
                     dbc.Row(
                         [
@@ -250,4 +272,15 @@ def update_bnb(n_intervals):
             style={'margin': 5, 'font-size': 14, 'color': base_colours['secondary_text']}
         ),
     ]
+
+
+@app.callback(
+    Output("collapse", "is_open"),
+    [Input("toggle", "n_clicks")],
+    [State("collapse", "is_open")],
+)
+def toggle_collapse(n, is_open):
+    if n:
+        return not is_open
+    return is_open
 

@@ -172,7 +172,7 @@ def generate_pie_chart(gem_list, change):
         plot_bgcolor=base_colours['card'],
         paper_bgcolor=base_colours['card'],
         margin={'l': 0, 'r': 0, 't': 10, 'b': 15},
-        height=240,
+        height=220,
         showlegend=False,
         hoverlabel=dict(font=dict(family='Supermolot', color=base_colours['text'])),
     )
@@ -320,7 +320,7 @@ layout = html.Div(
 												),
 												html.H3('1h', style={'textAlign': 'center'})
 											],
-											width=4,
+											sm=4,
 											style={'padding': 0},
 											align='center',
 										),
@@ -333,7 +333,7 @@ layout = html.Div(
 												),
 												html.H2('24h', style={'textAlign': 'center'})
 											],
-											width=4,
+											sm=4,
 											style={'padding': 0},
 										),
 										dbc.Col(
@@ -345,7 +345,7 @@ layout = html.Div(
 												),
                                                                                                 html.H2('7d', style={'textAlign': 'center', 'margin-bottom': 0})
 											],
-											width=4,
+											sm=4,
 											style={'padding': 0},
 										),
 									],

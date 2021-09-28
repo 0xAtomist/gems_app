@@ -228,7 +228,7 @@ layout = html.Div(
                                                     ],
                                                 ),
                                             ],
-                                            md=4,
+                                            lg=4,
                                             style={'padding-right': 10, 'padding-left': 10},
                                         ),
                                         dbc.Col(
@@ -254,7 +254,7 @@ layout = html.Div(
                                                     ],
                                                 ),
                                             ],
-                                            md=4,
+                                            lg=4,
                                             style={'padding-right': 10, 'padding-left': 10},
                                         ),
                                         dbc.Col(
@@ -277,12 +277,13 @@ layout = html.Div(
                                                             max_date_allowed=date.today(),
                                                             initial_visible_month=date.today()-timedelta(90),
                                                             end_date=date.today(),
-                                                            start_date=date.today()-timedelta(90)
+                                                            start_date=date.today()-timedelta(90),
+							    style={'width': 'calc(100%-40px)', 'margin-bottom': 10},
                                                         ),
                                                     ],
                                                 ),
                                             ],
-                                            md=4,
+                                            lg=4,
                                             #align='center',
                                         ),
                                     ],

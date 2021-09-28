@@ -17,7 +17,7 @@
   margin-top: 1rem;
 }
 
-@media (min-width: 42em) {
+@media (min-width: 60em) {
   #sidebar {
     position: fixed;
     top: 0;
@@ -48,6 +48,14 @@
   background-image: url("data:image/svg+xml,%3csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3e%3cpath stroke='rgba(0, 0, 0, 0.5)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
 }
 
+/*  background-image: url("data:image/svg+xml,%3csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3e%3cpath stroke='rgba(176, 179, 184, 0.5)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+}
+*/
+
+.navbar-toggler {
+    border-color: rgba(176, 179, 184, 0.5);
+}
+
 .nav-link.active {
   background-color: #30D5C8 !important;
   color: #121212 !important;
@@ -65,11 +73,11 @@
 }
 
 #header {
-  padding: 2rem 1rem;
+  padding: 2rem 2rem;
   margin-top: 0.5rem;
 }
 
-@media (min-width: 42em) {
+@media (min-width: 60em) {
   /* set margins of the main content so that it doesn't overlap the sidebar */
   #page-content {
     margin-left: 9rem;

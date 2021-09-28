@@ -81,6 +81,9 @@ def generate_staked_trend(df, dff, y_var, y_text, hover_temp):
         ),
         secondary_y=True
     )
+    fig_range.update_xaxes(showspikes=True, spikecolor="grey", spikethickness=2, spikesnap="cursor", spikemode="across")
+    fig_range.update_yaxes(showspikes=True, spikecolor="grey", spikethickness=2, spikesnap="cursor", spikemode="across")
+
     fig_range.update_layout(
         plot_bgcolor='#434343',
         paper_bgcolor=base_colours['card'],
@@ -90,6 +93,7 @@ def generate_staked_trend(df, dff, y_var, y_text, hover_temp):
             titlefont=dict(family='Supermolot', size=14, color=base_colours['primary_text']),
             tickfont=dict(family='Supermolot', size=12, color=base_colours['secondary_text']),
             showgrid=False,
+            range=[min(df.index), max(df.index)+(max(df.index)-min(df.index))*0.1]
         ),
         yaxis=dict(
             gridcolor=base_colours['secondary_text'],
@@ -116,9 +120,9 @@ def generate_staked_trend(df, dff, y_var, y_text, hover_temp):
         ),
         showlegend=True,
         font={'color': base_colours['primary_text']},
-        hoverlabel=dict(font=dict(family='Supermolot', color=base_colours['black'])),
-        hovermode='x',
-        height=550,
+        hoverlabel=dict(font=dict(family='Supermolot', color=base_colours['primary_text'])),
+        hovermode='x unified',
+        height=450,
         legend=dict(
             font=dict(family='Supermolot', color=base_colours['text']),
             yanchor="top",
@@ -151,7 +155,7 @@ layout = html.Div(
                                 )
                             ],
                             className="pretty_container",
-                            style={'height': 'auto', 'min-height': 600},
+                            style={'height': 'auto'},
                         ),
                     ],
                     xl=12,

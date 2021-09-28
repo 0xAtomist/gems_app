@@ -14,6 +14,7 @@ app = dash.Dash(
     __name__,
     server=server,
     suppress_callback_exceptions=True,
+    meta_tags=[{'name': 'viewport', 'content': "width=device-width, initial-scale=1"}],
     external_stylesheets=[dbc.themes.BOOTSTRAP, "https://tools.aftertheflood.com/sparks/styles/font-faces.css"]
 )
 
