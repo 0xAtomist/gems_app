@@ -1,0 +1,35 @@
+server {
+	server_name tokenfeeds.info www.tokenfeeds.info;
+
+	location / {
+		include proxy_params;
+		proxy_pass http://unix:/home/berrytom08/gems_app/gems_app.sock;
+	}
+
+    listen 443 ssl; # managed by Certbot
+    ssl_certificate /etc/letsencrypt/live/tokenfeeds.info/fullchain.pem; # managed by Certbot
+    ssl_certificate_key /etc/letsencrypt/live/tokenfeeds.info/privkey.pem; # managed by Certbot
+    include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
+
+
+}
+server {
+    if ($host = www.tokenfeeds.info) {
+        return 301 https://$host$request_uri;
+    } # managed by Certbot
+
+
+    if ($host = tokenfeeds.info) {
+        return 301 https://$host$request_uri;
+    } # managed by Certbot
+
+
+	listen 80;
+	server_name tokenfeeds.info www.tokenfeeds.info;
+    return 404; # managed by Certbot
+
+
+
+
+}

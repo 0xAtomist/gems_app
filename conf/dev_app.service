@@ -1,0 +1,14 @@
+[Unit]
+Description=Gunicorn instance to serve gem_app test port
+After=network.target
+
+[Service]
+User=berrytom08
+Group=www-data
+WorkingDirectory=/home/berrytom08/dev_app
+Environment="PATH=/home/berrytom08/dev_app/venv/bin"
+ExecStart=/home/berrytom08/dev_app/venv/bin/gunicorn --workers 3 --timeout 90 --bind :8050 -m 007 index:server
+
+[Install]
+WantedBy=multi-user.target
+

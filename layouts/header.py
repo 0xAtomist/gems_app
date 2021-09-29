@@ -26,6 +26,7 @@ def generate_layout():
 			dcc.Interval(id='chart-interval', interval=10*1000, n_intervals=0),
 			dcc.Store(id='filter-store', storage_type='session'),
 			dcc.Store(id='filter-trend', storage_type='session'),
+			dcc.Store(id='gmx_shapes', storage_type='local'),
 			dbc.Row(
 				[
 					dbc.Col(

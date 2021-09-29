@@ -3,6 +3,7 @@ from datetime import datetime, timedelta, date
 import json
 import pandas as pd
 
+import dash
 from dash.dependencies import Input, Output, State
 import dash_core_components as dcc
 import dash_html_components as html
@@ -33,106 +34,7 @@ graph_config = {
 }
 
 
-def generate_candle_data(df, var, candle, y_text):
-    data_ohlc = get_candle_data(df, var, candle)
-    data_vol = get_volume_data(df, candle)
-    if data_ohlc['close'].iloc[-1] >= data_ohlc['open'].iloc[-1]:
-        price_color = palette['green']['50']
-    elif data_ohlc['close'].iloc[-1] < data_ohlc['open'].iloc[-1]:
-        price_color = palette['red']['50']
-    else:
-        price_color = color=base_colours['secondary_text']
-
-    data_ohlc = data_ohlc.dropna()
-    data_vol = data_vol.dropna()
-    trace_1 = go.Candlestick(x=data_ohlc.index,
-                    open=data_ohlc['open'],
-                    high=data_ohlc['high'],
-                    low=data_ohlc['low'],
-                    close=data_ohlc['close'],
-                    increasing_line_color= palette['green']['50'],
-                    decreasing_line_color = palette['red']['50'],
-                    increasing_fillcolor= palette['green']['50'],
-                    decreasing_fillcolor = palette['red']['50'],
-                    name='{} Price'.format(y_text)
-    )
-    trace_2 = go.Bar(x=data_vol.index, y=data_vol, marker={'color': '#30D5C8'}, name='USD Volume')
-    trace_3 = go.Scatter(x=[min(df.index), max(df.index)+(max(df.index)-min(df.index))*0.1], 
-                            y=[df[var].iloc[-1], df[var].iloc[-1]], 
-                            mode='lines', 
-                            line=dict(color=price_color, width=1, dash='dot'),
-                            hoverinfo='skip',
-    )
-    return [trace_1, trace_2, trace_3]
-
-
-def generate_candle_layout(df, var, candle, y_text):
-    data_ohlc = get_candle_data(df, var, candle)
-    data_vol = get_volume_data(df, candle)
-    if data_ohlc['close'].iloc[-1] >= data_ohlc['open'].iloc[-1]:
-        price_color = palette['green']['50']
-    elif data_ohlc['close'].iloc[-1] < data_ohlc['open'].iloc[-1]:
-        price_color = palette['red']['50']
-    else:
-        price_color = color=base_colours['secondary_text']
-
-    data_ohlc = data_ohlc.dropna()
-    data_vol = data_vol.dropna()
-    
-    fig_layout=dict(
-        plot_bgcolor='#434343',
-        paper_bgcolor=base_colours['card'],
-        margin={'l': 0, 'r': 10, 't': 0, 'b': 0, 'pad': 0},
-        xaxis=dict(
-            gridcolor='rgba(176,179,184, 0.25)',
-            gridwidth=1,
-            title=dict(text=''),
-            titlefont=dict(family='Supermolot', size=14, color=base_colours['primary_text']),
-            tickfont=dict(family='Supermolot', size=12, color=base_colours['secondary_text']),
-            #showgrid=False,
-            range=[min(df.index), max(df.index)+(max(df.index)-min(df.index))*0.1]
-        ),
-        yaxis=dict(
-            gridcolor='rgba(176,179,184, 0.5)',
-            gridwidth=1,
-            title=dict(text=y_text),
-            titlefont=dict(family='Supermolot', size=14, color=base_colours['primary_text']),
-            tickfont=dict(family='Supermolot', size=12, color=base_colours['secondary_text']),
-            ticksuffix='   ',
-            tickprefix='',
-            range=[min(df[var])*0.75, max(df[var])*1.05]
-        ),
-        yaxis2=dict(
-            showgrid=False,
-            #title=dict(text='USD Volume'),
-            #titlefont=dict(family='Supermolot', size=14, color=base_colours['primary_text']),
-            #tickfont=dict(family='Supermolot', size=12, color=base_colours['secondary_text']),
-            #ticksuffix='   ',
-            #tickprefix='',
-            range=[0, max(data_vol)*6],
-            showticklabels=False
-        ),
-        showlegend=False,
-        font={'color': base_colours['primary_text']},
-        hoverlabel=dict(font=dict(family='Supermolot', color=base_colours['primary_text'])),
-        hovermode='x unified',
-        height=450,
-        legend=dict(font=dict(family='Supermolot', color=base_colours['text'])),
-        annotations=[dict(xref='paper', x=0.925, y=df[var].iloc[-1],
-                                  xanchor='left', yanchor='middle',
-                                  text=round(df[var].iloc[-1], 4),
-                                  font=dict(family='Supermolot', color=base_colours['black'], size=12),
-                                  bgcolor=price_color,
-                                  showarrow=False,
-        )],
-        # style of new shapes
-        dragmode='drawline',
-        newshape=dict(line_color=base_colours['primary_text'],opacity=1, line=dict(width=2))
-    )
-    return fig_layout
-
-
-def generate_candle(df, var, candle, y_text):
+def generate_candle(df, var, candle, y_text, shape_data):
     data_ohlc = get_candle_data(df, var, candle)
     data_vol = get_volume_data(df, candle)
     if data_ohlc['close'].iloc[-1] >= data_ohlc['open'].iloc[-1]:
@@ -170,7 +72,7 @@ def generate_candle(df, var, candle, y_text):
     fig.update_layout(
         plot_bgcolor='#434343',
         paper_bgcolor=base_colours['card'],
-        margin={'l': 0, 'r': 10, 't': 0, 'b': 0, 'pad': 0},
+        margin={'l': 0, 'r': 0, 't': 0, 'b': 0, 'pad': 0},
         xaxis=dict(
             gridcolor='rgba(176,179,184, 0.25)',
             gridwidth=1,
@@ -204,9 +106,9 @@ def generate_candle(df, var, candle, y_text):
         font={'color': base_colours['primary_text']},
         hoverlabel=dict(font=dict(family='Supermolot', color=base_colours['primary_text'])),
         hovermode='x unified',
-        height=450,
+        height=500,
         legend=dict(font=dict(family='Supermolot', color=base_colours['text'])),
-        annotations=[dict(xref='paper', x=0.925, y=df[var].iloc[-1],
+        annotations=[dict(xref='paper', x=0.94, y=df[var].iloc[-1],
                                   xanchor='left', yanchor='middle',
                                   text=round(df[var].iloc[-1], 4),
                                   font=dict(family='Supermolot', color=base_colours['black'], size=12),
@@ -215,7 +117,8 @@ def generate_candle(df, var, candle, y_text):
         )],
         # style of new shapes
         dragmode='drawline',
-        newshape=dict(line_color=base_colours['primary_text'],opacity=1, line=dict(width=2))
+        newshape=dict(line_color=base_colours['primary_text'],opacity=1, line=dict(width=2)),
+        modebar=dict(orientation='v', activecolor=base_colours['primary_text']),
     )
     
     fig.update_xaxes(
@@ -234,6 +137,21 @@ def generate_candle(df, var, candle, y_text):
         linecolor='rgba(176,179,184, 0.25)', 
         mirror=True
     )
+    if shape_data:
+        for shape in shape_data:
+            fig.add_shape(
+                editable=True,
+                layer='above',
+                type=shape['type'],
+                x0=shape['x0'],
+                x1=shape['x1'],
+                y0=shape['y0'],
+                y1=shape['y1'],
+                line=dict(
+                    color=base_colours['primary_text'],
+                    width=2,
+                )
+            )
     return fig
   
   
@@ -379,7 +297,7 @@ layout = html.Div(
                                 dcc.Graph(
                                     id='uni_candlestick',
                                     config=graph_config,
-                                    figure=generate_candle(get_uni_data('gmx', 7), 'usd_price', '1h', 'GMX/USD'),
+                                    figure=generate_candle(get_uni_data('gmx', 7), 'usd_price', '1h', 'GMX/USD', []),
                                     style={'padding-top': 20},
                                 )
                             ],
@@ -528,38 +446,43 @@ layout = html.Div(
 
         
 @app.callback(Output('uni_candlestick', 'figure'),
-        [Input('candle_filter', 'value'),
+	[Input('chart-interval', 'n_intervals'),
+            Input('candle_filter', 'value'),
             Input('period_filter', 'value'),
-            Input('currency_filter', 'value')])
-def update_uni_trend(interval, period, currency):
-    if currency == 'usd':
-        return generate_candle(get_uni_data('gmx', period), 'usd_price', interval, 'GMX/USD')
-    elif currency == 'eth':
-        return generate_candle(get_uni_data('gmx', period), 'gmxeth', interval, 'GMX/ETH')
-
-
-@app.callback(Output('uni_candlestick', 'data'),
-	[Input('chart-interval', 'n_intervals'),
-            Input('candle_filter', 'value'),
             Input('currency_filter', 'value')],
-            State('period_filter', 'value'))
-def update_uni_data(n_intervals, interval, currency, period):
+        State('gmx_shapes', 'data'))
+def update_uni_trend(n_intervals, interval, period, currency, shape_data):
+    if shape_data:
+        shape_data = json.loads(shape_data)
+    else:
+        shape_data = []
     if currency == 'usd':
-        return generate_candle_data(get_uni_data('gmx', period), 'usd_price', interval, 'GMX/USD')
+        return generate_candle(get_uni_data('gmx', period), 'usd_price', interval, 'GMX/USD', shape_data)
     elif currency == 'eth':
-        return generate_candle_data(get_uni_data('gmx', period), 'gmxeth', interval, 'GMX/ETH')
- 
+        return generate_candle(get_uni_data('gmx', period), 'gmxeth', interval, 'GMX/ETH', shape_data)
 
-@app.callback(Output('uni_candlestick', 'layout'),
-	[Input('chart-interval', 'n_intervals'),
-            Input('candle_filter', 'value'),
-            Input('currency_filter', 'value')],
-            State('period_filter', 'value'))
-def update_uni_layout(n_intervals, interval, currency, period):
-    if currency == 'usd':
-        return generate_candle_layout(get_uni_data('gmx', period), 'usd_price', interval, 'GMX/USD')
-    elif currency == 'eth':
-        return generate_candle_layout(get_uni_data('gmx', period), 'gmxeth', interval, 'GMX/ETH')
+
+@app.callback(Output('gmx_shapes', 'data'),
+        [Input('uni_candlestick', 'relayoutData')],
+        State('gmx_shapes', 'data'),
+        prevent_initial_call=True)
+def on_gmx_annotation(relayout_data, shape_data):
+    if relayout_data:
+        if 'shapes' in relayout_data:
+            return json.dumps(relayout_data["shapes"], indent=2)
+        elif 'shapes' in list(relayout_data.keys())[0]:
+            shape_data = json.loads(shape_data)
+            idx = list(relayout_data.keys())[0][7:8]
+            shape_data[int(idx)]['x0'] = relayout_data['shapes[{}].x0'.format(idx)]
+            shape_data[int(idx)]['x1'] = relayout_data['shapes[{}].x1'.format(idx)]
+            shape_data[int(idx)]['y0'] = relayout_data['shapes[{}].y0'.format(idx)]
+            shape_data[int(idx)]['y1'] = relayout_data['shapes[{}].y1'.format(idx)]
+            return json.dumps(shape_data, indent=2)
+        else:
+            return dash.no_update
+    else:
+        return dash.no_update
+
 
 
 @app.callback(Output('uni_price', 'children'),

@@ -1,4 +1,5 @@
 import dash
+from dash.dependencies import Input, Output
 from flask import Flask
 import dash_bootstrap_components as dbc
 from flask_caching import Cache
@@ -13,6 +14,7 @@ server = Flask(__name__)
 app = dash.Dash(
     __name__,
     server=server,
+    update_title=None,
     suppress_callback_exceptions=True,
     meta_tags=[{'name': 'viewport', 'content': "width=device-width, initial-scale=1"}],
     external_stylesheets=[dbc.themes.BOOTSTRAP, "https://tools.aftertheflood.com/sparks/styles/font-faces.css"]
@@ -53,7 +55,6 @@ app.index_string = '''
 
 
 app.css.config.serve_locally = True
-app.title = 'GEMS Alliance: Performance'
 app.server.secret_key = auth_conf['flask']['SECRET_KEY']
 
 # Configure cache
@@ -66,3 +67,4 @@ cache = Cache(server, config={
 })
 
 cache.clear()
+

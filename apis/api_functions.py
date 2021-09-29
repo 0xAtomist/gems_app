@@ -72,7 +72,6 @@ def get_api_inspections(gem):
             'name': market['market']['name'],
             'price': market['converted_last']['usd'],
             'volume': market['converted_volume']['usd'],
-            'volume_percent': market['converted_volume']['usd']/token_dict['volume'],
             'trust': market['trust_score'],
             'spread': market['bid_ask_spread_percentage'],
             'last_traded': market['last_traded_at'],

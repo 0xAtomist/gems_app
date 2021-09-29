@@ -31,7 +31,7 @@ for gem in gem_list:
     # Write chart data
     for period in [1, 7, 14, 30, 90, 180, 365, 'max']:
         df = get_chart_data(gem, period)
-        time.sleep(1)
+        time.sleep(5)
         context = pa.default_serialization_context()
         r.set('{}-{}d-chart'.format(gem, period), context.serialize(df).to_buffer().to_pybytes())
 

@@ -20,7 +20,13 @@ content = html.Div(id="page-content", style={'padding-top': 5}) #, style=CONTENT
 
 def serve_layout():
 	return html.Div(
-		[dcc.Location(id='url', refresh=False), sidebar.layout, header.layout, content],
+		[
+                    dcc.Location(id='url', refresh=False),
+                    sidebar.layout,
+                    header.layout,
+                    content,
+                    html.Div(id='blank-output'),
+                ],
 		id='mainContainer',
 	)
 
@@ -123,6 +129,27 @@ def api_large_caps():
     }, inplace=True)
     json_msg = df_master.to_json(orient='table')
     return json_msg
+
+
+app.clientside_callback(
+    """
+    function(pathname) {
+        if (pathname === '/gems-overview') {
+            document.title = 'GEMS Performance Overview'
+        } else if (pathname === '/gmx-chart') {
+            document.title = 'GMX Uniswap Chart'
+        } else if (pathname === '/gmx-staking') {
+            document.title = 'GMX Staking'
+        } else if (pathname === '/trends') {
+            document.title = 'GEMS Trending Data'
+        } else {
+            document.title = 'GEMS Performance Overview'
+        }
+    }
+    """,
+    Output('blank-output', 'children'),
+    Input('url', 'pathname')
+)
 
 
 if __name__ == "__main__":

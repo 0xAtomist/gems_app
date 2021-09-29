@@ -1,0 +1,15 @@
+[Unit]
+Description=GMX Bot Alerts service
+After=multi-user.target
+
+[Service]
+Type=simple
+Restart=always
+User=berrytom08
+Group=www-data
+WorkingDirectory=/home/berrytom08/gems_app
+Environment="PATH=/home/berrytom08/gems_app/venv/bin"
+ExecStart=/home/berrytom08/gems_app/venv/bin/python /home/berrytom08/gems_app/apis/gmx_staking.py
+
+[Install]
+WantedBy=multi-user.target
