@@ -36,13 +36,21 @@ graph_config = {
 # Set line styles for the list of GEMS
 gem_style = []
 for item in px.colors.qualitative.Pastel:
-    gem_style.append([item, None])
+    gem_style.append([item, None, 'lines'])
 for item in px.colors.qualitative.Pastel:
-    gem_style.append([item, 'dash'])
+    gem_style.append([item, 'dash', 'lines'])
 for item in px.colors.qualitative.Pastel:
-    gem_style.append([item, 'dot'])
+    gem_style.append([item, 'dot', 'lines'])
 for item in px.colors.qualitative.Pastel:
-    gem_style.append([item, 'dashdot'])
+    gem_style.append([item, 'dashdot', 'lines'])
+for item in px.colors.qualitative.Pastel:
+    gem_style.append([item, None, 'lines+markers'])
+for item in px.colors.qualitative.Pastel:
+    gem_style.append([item, 'dash', 'lines+markers'])
+for item in px.colors.qualitative.Pastel:
+    gem_style.append([item, 'dot', 'lines+markers'])
+for item in px.colors.qualitative.Pastel:
+    gem_style.append([item, 'dashdot', 'lines+markers'])
 
 
 def get_options(variable):
@@ -83,6 +91,7 @@ def generate_trend(gem_list, start_date, end_date, y_var, y_text, hover_temp):
                 y=dff[y_var], 
                 name=symbol, 
                 hovertemplate=hover_temp,
+                mode=gem_style[i][2],
                 line=dict(color=gem_style[i][0], dash=gem_style[i][1]),
                 textfont=dict(family='Supermolot', color=base_colours['text'], size=13)
             )
@@ -369,7 +378,7 @@ layout = html.Div(
                                 dcc.Graph(
                                     id='trend_mc_relative', 
                                     config=graph_config,
-                                    figure=generate_trend(get_gem_list(master), datetime.strftime(date.today()-timedelta(90), '%Y-%m-%d'), datetime.strftime(date.today(), '%Y-%m-%d'), 'relative_cap', 'Relative Market Cap', '%{y:.2f}')
+                                    figure=generate_trend([], datetime.strftime(date.today()-timedelta(90), '%Y-%m-%d'), datetime.strftime(date.today(), '%Y-%m-%d'), 'relative_cap', 'Relative Market Cap', '%{y:.2f}')
                                 )
                             ],
                             className="pretty_container",
@@ -395,7 +404,7 @@ layout = html.Div(
 @cache.memoize(timeout=20)
 def update_filter_trend(gem_filter, tier_filter, sector_filter, market_filter, rewards_filter):
     if not gem_filter and not tier_filter and not sector_filter and not market_filter and not rewards_filter:
-        filtered_json = json.dumps(get_gem_list(master))
+        filtered_json = json.dumps([]) # get_gem_list(master))
         return filtered_json
     else:
         filtered_gem_list = filter_gem_list(gem_filter, tier_filter, sector_filter, market_filter, rewards_filter)

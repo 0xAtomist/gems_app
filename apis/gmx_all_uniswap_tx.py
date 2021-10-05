@@ -22,6 +22,7 @@ def get_all_LP_tx(LP_contract, top_pair, bottom_pair, decimal_ratio, blocklength
         end = 300000+blocklength+i*blocklength+1
         r_page = requests.get('https://api.arbiscan.io/api?module=account&action=tokentx&address={}&startblock={}&endblock={}&sort=asc&apikey={}'
                             .format(LP_contract, start, end, API_key))
+        print(top_pair, i, len(r_page.json()['result']))
         #print(r_page.json()['result'][0])
         r_all.extend(r_page.json()['result'])
     
@@ -73,6 +74,7 @@ def get_all_LP_tx(LP_contract, top_pair, bottom_pair, decimal_ratio, blocklength
     df['timestamp'] = pd.to_datetime(df['timestamp'], unit='s')
 
     df = df[~(df['timestamp'] < '2021-09-06')]
+    df = df.dropna()
     
     price_list = []
         
@@ -84,8 +86,15 @@ def get_all_LP_tx(LP_contract, top_pair, bottom_pair, decimal_ratio, blocklength
         price_list.append(price*decimal_ratio)
     
     df['price'] = price_list
+    df = df.dropna().set_index('timestamp', drop=False)
+    dt = pd.to_datetime(df['timestamp'], format='%Y/%m/%d %H:%M:%S')
+    delta = pd.to_timedelta(df.groupby(dt).cumcount(), unit='ms')
+    df['timestamp'] = dt + delta.values
+    df = df.dropna().set_index('timestamp', drop=False)
+    df = df.sort_index()
+    print(df)
     
-    df = df.dropna().drop_duplicates(subset=['timestamp']).set_index('timestamp', drop=False)
+    # df = df.dropna().drop_duplicates(subset=['timestamp']).set_index('timestamp', drop=False)
 
     return df
 
@@ -100,7 +109,7 @@ def get_usd_dataset(df_top, df_bottom):
     action_list = []
     
     for i, dt in enumerate(df_top.index):
-        idx = df_bottom.index.unique().get_loc(dt, method='nearest')
+        idx = df_bottom.index.get_loc(dt, method='nearest')
         ethusd_price = df_bottom['price'].iloc[idx]
         gmxusd_price = df_top['price'].iloc[i] * ethusd_price
         usd_list.append(gmxusd_price)
@@ -138,8 +147,8 @@ r = redis.StrictRedis('localhost')
 context = pa.default_serialization_context()
 
 
-df = get_usd_dataset(get_all_LP_tx(GMX_ETH_LP, 'GMX', 'WETH', 1, 300000, 5), 
-                     get_all_LP_tx(ETH_USDC_LP, 'WETH', 'USDC', 1e12, 100000, 15))
+df = get_usd_dataset(get_all_LP_tx(GMX_ETH_LP, 'GMX', 'WETH', 1, 300000, 10), 
+                     get_all_LP_tx(ETH_USDC_LP, 'WETH', 'USDC', 1e12, 100000, 30))
 #print(df)
 r.set('gmx-uniswap', context.serialize(df).to_buffer().to_pybytes())
 #output = context.deserialize(r.get('api3-trending'))

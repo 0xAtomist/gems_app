@@ -3,7 +3,7 @@ import dash_core_components as dcc
 import dash_html_components as html
 import dash_bootstrap_components as dbc
 from dash.dependencies import Input, Output
-#import logging
+import logging
 
 
 from app import app, server
@@ -143,7 +143,7 @@ app.clientside_callback(
         } else if (pathname === '/trends') {
             document.title = 'GEMS Trending Data'
         } else {
-            document.title = 'GEMS Performance Overview'
+            document.title = 'TokenFeeds'
         }
     }
     """,
@@ -153,8 +153,8 @@ app.clientside_callback(
 
 
 if __name__ == "__main__":
-	#gunicorn_logger = logging.getLogger('gunicorn.error')
-	#app.logger.handlers = gunicorn_logger.handlers
-	#app.logger.setLevel(gunicorn_logger.level)
-	app.run_server(host='0.0.0.0', port=8000, debug=True)
+    gunicorn_logger = logging.getLogger('gunicorn.error')
+    app.logger.handlers = gunicorn_logger.handlers
+    app.logger.setLevel(gunicorn_logger.level)
+    app.run_server(host='0.0.0.0', port=8000, debug=True)
 

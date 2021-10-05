@@ -60,7 +60,7 @@ def generate_staked_trend(df, dff, y_var, y_text, hover_temp):
     fig_range = make_subplots(specs=[[{"secondary_y": True}]])
     fig_range.add_trace(
         go.Scatter(
-            x=df.index, 
+            x=df['timestamp'], 
             y=df['usd_price'], 
             name='GMX/USD Price', 
             hovertemplate='%{y:,.5f}',
@@ -93,7 +93,7 @@ def generate_staked_trend(df, dff, y_var, y_text, hover_temp):
             titlefont=dict(family='Supermolot', size=14, color=base_colours['primary_text']),
             tickfont=dict(family='Supermolot', size=12, color=base_colours['secondary_text']),
             showgrid=False,
-            range=[min(df.index), max(df.index)+(max(df.index)-min(df.index))*0.1]
+            range=[min(df['timestamp']), max(df['timestamp'])+(max(df['timestamp'])-min(df['timestamp']))*0.1]
         ),
         yaxis=dict(
             gridcolor=base_colours['secondary_text'],

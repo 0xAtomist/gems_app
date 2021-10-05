@@ -20,6 +20,7 @@ from app import app, cache
 from colours import *
 from data_functions import get_uni_data, get_candle_data, get_volume_data
 
+pd.set_option('display.max_rows', 500)
 
 graph_config = {
     'modeBarButtonsToRemove': [
@@ -59,7 +60,7 @@ def generate_candle(df, var, candle, y_text, shape_data):
                     name='{} Price'.format(y_text)
     ))
     fig.add_trace(go.Bar(x=data_vol.index, y=data_vol, marker={'color': '#30D5C8'}, name='USD Volume') , secondary_y=True)
-    fig.add_trace(go.Scatter(x=[min(df.index), max(df.index)+(max(df.index)-min(df.index))*0.1], 
+    fig.add_trace(go.Scatter(x=[min(df['timestamp']), max(df['timestamp'])+(max(df['timestamp'])-min(df['timestamp']))*0.1], 
                             y=[df[var].iloc[-1], df[var].iloc[-1]], 
                             mode='lines', 
                             line=dict(color=price_color, width=1, dash='dot'),
@@ -80,7 +81,7 @@ def generate_candle(df, var, candle, y_text, shape_data):
             titlefont=dict(family='Supermolot', size=14, color=base_colours['primary_text']),
             tickfont=dict(family='Supermolot', size=12, color=base_colours['secondary_text']),
             #showgrid=False,
-            range=[min(df.index), max(df.index)+(max(df.index)-min(df.index))*0.1]
+            range=[min(df['timestamp']), max(df['timestamp'])+(max(df['timestamp'])-min(df['timestamp']))*0.1]
         ),
         yaxis=dict(
             gridcolor='rgba(176,179,184, 0.5)',

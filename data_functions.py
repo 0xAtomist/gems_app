@@ -161,7 +161,6 @@ def get_extended_data(gem):
     master = get_gem_info()
     tweet_price = master['gems'][gem]['Tweet Price']
     tweet_date = master['gems'][gem]['Tweet Date']
-    tweet_price = master['gems'][gem]['Tweet Price']
 
     df = get_data_recent(gem)
     df_btc = get_btc_daily()
@@ -171,14 +170,21 @@ def get_extended_data(gem):
     tweet_time = datetime.timestamp(datetime.strptime(tweet_date, '%Y-%m-%d'))
     btc_tweet = df_btc.loc[df_btc['time'] == tweet_time]['close'].values[0]
     df['btc_usd_x'] = btc_now/btc_tweet
-    gem_tweet = tweet_price
+    gem_tweet = float(tweet_price)
 
     df['fdv_tot'] = df['current_price'] * df['total_supply']
     df['mc_fdv_ratio'] = df['market_cap'] / df['fdv_tot']
     df['gem_usd_x'] = df['current_price'] / tweet_price - 1
     df['gem_btc_x'] = (gem_now/btc_now) / (gem_tweet/btc_tweet) - 1
-    df['ath_gem_usd_x'] = df['ath'] / tweet_price - 1
-    df['ath_gem_btc_x'] = (df['ath']/btc_now) / (gem_tweet/btc_tweet) - 1
+    if datetime.timestamp(datetime.strptime(df['ath_date'], '%Y-%m-%dT%H:%M:%S.%fZ')) < tweet_time:
+        df_trend = get_chart_range_data(gem, tweet_date, datetime.today().strftime('%Y-%m-%d'))
+        ath_post_idx = df_trend['price'].idxmax()
+        ath_post = df_trend['price'].iloc[ath_post_idx]
+        df['ath_gem_usd_x'] = ath_post / gem_tweet - 1
+        df['ath_gem_btc_x'] = (ath_post/btc_now) / (gem_tweet/btc_tweet) - 1
+    else:
+        df['ath_gem_usd_x'] = df['ath'] / gem_tweet - 1
+        df['ath_gem_btc_x'] = (df['ath']/btc_now) / (gem_tweet/btc_tweet) - 1
     df['20x']  = tweet_price * 20
     df['50x'] = tweet_price * 50
 
@@ -215,7 +221,7 @@ def get_uni_data(gem, period):
     context = pa.default_serialization_context()
     df = context.deserialize(r.get('{}-uniswap'.format(gem)))
     start_date = datetime.today() - timedelta(days=period)
-    df = df[~(df.index < start_date)]
+    df = df[~(df['timestamp'] < start_date)]
     df['gmxeth'] = df['usd_price']/df['eth_price']
     return df
 

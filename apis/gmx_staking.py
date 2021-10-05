@@ -3,6 +3,7 @@ import pandas as pd
 import time
 import telegram
 import redis
+import sys
 
 bot_key = '1857023695:AAGFDIotyZoy3_yFFhsbaASTVvibRIeJfXU'
 
@@ -19,10 +20,13 @@ sGMX_contract = "0x908c4d94d34924765f1edc22a1dd098397c59dd4"
 
 API_key = "YWR5E9YUBPE2X6KNXG99D2MX1UHPYDFDBGT"
 
+pd.set_option('display.max_rows', 500)
+
+offset = 500
 
 def get_recent(interval):
-    r_100 = requests.get('https://api.arbiscan.io/api?module=account&action=tokentx&contractaddress={}&address={}&page=1&offset=100&sort=desc&apikey={}'
-                        .format(GMX_contract, sGMX_contract, API_key))
+    r_100 = requests.get('https://api.arbiscan.io/api?module=account&action=tokentx&contractaddress={}&address={}&page=1&offset={}&sort=desc&apikey={}'
+                        .format(GMX_contract, sGMX_contract, offset, API_key))
 
     df = pd.DataFrame(columns=['value', 'timestamp', 'in/out', 'hash'])
 
@@ -51,10 +55,9 @@ def get_recent(interval):
             output_dict['in/out'].append(in_out)
             output_dict['hash'].append(tx_hash)
 
-
     df = pd.DataFrame.from_dict(output_dict) 
     df['timestamp'] = pd.to_datetime(df['timestamp'], unit='s')
-    #print(df)
+    df = df.drop_duplicates(subset=['hash'], keep=False)
     return df
 
 
