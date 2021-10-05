@@ -3,12 +3,14 @@ from dash.dependencies import Input, Output
 from flask import Flask
 import dash_bootstrap_components as dbc
 from flask_caching import Cache
+import flask_monitoringdashboard as dashboard
 
 from auth import auth_conf
 
+
 server = Flask(__name__)
 
-
+dashboard.bind(server)
 
 
 app = dash.Dash(
