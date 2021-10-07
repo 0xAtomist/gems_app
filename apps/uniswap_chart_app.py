@@ -493,8 +493,7 @@ def update_uni_trend_data(json_data, candle, currency):
             Input('chart-interval', 'n_intervals'),
 	    Input('candle_filter', 'value'),
 	    Input('period_filter', 'value'),
-	    Input('gmx_shapes', 'data')],
-        prevent_initial_call=True)
+	    Input('gmx_shapes', 'data')])
 def update_uni_trend(currency, n_intervals, candle, interval, shape_data):
     df = get_uni_data('gmx', interval)
     if shape_data:
@@ -509,8 +508,7 @@ def update_uni_trend(currency, n_intervals, candle, interval, shape_data):
 
 @app.callback(Output('gmx_shapes', 'data'),
     [Input('uni_candlestick', 'relayoutData')],
-    State('gmx_shapes', 'data'),
-    prevent_initial_call=True)
+    State('gmx_shapes', 'data'))
 def on_gmx_annotation(relayout_data, shape_data):
     if relayout_data:
         if 'shapes' in relayout_data:
@@ -531,8 +529,7 @@ def on_gmx_annotation(relayout_data, shape_data):
 
 @app.callback(Output('uni_price', 'children'),
     [Input('chart-interval', 'n_intervals'),
-        Input('currency_filter', 'value')],
-    prevent_initial_call=True)
+        Input('currency_filter', 'value')])
 def update_uni_price(n_intervals, currency):
     df = get_uni_data('gmx', 1)
     if currency == 'usd':
@@ -543,8 +540,7 @@ def update_uni_price(n_intervals, currency):
 
 @app.callback(Output('uni_table', 'data'),
     [Input('chart-interval', 'n_intervals'),
-    Input('period_filter', 'value')],
-    prevent_initial_call=True)
+    Input('period_filter', 'value')])
 def update_table(n_intervals, interval):
     df = get_uni_data('gmx', interval)
     return generate_table_data(df)

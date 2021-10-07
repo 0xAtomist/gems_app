@@ -149,7 +149,7 @@ context = pa.default_serialization_context()
 
 
 df = get_usd_dataset(get_all_LP_tx(GMX_ETH_LP, 'GMX', 'WETH', 1, 300000, 10), 
-                     get_all_LP_tx(ETH_USDC_LP, 'WETH', 'USDC', 1e12, 100000, 30))
+                     get_all_LP_tx(ETH_USDC_LP, 'WETH', 'USDC', 1e12, 100000, 50))
 #print(df)
 r.set('gmx-uniswap', context.serialize(df).to_buffer().to_pybytes())
 #output = context.deserialize(r.get('api3-trending'))
