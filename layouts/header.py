@@ -23,10 +23,11 @@ def generate_layout():
 	return html.Div(
 		[
 			dcc.Interval(id='live-interval', interval=1*60*1000, n_intervals=0),
-			dcc.Interval(id='chart-interval', interval=10*1000, n_intervals=0),
+			dcc.Interval(id='chart-interval', interval=15*1000, n_intervals=0),
 			dcc.Store(id='filter-store', storage_type='memory'),
 			dcc.Store(id='filter-trend', storage_type='memory'),
 			dcc.Store(id='gmx_shapes', storage_type='local'),
+			dcc.Store(id='uni-data', storage_type='memory'),
 			dbc.Row(
 				[
 					dbc.Col(
