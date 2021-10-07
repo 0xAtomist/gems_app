@@ -445,22 +445,60 @@ layout = html.Div(
     id='uniswap-container',
 )
 
-        
-@app.callback(Output('uni_candlestick', 'figure'),
+
+@app.callback(Output('uni-data', 'data'),
 	[Input('chart-interval', 'n_intervals'),
-            Input('candle_filter', 'value'),
-            Input('period_filter', 'value'),
-            Input('currency_filter', 'value')],
-        State('gmx_shapes', 'data'))
-def update_uni_trend(n_intervals, interval, period, currency, shape_data):
+            Input('period_filter', 'value')])
+def update_uni_data(n_intervals, period):
+	df = get_uni_data('gmx', period)
+	return json.dumps(df)
+
+
+@app.callback(Output('uni_candlestick', 'extendData'),
+	[Input('uni-data', 'data'),
+	 	Input('candle_filter', 'value')],
+	[State('currency_filter', 'value')])
+def update_uni_trend_data(df, candle, currency):
+	if currency == 'usd':
+        data_ohlc = get_candle_data(df, 'usd_price', candle)
+    elif currency == 'eth':
+		data_ohlc = get_candle_data(df, 'gmxeth', candle)
+		
+    if data_ohlc['close'].iloc[-1] >= data_ohlc['open'].iloc[-1]:
+        price_color = palette['green']['50']
+    elif data_ohlc['close'].iloc[-1] < data_ohlc['open'].iloc[-1]:
+        price_color = palette['red']['50']
+    else:
+        price_color = color=base_colours['secondary_text']
+
+    data_ohlc = data_ohlc.dropna()
+    data_vol = data_vol.dropna()
+	
+	data1 = dict(
+		x=data_ohlc.index,
+		open=data_ohlc['open'],
+		high=data_ohlc['high'],
+		low=data_ohlc['low'],
+		close=data_ohlc['close'])
+	data2 = dict(x=data_vol.index, y=data_vol)
+	
+	return [data1, data2], [0, 1]
+
+	
+@app.callback(Output('uni_candlestick', 'figure'),
+	[Input('currency_filter', 'value')],
+	[State('uni-data', 'data'),
+	 	State('candle_filter', 'value'),
+		State('gmx_shapes', 'data')])
+def update_uni_trend(currency, df, candle, shape_data):
     if shape_data:
         shape_data = json.loads(shape_data)
     else:
         shape_data = []
     if currency == 'usd':
-        return generate_candle(get_uni_data('gmx', period), 'usd_price', interval, 'GMX/USD', shape_data)
+        return generate_candle(df, 'usd_price', candle, 'GMX/USD', shape_data)
     elif currency == 'eth':
-        return generate_candle(get_uni_data('gmx', period), 'gmxeth', interval, 'GMX/ETH', shape_data)
+        return generate_candle(df, 'gmxeth', candle, 'GMX/ETH', shape_data)
 
 
 @app.callback(Output('gmx_shapes', 'data'),
@@ -485,22 +523,18 @@ def on_gmx_annotation(relayout_data, shape_data):
         return dash.no_update
 
 
-
 @app.callback(Output('uni_price', 'children'),
-	[Input('chart-interval', 'n_intervals'),
-            Input('currency_filter', 'value')])
-def update_uni_price(n_intervals, currency):
-    df = get_uni_data('gmx', 1)
+	[Input('uni-data', 'data'),
+	 	Input('currency_filter', 'value')])
+def update_uni_price(df, currency):
     if currency == 'usd':
         return '{} USD'.format(round(df['usd_price'].iloc[-1], 4))
     elif currency == 'eth':
         return '{} ETH'.format(round(df['gmxeth'].iloc[-1], 5))
 
 
-@app.callback(
-    Output('uni_table', 'data'),
-	[Input('chart-interval', 'n_intervals'),
-	Input('period_filter','value')])
-def update_table(n_intervals, interval):
-    return generate_table_data(get_uni_data('gmx', interval))
+@app.callback(Output('uni_table', 'data'),
+	[Input('uni-data', 'data'))
+def update_table(df):
+    return generate_table_data(df)
         
