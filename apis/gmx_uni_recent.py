@@ -145,7 +145,7 @@ def get_usd_dataset(df_top, df_bottom):
     df_top['nUSD'] = n_USD_list
     df_top['volume'] = vol_list
     df_top['action'] = action_list
-
+    df_top['gmxeth'] = df_top['usd_price']/df_top['eth_price']
     return df_top
 
 

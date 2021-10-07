@@ -20,6 +20,7 @@ import pandas as pd
 from collections import OrderedDict
 
 from app import app, cache
+from apps.uniswap_chart_app import get_period_options
 from colours import *
 from data_functions import get_gem_info, get_uni_data, get_staked_data
 
@@ -47,13 +48,6 @@ for item in px.colors.qualitative.Pastel:
     gem_style.append([item, 'dot'])
 for item in px.colors.qualitative.Pastel:
     gem_style.append([item, 'dashdot'])
-
-
-GMX_contract = "0xfc5a1a6eb076a2c7ad06ed22c90d7e710e35ad0a"
-sGMX_contract = "0x908c4d94d34924765f1edc22a1dd098397c59dd4"
-GMX_ETH_LP = '0x80a9ae39310abf666a87c743d6ebbd0e8c42158e'
-
-API_key = "YWR5E9YUBPE2X6KNXG99D2MX1UHPYDFDBGT"
 
 
 def generate_staked_trend(df, dff, y_var, y_text, hover_temp):
@@ -97,7 +91,7 @@ def generate_staked_trend(df, dff, y_var, y_text, hover_temp):
         ),
         yaxis=dict(
             gridcolor=base_colours['secondary_text'],
-            title=dict(text='GMX/ETH'),
+            title=dict(text='GMX/USD'),
             titlefont=dict(family='Supermolot', size=14, color=base_colours['primary_text']),
             tickfont=dict(family='Supermolot', size=12, color=base_colours['secondary_text']),
             ticksuffix='   ',
@@ -147,6 +141,70 @@ layout = html.Div(
                     [
                         html.Div(
                             [
+                                dbc.Row(
+                                    [
+                                        dbc.Col(
+                                            [
+                                                html.Div(
+                                                    [
+                                                        html.H5(id='gmx_staked'),
+                                                    ],
+                                                    id='gmx_staked_div',
+                                                ),
+                                            ],
+                                            sm=5,
+                                            style={'padding-right': 10, 'padding-left': 10, 'padding-top': 25, 'text-align': 'center'},
+                                        ),
+                                        dbc.Col(
+                                            [
+                                                html.Div(
+                                                    [
+                                                        html.H5(id='gmx_total'),
+                                                    ],
+                                                    id='gmx_total_div',
+                                                ),
+                                            ],
+                                            sm=5,
+                                            style={'padding-right': 10, 'padding-left': 10, 'padding-top': 25, 'text-align': 'center'},
+                                        ),
+                                        dbc.Col(
+                                            [
+                                                html.Div(
+                                                    [
+                                                        html.P("Interval", style={'margin-bottom': 2}),
+                                                        dcc.Dropdown(
+                                                            id='stake_interval',
+                                                            options=get_period_options(),
+                                                            multi=False,
+                                                            value=365,
+                                                            style={'width': 'calc(100%-40px)', 'margin-bottom': 10},
+                                                        ),
+                                                    ],
+                                                ),
+                                            ],
+                                            sm=2,
+                                            style={'padding-right': 10, 'padding-left': 10},
+                                        ),
+                                    ],
+                                    style={'padding-right': 10, 'padding-left': 10},
+                                ),
+                            ],
+                            id='uni_ribbon',
+                            className="pretty_container",
+                            style={'height': 'auto', 'min-height': 50, 'padding': 10},
+                        ),
+                    ],
+                    xl=12,
+                    style={'padding': 0},
+                ),
+            ],
+        ),
+        dbc.Row(
+            [
+                dbc.Col(
+                    [
+                        html.Div(
+                            [
                                 html.P('Historical View of GMX Price and Total Staked Supply', id='sGMX_trend_tip', style={'text-align': 'center'}),
                                 dcc.Graph(
                                     id='trend_sGMX',
@@ -169,8 +227,25 @@ layout = html.Div(
 
 
 @app.callback(Output('trend_sGMX', 'figure'),
-	[Input('chart-interval', 'n_intervals')])
-def update_trend_price(n_intervals):
-    return generate_staked_trend(get_uni_data('gmx', 365), get_staked_data('gmx'), 'cum_value', 'Staked GMX Count', '%{y:,.0f} <b>(%{customdata}%)</b>')
+	[Input('chart-interval', 'n_intervals'),
+            Input('stake_interval', 'value')])
+def update_trend_price(n_intervals, interval):
+    return generate_staked_trend(get_uni_data('gmx', interval), get_staked_data('gmx'), 'cum_value', 'Staked GMX Count', '%{y:,.0f} <b>(%{customdata}%)</b>')
 
 
+@app.callback(Output('gmx_staked', 'children'),
+	[Input('chart-interval', 'n_intervals')],
+        prevent_initial_callback=True)
+def update_gmx_staked(n_intervals):
+    df = get_staked_data('gmx')
+    val = int(df['cum_value'].iloc[-1])
+    return 'GMX Staked: ' + f'{val:,}' + ' ({}%)'.format(round(df['Staked %'].iloc[-1], 1))
+
+
+@app.callback(Output('gmx_total', 'children'),
+	[Input('chart-interval', 'n_intervals')],
+        prevent_initial_callback=True)
+def update_gmx_total(n_intervals):
+    df = get_staked_data('gmx')
+    val = int(df['cum_value'].iloc[-1]/(df['Staked %'].iloc[-1]/100))
+    return 'GMX Supply: ' + f'{val:,}'

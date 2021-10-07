@@ -221,8 +221,7 @@ def get_uni_data(gem, period):
     context = pa.default_serialization_context()
     df = context.deserialize(r.get('{}-uniswap'.format(gem)))
     start_date = datetime.today() - timedelta(days=period)
-    df = df[~(df['timestamp'] < start_date)]
-    df['gmxeth'] = df['usd_price']/df['eth_price']
+    df = df[~(df['timestamp'] < start_date)].copy()
     return df
 
 

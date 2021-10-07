@@ -200,6 +200,8 @@ body {
 #sector_filter2 .Select-menu-outer,
 #tier_filter2 .Select-menu-outer,
 #rewards_filter2 .Select-menu-outer,
+#stake_currency .Select-menu-outer,
+#stake_interval .Select-menu-outer,
 #candle_filter .Select-menu-outer,
 #period_filter .Select-menu-outer,
 #currency_filter .Select-menu-outer {
@@ -220,6 +222,8 @@ body {
 #sector_filter2 .Select-control,
 #tier_filter2 .Select-control,
 #rewards_filter2 .Select-control,
+#stake_currency .Select-control,
+#stake_interval .Select-control,
 #candle_filter .Select-control,
 #period_filter .Select-control,
 #currency_filter .Select-control {
@@ -241,6 +245,8 @@ body {
 #sector_filter2 .Select-placeholder,
 #tier_filter2 .Select-placeholder,
 #rewards_filter2 .Select-placeholder,
+#stake_currency .Select-placeholder,
+#stake_interval .Select-placeholder,
 #candle_filter .Select-placeholder,
 #period_filter .Select-placeholder,
 #currency_filter .Select-placeholder {
@@ -270,6 +276,8 @@ body {
 
 
 #inspect_dropdown .Select--single>.Select-control .Select-value, .Select-placeholder,
+#stake_currency .Select--single>.Select-control .Select-value, .Select-placeholder,
+#stake_interval .Select--single>.Select-control .Select-value, .Select-placeholder,
 #candle_filter .Select--single>.Select-control .Select-value, .Select-placeholder,
 #period_filter .Select--single>.Select-control .Select-value, .Select-placeholder,
 #currency_filter .Select--single>.Select-control .Select-value, .Select-placeholder {
@@ -280,6 +288,8 @@ body {
 }
 
 #inspect_dropdown .has-value.Select--single>.Select-control .Select-value .Select-value-label, .has-value.is-pseudo-focused.Select--single>.Select-control .Select-value .Select-value-label,
+#stake_currency .has-value.Select--single>.Select-control .Select-value .Select-value-label, .has-value.is-pseudo-focused.Select--single>.Select-control .Select-value .Select-value-label,
+#stake_interval .has-value.Select--single>.Select-control .Select-value .Select-value-label, .has-value.is-pseudo-focused.Select--single>.Select-control .Select-value .Select-value-label,
 #candle_filter .has-value.Select--single>.Select-control .Select-value .Select-value-label, .has-value.is-pseudo-focused.Select--single>.Select-control .Select-value .Select-value-label,
 #period_filter .has-value.Select--single>.Select-control .Select-value .Select-value-label, .has-value.is-pseudo-focused.Select--single>.Select-control .Select-value .Select-value-label,
 #currency_filter .has-value.Select--single>.Select-control .Select-value .Select-value-label, .has-value.is-pseudo-focused.Select--single>.Select-control .Select-value .Select-value-label {
