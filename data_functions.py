@@ -220,7 +220,7 @@ def get_uni_data(gem, period):
     r = redis.StrictRedis('localhost')
     context = pa.default_serialization_context()
     df = context.deserialize(r.get('{}-uniswap'.format(gem)))
-    start_date = datetime.today() - timedelta(days=period)
+    start_date = datetime.today() - timedelta(days=int(period))
     df = df[~(df['timestamp'] < start_date)].copy()
     return df
 

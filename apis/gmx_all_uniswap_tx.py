@@ -32,38 +32,42 @@ def get_all_LP_tx(LP_contract, top_pair, bottom_pair, decimal_ratio, blocklength
 
     for i, result in enumerate(r_all):
         try:
+            # present in every tx
             tx = result['hash']
             timestamp = result['timeStamp']
             blocknumber = result['blockNumber']
             
-            if tx in output_dict.keys():
+            if tx in output_dict.keys(): # check if already processed
                 pass
             else:
                 output_dict[tx] = {'timestamp': timestamp, 'blocknumber': blocknumber, 'tx_hash': tx}
 
-            if result['to'] == LP_contract:
+            if result['to'] == LP_contract: #sendingn to Uni LP
                 amt = float(result['value'])*1e-18
                 output_dict[tx]['in amt'] = amt
-                output_dict[tx]['address'] = result['from']
                     
-                if result['tokenSymbol'] == top_pair:
+                if result['tokenSymbol'] == top_pair: #GMX being sent to LP (SELL)
                     token = top_pair
                     output_dict[tx]['in token'] = token
+                    output_dict[tx]['address'] = result['from']
+
                     
-                elif result['tokenSymbol'] == bottom_pair:
+                elif result['tokenSymbol'] == bottom_pair: #WETH being sent to LP (BUY)
                     token = bottom_pair
                     output_dict[tx]['in token'] = token
+
                     
-            elif result['from'] == LP_contract:
+            elif result['from'] == LP_contract: #receiving from Uni LP
                 amt = float(result['value'])*1e-18
                 output_dict[tx]['out amt'] = amt
-                output_dict[tx]['address'] = result['to']
                 
-                if result['tokenSymbol'] == top_pair:
+                if result['tokenSymbol'] == top_pair: #GMX being received from LP (BUY)
                     token = top_pair
                     output_dict[tx]['out token'] = token
+                    output_dict[tx]['address'] = result['to']
+
                     
-                elif result['tokenSymbol'] == bottom_pair:
+                elif result['tokenSymbol'] == bottom_pair: #WETH being received from LP (SELL)
                     token = bottom_pair
                     output_dict[tx]['out token'] = token
                     

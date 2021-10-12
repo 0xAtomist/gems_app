@@ -157,7 +157,7 @@ def generate_candle(df, var, candle, y_text, shape_data):
   
   
 def generate_table_data(df):
-    df['timestamp'] = df.timestamp.dt.strftime('%Y-%m-%d %H:%M')
+    df['timestamp'] = df.timestamp.dt.strftime('%Y-%m-%d %H:%M:%S') + ' UTC'
     return df.sort_index(ascending=False).to_dict('records')
  
     
