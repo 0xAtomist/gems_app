@@ -10,7 +10,7 @@ from auth import auth_conf
 
 server = Flask(__name__)
 
-dashboard.bind(server)
+#dashboard.bind(server)
 
 
 app = dash.Dash(
@@ -69,5 +69,5 @@ cache = Cache(server, config={
     'CACHE_REDIS_DB': 1
 })
 
-cache.clear()
+#cache.clear()
 

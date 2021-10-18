@@ -5,20 +5,20 @@ import telegram
 import redis
 import sys
 
-bot_key = '1857023695:AAGFDIotyZoy3_yFFhsbaASTVvibRIeJfXU'
+from auth import auth_conf
 
-api_id = '8307029'
-api_hash = '3b18502f5287cfea4a2f1e1245e5753d'
 
-chat_id = '-1001325583681'
-
+bot_key = auth_conf['telegram']['bot_key']
+api_id = auth_conf['telegram']['api_id']
+api_hash = auth_conf['telegram']['api_hash']
+chat_id = auth_conf['telegram']['chat_id']
 
 bot = telegram.Bot(token=bot_key)
 
 GMX_contract = "0xfc5a1a6eb076a2c7ad06ed22c90d7e710e35ad0a"
 sGMX_contract = "0x908c4d94d34924765f1edc22a1dd098397c59dd4"
 
-API_key = "YWR5E9YUBPE2X6KNXG99D2MX1UHPYDFDBGT"
+API_key = auth_conf['arbiscan']['API_KEY']
 
 pd.set_option('display.max_rows', 500)
 

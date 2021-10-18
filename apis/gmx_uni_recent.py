@@ -5,6 +5,7 @@ from datetime import datetime, timedelta
 import redis
 import pyarrow as pa
 
+from auth import auth_conf
 
 GMX_contract = "0xfc5a1a6eb076a2c7ad06ed22c90d7e710e35ad0a"
 sGMX_contract = "0x908c4d94d34924765f1edc22a1dd098397c59dd4"
@@ -12,7 +13,7 @@ sGMX_contract = "0x908c4d94d34924765f1edc22a1dd098397c59dd4"
 GMX_ETH_LP = '0x80a9ae39310abf666a87c743d6ebbd0e8c42158e'
 ETH_USDC_LP = '0x17c14d2c404d167802b16c450d3c99f88f2c4f4d'
 
-API_key = "YWR5E9YUBPE2X6KNXG99D2MX1UHPYDFDBGT"
+API_key = auth_conf['arbiscan']['API_KEY']i
 
 pd.set_option('display.max_rows', 1000)
 
@@ -153,21 +154,21 @@ context = pa.default_serialization_context()
 
 while True:
     # get recent txns
-    # try:
-    df_100 = get_usd_dataset(get_recent_LP_tx(GMX_ETH_LP, 'GMX', 'WETH', 1, 200),
-                             get_recent_LP_tx(ETH_USDC_LP, 'WETH', 'USDC', 1e12, 1000))
-    print(df_100)
-    
-    for i, timestamp in enumerate(df_100.index):
-        df_all = context.deserialize(r.get('gmx-uniswap'))
-        if timestamp in df_all.index:
-            #print('already stored')
-            pass
-        else:
-            print('requires storing')
-            df_all = df_all.append(df_100.iloc[i])
+    try:
+        df_100 = get_usd_dataset(get_recent_LP_tx(GMX_ETH_LP, 'GMX', 'WETH', 1, 200),
+                                 get_recent_LP_tx(ETH_USDC_LP, 'WETH', 'USDC', 1e12, 1000))
+        print(df_100)
+        
+        for i, timestamp in enumerate(df_100.index):
+            df_all = context.deserialize(r.get('gmx-uniswap'))
+            if timestamp in df_all.index:
+                #print('already stored')
+                pass
+            else:
+                print('requires storing')
+                df_all = df_all.append(df_100.iloc[i])
             r.set('gmx-uniswap', context.serialize(df_all).to_buffer().to_pybytes())
-    #except Exception as e:
-    #    print(e)
+    except Exception as e:
+        print(e)
     time.sleep(10)
 

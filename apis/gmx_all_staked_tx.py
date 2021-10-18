@@ -5,6 +5,8 @@ from datetime import datetime, timedelta
 import redis
 import pyarrow as pa
 
+from auth import auth_conf
+
 
 GMX_contract = "0xfc5a1a6eb076a2c7ad06ed22c90d7e710e35ad0a"
 sGMX_contract = "0x908c4d94d34924765f1edc22a1dd098397c59dd4"
@@ -12,7 +14,7 @@ sGMX_contract = "0x908c4d94d34924765f1edc22a1dd098397c59dd4"
 GMX_ETH_LP = '0x80a9ae39310abf666a87c743d6ebbd0e8c42158e'
 ETH_USDC_LP = '0x17c14d2c404d167802b16c450d3c99f88f2c4f4d'
 
-API_key = "YWR5E9YUBPE2X6KNXG99D2MX1UHPYDFDBGT"
+API_key = auth_conf['arbiscan']['API_KEY']
 
 
 def get_all_staked_tx():
