@@ -1,5 +1,6 @@
 import requests
 import pandas as pd
+import numpy as np
 import time
 from datetime import datetime, timedelta
 import redis
@@ -117,6 +118,10 @@ def get_usd_dataset(df_top, df_bottom):
         idx = df_bottom.index.get_loc(dt, method='nearest')
         ethusd_price = df_bottom['price'].iloc[idx]
         gmxusd_price = df_top['price'].iloc[i] * ethusd_price
+        if gmxusd_price > 1000:
+            gmxusd_price = np.nan
+            ethusd_price = np.nan
+            print(gmxusd_price, ethusd_price, df_top['price'].iloc[i])
         usd_list.append(gmxusd_price)
         eth_list.append(ethusd_price)
         if df_top['in token'].iloc[i] == 'GMX':

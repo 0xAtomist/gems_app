@@ -1,5 +1,6 @@
 import requests
 import pandas as pd
+import numpy as np
 import time
 from datetime import datetime, timedelta
 import redis
@@ -13,7 +14,7 @@ sGMX_contract = "0x908c4d94d34924765f1edc22a1dd098397c59dd4"
 GMX_ETH_LP = '0x80a9ae39310abf666a87c743d6ebbd0e8c42158e'
 ETH_USDC_LP = '0x17c14d2c404d167802b16c450d3c99f88f2c4f4d'
 
-API_key = auth_conf['arbiscan']['API_KEY']i
+API_key = auth_conf['arbiscan']['API_KEY']
 
 pd.set_option('display.max_rows', 1000)
 
@@ -117,8 +118,13 @@ def get_usd_dataset(df_top, df_bottom):
         idx = df_bottom.index.get_loc(dt, method='nearest')
         ethusd_price = df_bottom['price'].iloc[idx]
         gmxusd_price = df_top['price'].iloc[i] * ethusd_price
+        if gmxusd_price > 1000:
+            gmxusd_price = np.nan
+            ethusd_price = np.nan
+            print(gmxusd_price, ethusd_price, df_top['price'].iloc[i])
         usd_list.append(gmxusd_price)
         eth_list.append(ethusd_price)
+
         if df_top['in token'].iloc[i] == 'GMX':
             n_GMX = df_top['in amt'].iloc[i]
             n_ETH = df_top['in amt'].iloc[i] * gmxusd_price/ethusd_price
@@ -154,21 +160,21 @@ context = pa.default_serialization_context()
 
 while True:
     # get recent txns
-    try:
-        df_100 = get_usd_dataset(get_recent_LP_tx(GMX_ETH_LP, 'GMX', 'WETH', 1, 200),
-                                 get_recent_LP_tx(ETH_USDC_LP, 'WETH', 'USDC', 1e12, 1000))
-        print(df_100)
-        
-        for i, timestamp in enumerate(df_100.index):
-            df_all = context.deserialize(r.get('gmx-uniswap'))
-            if timestamp in df_all.index:
-                #print('already stored')
-                pass
-            else:
-                print('requires storing')
-                df_all = df_all.append(df_100.iloc[i])
-            r.set('gmx-uniswap', context.serialize(df_all).to_buffer().to_pybytes())
-    except Exception as e:
-        print(e)
+    #try:
+    df_100 = get_usd_dataset(get_recent_LP_tx(GMX_ETH_LP, 'GMX', 'WETH', 1, 200),
+                             get_recent_LP_tx(ETH_USDC_LP, 'WETH', 'USDC', 1e12, 1000))
+    #print(df_100)
+    
+    for i, timestamp in enumerate(df_100.index):
+        df_all = context.deserialize(r.get('gmx-uniswap'))
+        if timestamp in df_all.index:
+            #print('already stored')
+            pass
+        else:
+            print('requires storing')
+            df_all = df_all.append(df_100.iloc[i])
+        r.set('gmx-uniswap', context.serialize(df_all).to_buffer().to_pybytes())
+    #except Exception as e:
+    #    print(e)
     time.sleep(10)
 
