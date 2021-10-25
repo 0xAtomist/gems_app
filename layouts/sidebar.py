@@ -163,7 +163,7 @@ def generate_layout():
                                         style={'margin': 10, 'background-color': base_colours['tf_accent2'], 'color': base_colours['black'], 'border-color': base_colours['black']},
                                         block=True,
                                     ),
-                                    href='https://tokenfeeds.info/api/v1/gems/all',
+                                    href='https://app.tokenfeeds.info/api/v1/gems/all',
                                 ),
 #                                html.A(
 #                                    dbc.Button(

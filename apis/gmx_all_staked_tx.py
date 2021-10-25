@@ -16,26 +16,28 @@ ETH_USDC_LP = '0x17c14d2c404d167802b16c450d3c99f88f2c4f4d'
 
 API_key = auth_conf['arbiscan']['API_KEY']
 
+pd.options.display.max_columns = 50
 
 def get_all_staked_tx(blocklength, iterations):
     r_all = []
     for i in range(iterations):
-        start = 300000+i*blocklength-1
-        end = 300000+blocklength+i*blocklength+1
-    r_page = requests.get('https://api.arbiscan.io/api?module=account&action=tokentx&contractaddress={}&address={}&startblock={}&endblock={}&sort=asc&apikey={}'
-                        .format(GMX_contract, sGMX_contract, API_key))
-    r_all.extend(r_page.json()['result'])
+        start = i*blocklength
+        end = blocklength+i*blocklength
+        r_page = requests.get('https://api.arbiscan.io/api?module=account&action=tokentx&contractaddress={}&address={}&startblock={}&endblock={}&sort=asc&apikey={}'
+                        .format(GMX_contract, sGMX_contract, start, end, API_key))
+        print(i, len(r_page.json()['result']))
 
-    df = pd.DataFrame(columns=['value', 'timestamp', 'in/out'])
-
-    output_dict = {}
+        r_all.extend(r_page.json()['result'])
+        
+    output_dict = {
+        'value': [],
+        'cum_value': [],
+        'timestamp': [],
+        'in/out': [],
+        'tx': []
+    }
 
     for result in r_all:
-        tx = result['hash']
-        timestamp = result['timeStamp']
-        blocknumber = result['blockNumber']
-        
-        output_dict[tx] = {'timestamp': timestamp, 'blocknumber': blocknumber, 'tx_hash': tx}
         
         if result['to'] == '0x908c4d94d34924765f1edc22a1dd098397c59dd4':
             value = float(float(result['value'])*1e-18)
@@ -45,14 +47,17 @@ def get_all_staked_tx(blocklength, iterations):
             in_out = 'OUT'
         
         cum_value = 0
+        timestamp = result['timeStamp']
+        tx = result['hash']
 
-        output_dict[tx]['value'].append(value)
-        output_dict[tx]['cum_value'].append(cum_value)
-        output_dict[tx]['timestamp'].append(timestamp)
-        output_dict[tx]['in/out'].append(in_out)
+        output_dict['value'].append(value)
+        output_dict['cum_value'].append(cum_value)
+        output_dict['timestamp'].append(timestamp)
+        output_dict['in/out'].append(in_out)
+        output_dict['tx'].append(tx)
 
-
-    df = pd.DataFrame.from_dict(output_dict, orient='index') 
+    df = pd.DataFrame.from_dict(output_dict)
+   # print(df)
     df['timestamp'] = pd.to_datetime(df['timestamp'], unit='s')
     
     for i, value in enumerate(df['value']):
@@ -63,11 +68,9 @@ def get_all_staked_tx(blocklength, iterations):
         cum_value = prev + value
         df['cum_value'].iloc[i] = cum_value
 
-        #print('idx={}, value={}, prev={}, cum_value={}'.format(i, value, prev, cum_value))
+       # print('idx={}, value={}, prev={}, cum_value={}'.format(i, value, prev, cum_value))
+    df = df[~(df['timestamp'] < '2021-09-06 15:00:00')].copy()
 
-    df = df[~(df['timestamp'] < '2021-09-06 15:00:00')]
-
-    df = df.dropna()
 
     df = df.dropna().set_index('timestamp', drop=False)
     dt = pd.to_datetime(df['timestamp'], format='%Y/%m/%d %H:%M:%S')

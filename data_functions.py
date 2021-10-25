@@ -245,6 +245,22 @@ def get_staked_data(gem):
     return df
 
 
+@cache.memoize(timeout=20)
+def get_n_total(gem):
+    r = redis.StrictRedis('localhost', charset='utf-8', decode_responses=True)
+
+    n_total = float(r.get('n-{}-total'.format(gem)))
+    return n_total
+
+
+@cache.memoize(timeout=20)
+def get_n_staked(gem):
+    r = redis.StrictRedis('localhost', charset='utf-8', decode_responses=True)
+
+    n_staked = float(r.get('n-{}-staked'.format(gem)))
+    return n_staked
+
+
 def get_slider(gem):  # get settings for date range slider
     today = pd.Timestamp.today()
     tweet_date = get_gem_info()['gems'][gem]['Tweet Date']  # get product start date from publishers.json

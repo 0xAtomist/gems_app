@@ -22,7 +22,7 @@ from collections import OrderedDict
 from app import app, cache
 from apps.uniswap_chart_app import get_period_options
 from colours import *
-from data_functions import get_gem_info, get_uni_data, get_staked_data
+from data_functions import get_gem_info, get_uni_data, get_staked_data, get_n_total, get_n_staked
 
 
 master = get_gem_info()
@@ -51,6 +51,7 @@ for item in px.colors.qualitative.Pastel:
 
 
 def generate_staked_trend(df, dff, y_var, y_text, hover_temp):
+    n_total = get_n_total('gmx')
     fig_range = make_subplots(specs=[[{"secondary_y": True}]])
     fig_range.add_trace(
         go.Scatter(
@@ -71,7 +72,7 @@ def generate_staked_trend(df, dff, y_var, y_text, hover_temp):
             hovertemplate=hover_temp,
             line=dict(color=base_colours['tf_accent']),
             textfont=dict(family='Supermolot', color=base_colours['text'], size=13),
-            customdata=round(dff[y_var]/6490429*100, 2)
+            customdata=round(dff[y_var]/n_total*100, 2)
         ),
         secondary_y=True
     )
@@ -237,15 +238,14 @@ def update_trend_price(n_intervals, interval):
 	[Input('chart-interval', 'n_intervals')],
         prevent_initial_callback=True)
 def update_gmx_staked(n_intervals):
-    df = get_staked_data('gmx')
-    val = int(df['cum_value'].iloc[-1])
-    return 'GMX Staked: ' + f'{val:,}' + ' ({}%)'.format(round(df['Staked %'].iloc[-1], 1))
+    val = get_n_staked('gmx')
+    pct = val/get_n_total('gmx')*100
+    return 'GMX Staked: ' + f'{val:,}' + ' ({}%)'.format(round(pct, 1))
 
 
 @app.callback(Output('gmx_total', 'children'),
 	[Input('chart-interval', 'n_intervals')],
         prevent_initial_callback=True)
 def update_gmx_total(n_intervals):
-    df = get_staked_data('gmx')
-    val = int(df['cum_value'].iloc[-1]/(df['Staked %'].iloc[-1]/100))
+    val = get_n_total('gmx')
     return 'GMX Supply: ' + f'{val:,}'
