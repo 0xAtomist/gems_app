@@ -28,14 +28,9 @@ def get_all_staked_tx(blocklength, iterations):
 
     df = pd.DataFrame(columns=['value', 'timestamp', 'in/out'])
 
-    output_dict = {
-        'value': [],
-        'cum_value': [],
-        'timestamp': [],
-        'in/out': []
-    }
+    output_dict = {}
 
-    for result in r_all.json()['result']:
+    for result in r_all:
         tx = result['hash']
         timestamp = result['timeStamp']
         blocknumber = result['blockNumber']
