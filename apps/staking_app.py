@@ -15,6 +15,7 @@ from dash.dependencies import Input, Output, State
 import plotly.graph_objs as go
 import plotly.express as px
 from plotly.subplots import make_subplots
+from scipy import signal
 
 import pandas as pd
 from collections import OrderedDict
@@ -56,7 +57,9 @@ def generate_staked_trend(df, dff, y_var, y_text, hover_temp):
     fig_range.add_trace(
         go.Scatter(
             x=df['timestamp'], 
-            y=df['usd_price'], 
+            y=signal.savgol_filter(df['usd_price'],
+                11, # window size used for filtering
+                3), # order of fitted polynomial 
             name='GMX/USD Price', 
             hovertemplate='%{y:,.5f}',
             line=dict(color=base_colours['tf_accent3']),
@@ -111,7 +114,9 @@ def generate_staked_trend(df, dff, y_var, y_text, hover_temp):
             tickprefix='',
 #            dtick=round(max(dff[y_var])-min(dff[y_var]), -5)/5
 #            scaleanchor='y1',
-            #range=[min(dff[y_var]), max(dff[y_var])]
+            #range=[min(dff[y_var])*0.9, max(dff[y_var])*1.1],
+            #autorange=True,
+            #fixedrange=False,
         ),
         showlegend=True,
         font={'color': base_colours['primary_text']},
@@ -210,7 +215,7 @@ layout = html.Div(
                                 dcc.Graph(
                                     id='trend_sGMX',
                                     config=graph_config,
-                                    figure=generate_staked_trend(get_uni_data('gmx', 365), get_staked_data('gmx') ,'cum_value', 'Staked GMX Count', '%{y:,.0f} (%{customdata}%)')
+                                    figure=generate_staked_trend(get_uni_data('gmx', 365), get_staked_data('gmx', 365) ,'cum_value', 'Staked GMX Count', '%{y:,.0f} (%{customdata}%)')
                                 )
                             ],
                             className="pretty_container",
@@ -231,7 +236,7 @@ layout = html.Div(
 	[Input('chart-interval', 'n_intervals'),
             Input('stake_interval', 'value')])
 def update_trend_price(n_intervals, interval):
-    return generate_staked_trend(get_uni_data('gmx', interval), get_staked_data('gmx'), 'cum_value', 'Staked GMX Count', '%{y:,.0f} <b>(%{customdata}%)</b>')
+    return generate_staked_trend(get_uni_data('gmx', interval), get_staked_data('gmx', interval), 'cum_value', 'Staked GMX Count', '%{y:,.0f} <b>(%{customdata}%)</b>')
 
 
 @app.callback(Output('gmx_staked', 'children'),

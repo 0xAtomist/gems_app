@@ -216,11 +216,11 @@ def get_filtered_df(filtered_gem_list):
 
 
 @cache.memoize(timeout=20)
-def get_uni_data(gem, period):
+def get_uni_data(gem, interval):
     r = redis.StrictRedis('localhost')
     context = pa.default_serialization_context()
     df = context.deserialize(r.get('{}-uniswap'.format(gem)))
-    start_date = datetime.today() - timedelta(days=int(period))
+    start_date = datetime.today() - timedelta(days=int(interval))
     df = df[~(df['timestamp'] < start_date)].copy()
     return df
 
@@ -238,10 +238,12 @@ def get_volume_data(df, candle):
 
 
 @cache.memoize(timeout=20)
-def get_staked_data(gem):
+def get_staked_data(gem, interval):
     r = redis.StrictRedis('localhost')
     context = pa.default_serialization_context()
     df = context.deserialize(r.get('{}-staked'.format(gem)))
+    start_date = datetime.today() - timedelta(days=int(interval))
+    df = df[~(df['timestamp'] < start_date)].copy()
     return df
 
 
