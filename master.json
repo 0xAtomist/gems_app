@@ -71,7 +71,7 @@
 				"Tier": 1,
 				"Chart": "https://www.tradingview.com/chart?symbol=FTX%3AROOKUSD",
 				"Rewards": "Negligible",
-				"Reward Details": "Rewards for people using KeeperDAO to trade or borrow, as well as for people lending stables to the protocol."
+				"Reward Details": "Rewards for people using KeeperDAO to trade or borrow, as well as for people lending stables to the protocol. UPDATE: new tokenomics will reduce supply."
 			},
 			"yield": {
 				"symbol": "YLD",
@@ -116,7 +116,7 @@
 				"Notes": "Crypto native monetary policy",
 				"Tweet Date": "2021-03-13",
 				"Tweet Price": 635,
-				"Tier": 2,
+				"Tier": 1,
 				"Chart": "https://chartex.pro/?symbol=UNISWAP%3ABANK.B42921",
 				"Rewards": "No",
 				"Reward Details": "Staking rewards, locked with multiplier"
@@ -190,8 +190,8 @@
 				"Tweet Price": 36.5,
 				"Tier": 2,
 				"Chart": "https://chartex.pro/?symbol=UNISWAP%3ALIEN.A7557E",
-				"Rewards": "Unresearched",
-				"Reward Details": ""
+				"Rewards": "Yes",
+				"Reward Details": "700 tokens/day until July 2022"
 			},
 			"offshift": {
 				"symbol": "XFT",
@@ -216,18 +216,6 @@
 				"Chart": "https://chartex.pro/?symbol=UNISWAP%3ACOMBO.930278",
 				"Rewards": "Yes",
 				"Reward Details": ""
-			},
-			"defidollar-dao": {
-				"symbol": "DFD",
-				"market": "Uniswap",
-				"sector": "DeFi",
-				"Notes": "Stablecoin aggregator",
-				"Tweet Date": "2021-02-06",
-				"Tweet Price": 0.55,
-				"Tier": 1,
-				"Chart": "https://www.dextools.io/app/sushiswap/pair-explorer/0xb12aa722a3a4566645f079b6f10c89a3205b6c2c",
-				"Rewards": "Yes",
-				"Reward Details": "https://forum.dusd.finance/t/liquidity-mining-update-june/52"
 			},
 			"plotx": {
 				"symbol": "PLOT",
@@ -262,8 +250,8 @@
 				"Tweet Price": 0.15,
 				"Tier": 1,
 				"Chart": "https://chartex.pro/?symbol=UNISWAP%3AXTK.B3ADEB",
-				"Rewards": "Unresearched",
-				"Reward Details": ""
+				"Rewards": "Yes",
+				"Reward Details": "https://t.me/CryptoProjectsFA/199423"
 			},
 			"mina-protocol": {
 				"symbol": "MINA",
@@ -310,8 +298,8 @@
 				"Tweet Price": 5.35,
 				"Tier": 2,
 				"Chart": "https://www.dextools.io/app/uniswap/pair-explorer/0xf3bc6f13bc030e7c294da2aad27b99807bc5f8fd",
-				"Rewards": "Unresearched",
-				"Reward Details": ""
+				"Rewards": "Yes",
+				"Reward Details": "High rewards"
 			},
 			"arc-governance": {
 				"symbol": "ARCX",
@@ -322,8 +310,8 @@
 				"Tweet Price": 0.8780,
 				"Tier": 1,
 				"Chart": "https://www.dextools.io/app/sushiswap/pair-explorer/0x87c33321e1755ab54b0a27d4969a72b953486e75",
-				"Rewards": "No",
-				"Reward Details": ""
+				"Rewards": "Yes",
+				"Reward Details": "Investor unlocks with streaming until mid-2022"
 			},
 			"stabilize": {
 				"symbol": "STBZ",
@@ -334,8 +322,8 @@
 				"Tweet Price": 5.16,
 				"Tier": 2,
 				"Chart": "https://www.dextools.io/app/uniswap/pair-explorer/0xdb28312a8d26d59978d9b86ca185707b1a26725b",
-				"Rewards": "No",
-				"Reward Details": ""
+				"Rewards": "Negligible",
+				"Reward Details": "Rewards for various LPs"
 			},
 			"moar": {
 				"symbol": "MOAR",
@@ -406,8 +394,8 @@
 				"Tweet Price": 10.8,
 				"Tier": 1,
 				"Chart": "https://www.dextools.io/app/sushiswap/pair-explorer/0xe9a889e6963f122a98f8083d951c71329c726c0a",
-				"Rewards": "Yes",
-				"Reward Details": "Vesting - 18th of every month until Oct 2021, 800k tokens are unlocked."
+				"Rewards": "Negligible",
+				"Reward Details": "Vesting - 18th of every month until Nov 2021, 800k tokens are unlocked: https://0xnodes.live/"
 			},
 			"route": {
 				"symbol": "ROUTE",
@@ -431,7 +419,7 @@
 				"Tier": 1,
 				"Chart": "https://www.dextools.io/app/ether/pair-explorer/0xe55c3e83852429334a986b265d03b879a3d188ac",
 				"Rewards": "Yes",
-				"Reward Details":"High rewards: https://discourse.tracer.finance/t/tcr-staking-incentive-program-proposal/485"
+				"Reward Details":"High rewards (after the product gets some usage): https://discourse.tracer.finance/t/tcr-staking-incentive-program-proposal/485"
 			},
 			"lixir-protocol": {
 				"symbol": "LIX",
@@ -490,8 +478,8 @@
 				"Tweet Price": 0.087,
 				"Tier": 1,
 				"Chart": "",
-				"Rewards": "Negligible",
-				"Reward Details": "Low rewards for LP"
+				"Rewards": "Yes",
+				"Reward Details": "Low rewards for LP but low circulating supply is worrying"
 			},
 			"unslashed-finance": {
 				"symbol": "USF",
@@ -514,7 +502,7 @@
 				"Tweet Price": 0.64,
 				"Tier": 2,
 				"Chart": "",
-				"Rewards": "Negligible",
+				"Rewards": "No",
 				"Reward Details": "Low rewards for LP"
 			},
 			"nftx": {
@@ -526,7 +514,7 @@
 				"Tweet Price": 126,
 				"Tier": 1,
 				"Chart": "",
-				"Rewards": "Negligible",
+				"Rewards": "No",
 				"Reward Details": "Low rewards for LP"
 			},
 			"taraxa": {
@@ -538,8 +526,8 @@
 				"Tweet Price": 0.004,
 				"Tier": 2,
 				"Chart": "",
-				"Rewards": "No",
-				"Reward Details": "No rewards yet"
+				"Rewards": "Yes",
+				"Reward Details": "High rewards"
 			},
 			"visor": {
 				"symbol": "VISR",
@@ -550,8 +538,8 @@
 				"Tweet Price": 1.07,
 				"Tier": 1,
 				"Chart": "",
-				"Rewards": "Negligible",
-				"Reward Details": "Staking rewards, small"
+				"Rewards": "No",
+				"Reward Details": "Low rewards for LP"
 			},
 			"alchemist": {
 				"symbol": "MIST",
@@ -560,10 +548,46 @@
 				"Notes": "A decentralized startup studio building different products",
 				"Tweet Date": "2021-10-01",
 				"Tweet Price": 98,
-				"Tier": 1,
+				"Tier": 2,
 				"Chart": "",
 				"Rewards": "Yes",
 				"Reward Details": "Weekly 1% inflation, stake in Aludel to get their rewards, as price will not appreciate, but you’ll get more tokens."
+			},
+			"warp-finance": {
+				"symbol": "WARP",
+				"market": "Uniswap",
+				"sector": "DeFi",
+				"Notes": "Enables users to borrow against their LP tokens",
+				"Tweet Date": "2021-10-07",
+				"Tweet Price": 216,
+				"Tier": 1,
+				"Chart": "",
+				"Rewards": "Negligible",
+				"Reward Details": "Incentives to hold 3 months - See PCR: https://docs.warp.finance/warp-finance/resources/litepaper-1/personal-rewards-curve"
+			},
+			"derivadao": {
+				"symbol": "DDX",
+				"market": "SushiSwap",
+				"sector": "DeFi",
+				"Notes": "DEX",
+				"Tweet Date": "2021-10-09",
+				"Tweet Price": 5.85,
+				"Tier": 1,
+				"Chart": "",
+				"Rewards": "Yes",
+				"Reward Details": "Rewards for staking"
+			},
+			"rmrk": {
+				"symbol": "RMRK",
+				"market": "KuCoin",
+				"sector": "NFT",
+				"Notes": "Building the metaverse (on Polkadot)",
+				"Tweet Date": "2021-10-23",
+				"Tweet Price": 8.46,
+				"Tier": 2,
+				"Chart": "",
+				"Rewards": "No",
+				"Reward Details": ""
 			},
 			"usd-coin": {
 				"symbol": "USDC",

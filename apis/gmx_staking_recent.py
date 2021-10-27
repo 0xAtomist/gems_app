@@ -80,30 +80,30 @@ r_sing = redis.StrictRedis('localhost', charset='utf-8', decode_responses=True)
 
 
 while True:
-    #try:
-    df_all = context.deserialize(r.get('gmx-staked'))
-    df_100 = get_staked_recent()
+    try:
+        df_all = context.deserialize(r.get('gmx-staked'))
+        df_100 = get_staked_recent()
 
-    n_staked = get_n_staked()
-    n_total = get_n_total()
-    df_100['Staked %'] = df_100['cum_value']/n_total*100
-    for i, timestamp in enumerate(df_100.index):
-        if timestamp in df_all.index:
-            # print('already stored')
-            pass
-        else:
-            print('requires storing')
-            prev = df_all['cum_value'].iloc[-1]
-            df_100['cum_value'].iloc[i] = prev + df_100['value'].iloc[i]
-            df_100['Staked %'] = df_100['cum_value']/n_total*100
-            df_all = df_all.append(df_100.iloc[i])
-    
-    r.set('gmx-staked', context.serialize(df_all).to_buffer().to_pybytes())
-    # overwrite (set) df tp redis
-    r_sing.set('n-gmx-staked', n_staked)
-    r_sing.set('n-gmx-total', n_total)
-    #except Exception as e:
-      #  print(e)
+        n_staked = get_n_staked()
+        n_total = get_n_total()
+        df_100['Staked %'] = df_100['cum_value']/n_total*100
+        for i, timestamp in enumerate(df_100.index):
+            if timestamp in df_all.index:
+                # print('already stored')
+                pass
+            else:
+                print('requires storing')
+                prev = df_all['cum_value'].iloc[-1]
+                df_100['cum_value'].iloc[i] = prev + df_100['value'].iloc[i]
+                df_100['Staked %'] = df_100['cum_value']/n_total*100
+                df_all = df_all.append(df_100.iloc[i])
+        
+        r.set('gmx-staked', context.serialize(df_all).to_buffer().to_pybytes())
+        # overwrite (set) df tp redis
+        r_sing.set('n-gmx-staked', n_staked)
+        r_sing.set('n-gmx-total', n_total)
+    except Exception as e:
+        print(e)
     time.sleep(10)
 
 

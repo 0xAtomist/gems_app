@@ -17,6 +17,7 @@ gem_list = get_gem_list(get_gem_info())
 gem_list.reverse()
 
 for gem in list(gem_list):
+    print(gem)
     # Write inspection data
     df_max = get_chart_data(gem, 'max')
     time.sleep(1)
