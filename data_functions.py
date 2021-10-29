@@ -109,7 +109,7 @@ def get_gem_markets(gem):
     r = redis.StrictRedis('localhost')
     context = pa.default_serialization_context()
     df = context.deserialize(r.get('{}-markets'.format(gem)))
-    return df
+    return df.iloc[0:4]
 
 
 @cache.memoize(timeout=20)
@@ -161,6 +161,7 @@ def get_extended_data(gem):
     master = get_gem_info()
     tweet_price = master['gems'][gem]['Tweet Price']
     tweet_date = master['gems'][gem]['Tweet Date']
+    rewards = master['gems'][gem]['Rewards']
 
     df = get_data_recent(gem)
     df_btc = get_btc_daily()
@@ -172,6 +173,7 @@ def get_extended_data(gem):
     df['btc_usd_x'] = btc_now/btc_tweet
     gem_tweet = float(tweet_price)
 
+    df['rewards'] = rewards
     df['fdv_tot'] = df['current_price'] * df['total_supply']
     df['mc_fdv_ratio'] = df['market_cap'] / df['fdv_tot']
     df['gem_usd_x'] = df['current_price'] / tweet_price - 1

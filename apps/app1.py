@@ -20,7 +20,7 @@ from collections import OrderedDict
 
 from app import app, cache
 from colours import *
-from data_functions import get_gem_info, get_gem_list, get_data_recent, get_extended_data, get_filtered_df
+from data_functions import get_gem_info, get_gem_list, get_data_recent, get_extended_data, get_filtered_df, get_gem_markets
 
 master = get_gem_info()
 
@@ -81,6 +81,23 @@ def get_options(variable):
 	variable_list = []
 	for gem in gem_list:
 		variable_list.append(master['gems'][gem][variable])
+	df = pd.DataFrame(data={'label': variable_list, 'value': variable_list})
+	df = df.sort_values('label')
+	df = df.drop_duplicates()
+	for i in df.index:
+		options.append({'label': df.loc[i]['label'], 'value': df.loc[i]['value']})
+	return options
+
+
+def get_market_options():
+	options = []
+	gem_list = get_gem_list(master)
+	variable_list = []
+	for gem in gem_list:
+                dff = get_gem_markets(gem)
+                market_list = dff['name']
+                for market in market_list:
+                    variable_list.append(market)
 	df = pd.DataFrame(data={'label': variable_list, 'value': variable_list})
 	df = df.sort_values('label')
 	df = df.drop_duplicates()
@@ -237,7 +254,7 @@ def filter_gem_list(gem_filter, tier_filter, sector_filter, market_filter, rewar
         tiers.append(option['value'])
     for option in get_options('sector'):
         sectors.append(option['value'])
-    for option in get_options('market'):
+    for option in get_market_options():
         markets.append(option['value'])
     for option in get_options('Rewards'):
         rewards.append(option['value'])
@@ -275,7 +292,9 @@ def filter_gem_list(gem_filter, tier_filter, sector_filter, market_filter, rewar
     for market in markets:
         if market in market_filter:
             for gem in gem_list:
-                if market == master['gems'][gem]['market']:
+                dff = get_gem_markets(gem)
+                exchange_list = list(dff['name'])
+                if market in exchange_list:
                     market_filter_list.append(gem)
     if not market_filter_list:
         market_filter_list = get_gem_list(master)
@@ -374,7 +393,7 @@ layout = html.Div(
 							html.P("Filter by Market", style={'margin-bottom': 2}),
 							dcc.Dropdown(
 								id='market_filter',
-								options=get_options('market'),
+								options=get_market_options(),
 								multi=True,
 								value=[],
 								style={'width': 'calc(100%-40px)', 'margin-bottom': 10},
@@ -502,6 +521,20 @@ layout = html.Div(
 								# 'backgroundColor': base_colours['alt_row'],
 								# 'color': base_colours['text']},
 								{'if': {'column_id': 'name'}, 'color': base_colours['text']},
+								{'if': 
+									{
+										'filter_query': '{rewards} = No or {rewards} = Negligible',
+										'column_id': 'name'
+									},
+									'color': palette['green']['50']
+								},
+								{'if': 
+									{
+										'filter_query': '{rewards} = Yes',
+										'column_id': 'name'
+									},
+									'color': palette['red']['50']
+								},
 								{'if': 
 									{
 										'filter_query': '{1h_col} > 0',
