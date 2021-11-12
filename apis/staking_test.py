@@ -79,55 +79,55 @@ shark = '\U0001F988'
 whale = '\U0001F40B'
 
 while True:
-    try:
+    #try:
+    #print(time.time())
+    df = get_recent(600)
+    #print(df)
+    n_staked = get_n_staked()
+    if df.empty:
+        print('empty')
+        pass
+    else:
+        print('Length: {}'.format(len(df.index)))
+        for i, value in enumerate(df['value']):
+            tx_hash = df['hash'].iloc[i]
+            timestamp = str(df['timestamp'].iloc[i])
+            if value < -2499 and value > -5000:
+                # send alert to TG bot
+                print('fish withdrawal')
+                print(str(df['timestamp'].iloc[i]))
+                entry = r.get(str(df['timestamp'].iloc[i]))
+                if not entry:
+                    print('sending msg')
+                    message = '{} ALERT: {} GMX has just been unstaked\n{} sGMX remaining\nTX Hash: https://arbiscan.io/tx/{}'.format(fish, int(-value), n_staked, tx_hash)
+                    #bot.send_message(chat_id=chat_id, text=message)
+                    #r.append(str(df['timestamp'].iloc[i]), value)
+            elif value < -4999 and value > -25000:
+                # send alert to TG bot
+                print('shark withdrawal')
+                print(str(df['timestamp'].iloc[i]))
+                entry = r.get(str(df['timestamp'].iloc[i]))
+                if not entry:
+                    print('sending msg')
+                    message = '{} ALERT: {} GMX has just been unstaked\n{} sGMX remaining\nTX Hash: https://arbiscan.io/tx/{}'.format(shark, int(-value), n_staked, tx_hash)
+                    #bot.send_message(chat_id=chat_id, text=message)
+                    #r.append(str(df['timestamp'].iloc[i]), value)
+            if value <= -25000:
+                # send alert to TG bot
+                print('whale withdrawal')
+                print(str(df['timestamp'].iloc[i]))
+                entry = r.get(str(df['timestamp'].iloc[i]))
+                if not entry:
+                    print('sending msg')
+                    message = '{} ALERT: {} GMX has just been unstaked\n{} sGMX remaining\nTX Hash: https://arbiscan.io/tx/{}'.format(whale, int(-value), n_staked, tx_hash)
+                    #bot.send_message(chat_id=chat_id, text=message)
+                    #r.append(str(df['timestamp'].iloc[i]), value)
+            else:
+                pass
+                print('no large withdrawals')
         #print(time.time())
-        df = get_recent(600)
-        #print(df)
-        n_staked = get_n_staked()
-        if df.empty:
-            print('empty')
-            pass
-        else:
-            print('Length: {}'.format(len(df.index)))
-            for i, value in enumerate(df['value']):
-                tx_hash = df['hash'].iloc[i]
-                timestamp = str(df['timestamp'].iloc[i])
-                if value < -2499 and value > -5000:
-                    # send alert to TG bot
-                    print('fish withdrawal')
-                    print(str(df['timestamp'].iloc[i]))
-                    entry = r.get(str(df['timestamp'].iloc[i]))
-                    if not entry:
-                        print('sending msg')
-                        message = '{} ALERT: {} GMX has just been unstaked\n{} sGMX remaining\nTX Hash: https://arbiscan.io/tx/{}'.format(fish, int(-value), n_staked, tx_hash)
-                        bot.send_message(chat_id=chat_id, text=message)
-                        r.append(str(df['timestamp'].iloc[i]), value)
-                elif value < -4999 and value > -25000:
-                    # send alert to TG bot
-                    print('shark withdrawal')
-                    print(str(df['timestamp'].iloc[i]))
-                    entry = r.get(str(df['timestamp'].iloc[i]))
-                    if not entry:
-                        print('sending msg')
-                        message = '{} ALERT: {} GMX has just been unstaked\n{} sGMX remaining\nTX Hash: https://arbiscan.io/tx/{}'.format(shark, int(-value), n_staked, tx_hash)
-                        bot.send_message(chat_id=chat_id, text=message)
-                        r.append(str(df['timestamp'].iloc[i]), value)
-                if value <= -25000:
-                    # send alert to TG bot
-                    print('whale withdrawal')
-                    print(str(df['timestamp'].iloc[i]))
-                    entry = r.get(str(df['timestamp'].iloc[i]))
-                    if not entry:
-                        print('sending msg')
-                        message = '{} ALERT: {} GMX has just been unstaked\n{} sGMX remaining\nTX Hash: https://arbiscan.io/tx/{}'.format(whale, int(-value), n_staked, tx_hash)
-                        bot.send_message(chat_id=chat_id, text=message)
-                        r.append(str(df['timestamp'].iloc[i]), value)
-                else:
-                    pass
-                    print('no large withdrawals')
-        #print(time.time())
-    except Exception as e:
-        print(e)
+    #except Exception as e:
+        #print(e)
     time.sleep(5)
 
 

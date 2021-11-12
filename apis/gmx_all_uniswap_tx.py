@@ -81,7 +81,8 @@ def get_all_LP_tx(LP_contract, top_pair, bottom_pair, decimal_ratio, blocklength
 
     df = df[~(df['timestamp'] < '2021-09-06')]
     df = df.dropna()
-    
+    df = df[df['address'] != '0x7Ee730a0438529F1D5FeD33c27457D1EACEc402E'.lower()]
+    df = df[df['address'] != '0xfeb6d3004b9cf7595af96dba23d9ec8e5f6e3ebc'.lower()]
     price_list = []
         
     for i, sell in enumerate(df['in token']):
@@ -104,6 +105,13 @@ def get_all_LP_tx(LP_contract, top_pair, bottom_pair, decimal_ratio, blocklength
 
     return df
 
+def get_new_eth_price(ethusd_price, df_bottom, idx):
+    for i in range(10):
+        if ethusd_price > 100000 or ethusd_price < 1000:
+            print(df_bottom['price'].iloc[idx-(i+1)])
+            ethusd_price = df_bottom['price'].iloc[idx-(i+1)]
+        else:
+            return ethusd_price
 
 def get_usd_dataset(df_top, df_bottom):
     usd_list = []
@@ -117,11 +125,8 @@ def get_usd_dataset(df_top, df_bottom):
     for i, dt in enumerate(df_top.index):
         idx = df_bottom.index.get_loc(dt, method='nearest')
         ethusd_price = df_bottom['price'].iloc[idx]
+        ethusd_price = get_new_eth_price(ethusd_price, df_bottom, idx)
         gmxusd_price = df_top['price'].iloc[i] * ethusd_price
-        if gmxusd_price > 1000:
-            gmxusd_price = np.nan
-            ethusd_price = np.nan
-            print(gmxusd_price, ethusd_price, df_top['price'].iloc[i])
         usd_list.append(gmxusd_price)
         eth_list.append(ethusd_price)
         if df_top['in token'].iloc[i] == 'GMX':
@@ -150,6 +155,10 @@ def get_usd_dataset(df_top, df_bottom):
     df_top['volume'] = vol_list
     df_top['action'] = action_list
     df_top['gmxeth'] = df_top['usd_price']/df_top['eth_price']
+    
+    pd.set_option('display.max_columns', None)
+    df_top = df_top.drop_duplicates(subset=['tx_hash'])
+    print(df_top.loc[df_top['eth_price'] > 5000])
 
     return df_top
 

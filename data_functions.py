@@ -230,6 +230,8 @@ def get_uni_data(gem, interval):
 @cache.memoize(timeout=20)
 def get_candle_data(df, var, candle):
     df_candle = df[var].resample(candle).ohlc()
+    df_candle['open'] = df_candle['close'].shift(1)
+
     return df_candle
 
 
